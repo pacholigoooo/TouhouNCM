@@ -63,4 +63,15 @@ docs/          架构、兼容性、素材和发布说明
 
 项目代码使用 [MIT License](LICENSE)。角色立绘由对应作者持有权利，其来源和使用条件见 [THIRD_PARTY.md](THIRD_PARTY.md)。东方 Project 原作版权归上海爱丽丝幻乐团等相应权利人所有。
 
+## 致谢
+
+- [Apple Music](https://www.apple.com/apple-music/) 为沉浸播放页提供视觉方向参考。
+- [BetterNCM](https://github.com/BetterNCM) 的插件生态为功能方向提供参考。
+- [Leafmy/BetterNCM-v3](https://github.com/Leafmy/BetterNCM-v3) 中的 RefinedNowPlaying、原生桥接文档与选择器资料用于客户端接口研究。
+- [THBWiki](https://thwiki.cc/) 为东方原曲查询提供资料与接口。
+- dairi / はるか与 kaoru 提供东方角色立绘素材。
+- [Inno Setup](https://jrsoftware.org/) 用于构建 Windows 安装程序。
+
+详细参考链接、素材来源与用途见 [THIRD_PARTY.md](THIRD_PARTY.md)。
+
 作者：**pachi**。
