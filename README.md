@@ -18,7 +18,13 @@ TouhouNCM 在网易云桌面客户端里提供沉浸播放页、封面流动背�
 
 项目面向 **Windows 10/11 x64、网易云音乐 3.x 的 Orpheus 客户端**。已实机核对版本为 **3.1.43.205627**；其他版本的适配状态见 [兼容性说明](docs/compatibility.md)。
 
-当前仓库提供源码。从源码构建后，运行 `Install.cmd`，再通过桌面上的「网易云音乐 · 沉浸听歌」快捷方式启动。`SelectClient.cmd` 可重新选择网易云路径，`Detect.cmd` 可检查安装位置。
+**[下载 Windows 安装包](https://github.com/pacholigoooo/TouhouNCM/releases/latest)**。在发布页选择 `TouhouNCM-1.0.0-Windows-x64.zip`，其中包含已编译程序、安装脚本和全部 162 项角色立绘资源。
+
+1. 完整解压 ZIP，双击 `Install.cmd`。
+2. 按提示完成安装。
+3. 通过桌面上的「网易云音乐 · 沉浸听歌」快捷方式启动。原入口正在运行时，先从系统托盘退出网易云音乐。
+
+`SelectClient.cmd` 可重新选择网易云路径，`Detect.cmd` 可检查安装位置。安装包中的 `Uninstall.cmd` 用于卸载。
 
 卸载时，在 PowerShell 中运行 `Uninstall.ps1`。辅助程序负责加载页面扩展与原生歌词窗口，网易云安装目录由原客户端维护。
 
