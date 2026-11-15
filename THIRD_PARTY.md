@@ -1,5 +1,9 @@
 # 第三方来源
 
+## 安装程序
+
+EXE 安装程序使用 [Inno Setup](https://jrsoftware.org/) 构建。简体中文语言文件来自 [Inno Setup 官方仓库](https://github.com/jrsoftware/issrc/blob/main/Files/Languages/ChineseSimplified.isl)，由 Zhenghan Yang（Kira）维护。原始署名保留在语言文件中，许可见 [InnoSetup-LICENSE.txt](installer/InnoSetup-LICENSE.txt)。
+
 ## 东方角色立绘
 
 素材逐项来源见 [manifest.json](assets/characters/manifest.json)。公开仓库包含元数据，原始图片保留在本地。

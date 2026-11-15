@@ -17,6 +17,7 @@
     "check": "node scripts/build.cjs --check --without-art",
     "test": "node scripts/test.cjs",
     "build": "node scripts/build.cjs",
-    "build:code": "node scripts/build.cjs --without-art"
+    "build:code": "node scripts/build.cjs --without-art",
+    "build:installer": "node scripts/package.cjs"
   }
 }
