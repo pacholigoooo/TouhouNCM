@@ -1,0 +1,630 @@
+/* Native content pages, verified against local web.pack 83304b1.
+ * Page DOM: 39/41/44/58/38/48/66/51/52/60/63.chunk modules
+ * 3086/3097/3096/3113/3090/3104/3109/3106/3102/3118/3127.
+ * Table DOM: app.chunk modules 392/225/355; CSS f85f38de6ed21efc84b1.
+ * Keep native grid geometry, measured row heights, hit targets and artwork.
+ * Colors are supplied by the outer skin; this file owns no theme palette.
+ */
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(
+  #page_pc_home,
+  #page_pc_choice,
+  #page_pc_voice,
+  #page_pc_music_rcmd,
+  #page_pc_search_result,
+  #page_pc_artist,
+  #page_pc_album,
+  #page_pc_album_detail,
+  #page_pc_personalhomepage,
+  #page_pc_songlist_songflow,
+  #page_pc_songlist_commentflow,
+  #page_pc_songplay_comment,
+  #page_pc_songlist_addlist,
+  #page_pc_recently_play_subpage,
+  #page_pc_local_resource,
+  #page_pc_downloaded,
+  #page_pc_mine_cloud_storage,
+  #page_pc_my_collect,
+  #page_pc_daily_recommend,
+  .StyledContent_s1n040op,
+  .StyledContent_s130uktw,
+  .StyledScrollContainer_spyptxt,
+  .Warpper_wsg8vfh
+) {
+  --colorBlack1: var(--ncm-ink);
+  --colorBlack2: var(--ncm-ink);
+  --colorBlack3: var(--ncm-ink);
+  --colorBlack4: var(--ncm-muted);
+  --colorBlack5: var(--ncm-muted);
+  --colorBlack6: var(--ncm-muted);
+  --colorBlack7: var(--ncm-muted);
+  --colorBlack8: var(--ncm-muted);
+  --colorBlack10: var(--ncm-line);
+  --colorBlack11: var(--ncm-line);
+  --colorBlack12: var(--ncm-line);
+  --colorFunction2: var(--ncm-hover);
+  --colorFunction4: var(--ncm-raised);
+  color: var(--ncm-ink);
+  caret-color: var(--ncm-accent);
+}
+
+/* Preserve the native route canvas, cover-derived gradients and custom covers.
+ * Native primary, secondary, warning and error colors are not remapped.
+ */
+
+/* Native comment and playlist/album headers clip a viewport-sized StickyMask
+   to their fixed band. Its opaque base blocks scrolling rows, while the shared
+   artwork layers in theme.css replace the flat native AppBackground. */
+html[data-ncm-skin] #page_pc_songplay_comment .Mask_mp3nchl > .StyledStickyMask_s1iiif9f,
+html[data-ncm-skin] .StyledStickyOper_svzrh3b > .StyledStickyMask_s1iiif9f {
+  background: var(--colorBackground, #e8eef6) !important;
+}
+html[data-ncm-skin] #page_pc_songplay_comment .Mask_mp3nchl > .StyledStickyMask_s1iiif9f > div,
+html[data-ncm-skin] .StyledStickyOper_svzrh3b > .StyledStickyMask_s1iiif9f > div {
+  display: none;
+}
+html[data-ncm-skin] #page_pc_songplay_comment .Mask_mp3nchl > .StyledStickyMask_s1iiif9f::after,
+html[data-ncm-skin] .StyledStickyOper_svzrh3b > .StyledStickyMask_s1iiif9f::after {
+  background: linear-gradient(var(--ncm-canvas), var(--ncm-canvas)), var(--ncm-glass-shade);
+}
+
+/* Home and discovery section rhythm. These headings are outside row viewers. */
+html[data-ncm-skin] [data-testid="tid_scroll_container"] #page_pc_home .block-title {
+  margin-top: 30px;
+  margin-bottom: 12px;
+  color: var(--ncm-ink);
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] #page_pc_home .block-title .cmd-typography,
+html[data-ncm-skin] [data-testid="tid_scroll_container"] #page_pc_home [data-testid="tid_homepage_titlelink_recent"],
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(
+  [data-testid="tid_choice_latestmusic_title"],
+  [data-testid="tid_choice_official_playlist_title"]
+) {
+  color: var(--ncm-ink);
+  font-weight: 650;
+  letter-spacing: -.025em;
+}
+
+/* Playlist, album and artist mastheads retain their native cover dimensions. */
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(
+  .StyledCommon_s1pv4hmr,
+  .StyledCommon_s1evt1m3,
+  .StyledCommon_s1uck782
+) .info {
+  margin-left: 28px;
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(
+  [data-testid="tid_playlist_title"],
+  [data-testid="tid_artist_header"] .title,
+  .StyledCommon_s1evt1m3 .info .title,
+  [data-testid="tid_userdetail_header_title"]
+) {
+  color: var(--ncm-ink);
+  font-weight: 650;
+  letter-spacing: -.025em;
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(
+  .StyledCommon_s1pv4hmr,
+  .StyledCommon_s1evt1m3,
+  .StyledCommon_s1uck782
+) :is(.description, .alias-name, .time, .tags) {
+  color: var(--ncm-muted);
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(
+  .StyledCommon_s1pv4hmr,
+  .StyledCommon_s1evt1m3,
+  .StyledCommon_s1uck782
+) .btns > *:not(:last-child) {
+  margin-right: 8px;
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] #page_pc_album_detail :is(.title, .content),
+html[data-ncm-skin] [data-testid="tid_scroll_container"] #page_pc_artist [data-testid="tid_artist_intro_tab"] {
+  color: var(--ncm-ink);
+}
+
+/* Existing cards keep their image ratios, counts, badges and play overlays. */
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(
+  [data-testid="tid_playlist_card_wrapper"],
+  [data-testid="tid_cell_pc_daily_recommend_card"],
+  [data-testid="tid_ranking_card_container"],
+  .CardWrapper_c1joonit .playlist-card
+) {
+  border-radius: 12px;
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(
+  [data-testid="tid_playlist_card_wrapper"],
+  [data-testid="tid_cell_pc_daily_recommend_card"],
+  [data-testid="tid_ranking_card_container"]
+):hover {
+  box-shadow: 0 8px 22px rgba(6, 16, 30, .12);
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(
+  [data-testid="tid_searchresults_artist_card"],
+  [data-testid="tid_searchresults_album_card"],
+  [data-testid="tid_searchresults_playlist_card"],
+  [data-testid="tid_searchresults_audio_card"],
+  [data-testid="tid_searchresults_video_card"],
+  [data-testid="tid_common_artist_card"],
+  .CreatePlaylistListRow_cqdvvtd
+) {
+  border-radius: 10px;
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(
+  [data-testid="tid_searchresults_artist_card"],
+  [data-testid="tid_searchresults_album_card"],
+  [data-testid="tid_searchresults_playlist_card"],
+  [data-testid="tid_searchresults_audio_card"],
+  [data-testid="tid_searchresults_video_card"],
+  [data-testid="tid_common_artist_card"],
+  .CreatePlaylistListRow_cqdvvtd
+):hover {
+  background-color: var(--ncm-hover);
+  box-shadow: none;
+}
+
+/* Search results, library tabs and detail tabs share one quiet hierarchy. */
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(
+  #page_pc_search_result,
+  #page_pc_artist,
+  .StyledContent_s1n040op,
+  .StyledContent_s130uktw,
+  .StyledScrollContainer_spyptxt
+) .cmd-tabs-bar {
+  border-color: var(--ncm-line);
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(
+  #page_pc_search_result,
+  #page_pc_artist,
+  .StyledContent_s1n040op,
+  .StyledContent_s130uktw,
+  .StyledScrollContainer_spyptxt
+) .cmd-tabs-tab {
+  color: var(--ncm-muted);
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(
+  #page_pc_search_result,
+  #page_pc_artist,
+  .StyledContent_s1n040op,
+  .StyledContent_s130uktw,
+  .StyledScrollContainer_spyptxt
+) .cmd-tabs-tab-active {
+  color: var(--ncm-ink);
+  font-weight: 650;
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(
+  #page_pc_search_result,
+  #page_pc_artist,
+  .StyledContent_s1n040op,
+  .StyledContent_s130uktw,
+  .StyledScrollContainer_spyptxt
+) .cmd-tabs-ink-bar {
+  background-color: var(--ncm-accent);
+  border-radius: 2px;
+}
+
+/* Virtualized rows: paint only. No row height, padding, line-height or transform. */
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(
+  #page_pc_search_result,
+  #page_pc_artist,
+  #page_pc_recently_play_subpage,
+  #page_pc_daily_recommend,
+  .StyledContent_s1n040op,
+  .StyledContent_s130uktw,
+  .StyledScrollContainer_spyptxt
+) :is(.StyledTableViewer_sv4xczm, .StyledTableViewer_shatmz, .StyledTableViewer_s1h6y92y) {
+  color: var(--ncm-muted);
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(
+  #page_pc_search_result,
+  #page_pc_artist,
+  #page_pc_recently_play_subpage,
+  #page_pc_daily_recommend,
+  .StyledContent_s1n040op,
+  .StyledContent_s130uktw,
+  .StyledScrollContainer_spyptxt
+) :is(.StyledTableViewer_sv4xczm, .StyledTableViewer_shatmz, .StyledTableViewer_s1h6y92y) .thead {
+  color: var(--ncm-muted);
+  border-color: var(--ncm-line);
+  background-color: var(--ncm-surface);
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(
+  #page_pc_search_result,
+  #page_pc_artist,
+  #page_pc_recently_play_subpage,
+  #page_pc_daily_recommend,
+  .StyledContent_s1n040op,
+  .StyledContent_s130uktw,
+  .StyledScrollContainer_spyptxt
+) :is(.StyledTableViewer_sv4xczm, .StyledTableViewer_shatmz, .StyledTableViewer_s1h6y92y) .tbody .tr:hover {
+  background: var(--ncm-hover);
+  box-shadow: none;
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(
+  #page_pc_search_result,
+  #page_pc_artist,
+  #page_pc_recently_play_subpage,
+  #page_pc_daily_recommend,
+  .StyledContent_s1n040op,
+  .StyledContent_s130uktw,
+  .StyledScrollContainer_spyptxt
+) :is(.StyledTableViewer_sv4xczm, .StyledTableViewer_shatmz, .StyledTableViewer_s1h6y92y) .tbody .tr.selected {
+  background: var(--ncm-selected);
+  box-shadow: none;
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(
+  .StyledContent_s1n040op,
+  .StyledContent_s130uktw,
+  .StyledScrollContainer_spyptxt,
+  #page_pc_search_result,
+  #page_pc_artist,
+  #page_pc_recently_play_subpage,
+  #page_pc_daily_recommend
+) :is(.StyledTableViewer_sv4xczm, .StyledTableViewer_shatmz, .StyledTableViewer_s1h6y92y) :is(.title-playing, .sub-title-playing) {
+  color: var(--colorPrimary1);
+}
+
+/* Native action/input components are scoped to content, never the shell. */
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(
+  .StyledContent_s1n040op,
+  .StyledContent_s130uktw,
+  .StyledScrollContainer_spyptxt,
+  #page_pc_search_result,
+  #page_pc_artist,
+  #page_pc_daily_recommend
+) :is(.cmd-button-surface-sec, .cmd-button-surface-thr) {
+  color: var(--ncm-ink);
+  background-color: var(--ncm-raised);
+  border-color: var(--ncm-line);
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(
+  .StyledContent_s1n040op,
+  .StyledContent_s130uktw,
+  .StyledScrollContainer_spyptxt,
+  #page_pc_search_result,
+  #page_pc_artist,
+  #page_pc_daily_recommend
+) :is(.cmd-button-surface-sec, .cmd-button-surface-thr):not(.cmd-button-disabled):hover {
+  background-color: var(--ncm-hover);
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(
+  [data-testid="tid_playlist_search_input"],
+  [data-testid="tid_clouddisk_track_search_input"],
+  [data-testid="tid_myfavorite_search_input"]
+) {
+  color: var(--ncm-ink);
+  background-color: var(--ncm-raised);
+  border-color: var(--ncm-line);
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(
+  #page_pc_home,
+  #page_pc_search_result,
+  #page_pc_artist,
+  .StyledContent_s1n040op,
+  .StyledContent_s130uktw,
+  .StyledScrollContainer_spyptxt
+) :is(a, button, input, [tabindex]):focus-visible {
+  outline: 2px solid var(--ncm-accent);
+  outline-offset: 2px;
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(
+  #page_pc_home,
+  #page_pc_search_result,
+  #page_pc_artist,
+  .StyledContent_s1n040op,
+  .StyledContent_s130uktw,
+  .StyledScrollContainer_spyptxt
+) :is(.cmd-empty-title, .cmd-empty-description) {
+  color: var(--ncm-muted);
+}
+
+@media (max-width: 980px) {
+  html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(
+    .StyledCommon_s1pv4hmr,
+    .StyledCommon_s1evt1m3,
+    .StyledCommon_s1uck782
+  ) .info {
+    margin-left: 20px;
+  }
+}
+/* Album-first page composition. These boundaries are outside virtual viewers;
+   measured rows and native carousel column calculations retain their geometry. */
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(#page_pc_home, #page_pc_choice, #page_pc_voice) {
+  width: 100%;
+  max-width: var(--ncm-content-width);
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+html[data-ncm-skin] #page_pc_home > :is(.gridWrapperCls_g90gl5l, .gridWrapperCls_gehgh2b, .gridWrapperCls_g9ql74) {
+  padding-top: 12px;
+  padding-bottom: 32px;
+  row-gap: 8px;
+}
+
+/* The first set is a listening stage. Every tile remains real cover artwork. */
+html[data-ncm-skin] #page_pc_home > :is(.gridWrapperCls_g90gl5l, .gridWrapperCls_gehgh2b, .gridWrapperCls_g9ql74) > div:first-child {
+  --ncm-ink: #eef4ff;
+  --ncm-muted: #bacbe0;
+  --colorBlack1: #eef4ff;
+  --colorBlack2: #eef4ff;
+  --colorBlack3: #d4e0f0;
+  --colorBlack4: #bacbe0;
+  --colorBlack5: #bacbe0;
+  --colorBlack7: #a6bddb;
+  padding: 24px 26px 8px;
+  background: rgba(22, 35, 56, .62);
+  border-radius: 16px;
+  box-sizing: border-box;
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] #page_pc_home .block-title {
+  margin-top: 32px;
+  margin-bottom: 16px;
+  min-height: 32px;
+  color: var(--ncm-ink);
+}
+
+html[data-ncm-skin] #page_pc_home .block-title .cmd-typography,
+html[data-ncm-skin] #page_pc_home [data-testid="tid_homepage_titlelink_recent"],
+html[data-ncm-skin] #page_pc_choice :is([data-testid="tid_choice_latestmusic_title"], [data-testid="tid_choice_official_playlist_title"]) {
+  font-size: 23px;
+  line-height: 1.4;
+  font-weight: 700;
+  letter-spacing: -.025em;
+}
+
+html[data-ncm-skin] #page_pc_home .block-title :is(.btn-play, .btn-refresh) {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(#page_pc_home, #page_pc_choice, #page_pc_voice) :is(
+  [data-testid="tid_playlist_card_wrapper"],
+  [data-testid="tid_cell_pc_daily_recommend_card"]
+) {
+  border-radius: 12px;
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(#page_pc_home, #page_pc_choice, #page_pc_voice) [data-testid="tid_playlist_card_wrapper"] :is(.playlist-card, .cover-wrapper, .cover-img),
+html[data-ncm-skin] #page_pc_home [data-testid="tid_cell_pc_daily_recommend_card"] .daily-recommend-card {
+  border-radius: 12px;
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(#page_pc_home, #page_pc_choice, #page_pc_voice) [data-testid="tid_playlist_card_wrapper"] .footer .name {
+  /* Each card variant sizes its caption for its own line height. */
+  font-weight: 600;
+}
+
+html[data-ncm-skin] #page_pc_home [data-testid="tid_homepage_recent_listen"] {
+  margin-top: 12px;
+  padding-top: 4px;
+  box-shadow: inset 0 1px var(--ncm-line);
+}
+
+/* Discovery and library navigation read as a compact toolbar below the title. */
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(
+  #page_pc_choice, #page_pc_voice, #page_pc_search_result, #page_pc_artist,
+  #page_pc_my_collect, #page_pc_local_resource, #page_pc_downloaded,
+  #page_pc_mine_cloud_storage, .StyledContent_s1n040op, .StyledContent_s130uktw, .Warpper_wsg8vfh
+) .cmd-tabs-bar {
+  margin-bottom: 22px;
+  border-bottom: 1px solid var(--ncm-line);
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(
+  #page_pc_choice, #page_pc_voice, #page_pc_search_result, #page_pc_artist,
+  #page_pc_my_collect, #page_pc_local_resource, #page_pc_downloaded,
+  #page_pc_mine_cloud_storage, .StyledContent_s1n040op, .StyledContent_s130uktw, .Warpper_wsg8vfh
+) .cmd-tabs-tab {
+  color: var(--ncm-muted);
+  font-size: 15px;
+  font-weight: 500;
+  padding-bottom: 16px;
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(
+  #page_pc_choice, #page_pc_voice, #page_pc_search_result, #page_pc_artist,
+  #page_pc_my_collect, #page_pc_local_resource, #page_pc_downloaded,
+  #page_pc_mine_cloud_storage, .StyledContent_s1n040op, .StyledContent_s130uktw, .Warpper_wsg8vfh
+) .cmd-tabs-tab-active {
+  color: var(--ncm-ink);
+  font-weight: 700;
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(#page_pc_choice, #page_pc_voice) > .cmd-tabs .cmd-tabs-tab {
+  font-size: 19px;
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(#page_pc_choice, #page_pc_voice) > .cmd-tabs .cmd-tabs-tab-active {
+  font-size: 23px;
+}
+
+/* ScrollContainer renders these route tabs in a sibling Header, outside its
+   scrolling viewport. Keep the top inset there so it survives scrolling and
+   native RemoveScroll, without changing virtual row offsets or bottom space. */
+html[data-ncm-skin] #page_pc_music_rcmd .Header_h9f37o > .btn_pc_music_rcmd_subtab,
+html[data-ncm-skin] .Header_h9f37o > [data-testid="tid_latestsongs_tabs"],
+html[data-ncm-skin] .Header_h9f37o .TabsCss_trb5qmq,
+html[data-ncm-skin] .Header_h9f37o .TabsCss_tfywedy,
+html[data-ncm-skin] .Header_h9f37o > .Header_hs3wk8v,
+html[data-ncm-skin] .Header_h9f37o > .Header_h19vac5o {
+  padding-top: 24px;
+}
+
+/* Choice's category buttons scroll below the fixed primary navigation. */
+html[data-ncm-skin] #page_pc_music_rcmd .Header_h9f37o > .btn_pc_music_rcmd_subtab {
+  margin-bottom: 12px;
+}
+html[data-ncm-skin] #page_pc_music_rcmd_list > .tags-btns {
+  padding-top: 12px;
+}
+
+/* New songs/albums already provide 12px above their category controls. */
+html[data-ncm-skin] .Header_h9f37o > [data-testid="tid_latestsongs_tabs"] {
+  margin-bottom: 12px;
+}
+
+/* Native detail covers and commands sit on a single spacious masthead. */
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(.StyledCommon_s1pv4hmr, .StyledCommon_s1evt1m3, .StyledCommon_s1uck782) {
+  padding: 16px 0 24px;
+  margin-top: 0;
+  margin-bottom: 16px;
+  border-radius: 0;
+  background: transparent;
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(.StyledCommon_s1pv4hmr, .StyledCommon_s1evt1m3, .StyledCommon_s1uck782) .info {
+  flex: 1 1 0;
+  min-width: 0;
+  height: auto;
+  margin-left: 32px;
+  overflow: visible;
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(
+  [data-testid="tid_playlist_title"], [data-testid="tid_artist_header"] .title,
+  .StyledCommon_s1pv4hmr .info .title, .StyledCommon_s1evt1m3 .info .title,
+  [data-testid="tid_userdetail_header_title"]
+) {
+  font-size: clamp(25px, 2.2vw, 34px);
+  line-height: 1.32;
+  font-weight: 700;
+  letter-spacing: -.03em;
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(.StyledCommon_s1pv4hmr, .StyledCommon_s1evt1m3, .StyledCommon_s1uck782) .description {
+  max-width: 72ch;
+  margin-top: 12px;
+  line-height: 1.7;
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(.StyledCommon_s1pv4hmr, .StyledCommon_s1evt1m3, .StyledCommon_s1uck782) .btns {
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  align-items: center;
+  row-gap: 8px;
+  padding-top: 16px;
+}
+
+/* The native compact playlist/album header fixes .info at 168px. Larger
+   headings need this column to grow so commands and focus rings stay whole. */
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(.StyledCommon_s1pv4hmr, .StyledCommon_s1evt1m3, .StyledCommon_s1uck782) :is(.btns, .actions) > * {
+  flex-shrink: 0;
+}
+
+html[data-ncm-skin] #page_pc_search_result [data-testid="tid_searchresults_tip"] {
+  padding-top: 18px;
+  padding-bottom: 22px;
+  color: var(--ncm-muted);
+}
+
+html[data-ncm-skin] #page_pc_search_result [data-testid="tid_searchresults_tip"] .keyword {
+  font-size: 32px;
+  line-height: 1.4;
+  font-weight: 700;
+  letter-spacing: -.03em;
+}
+
+/* Only paint the song table: native offsets, row heights and hit areas survive. */
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(.StyledTableViewer_sv4xczm, .StyledTableViewer_shatmz, .StyledTableViewer_s1h6y92y) {
+  color: var(--ncm-muted);
+  background: transparent;
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(.StyledTableViewer_sv4xczm, .StyledTableViewer_shatmz, .StyledTableViewer_s1h6y92y) .thead {
+  background: var(--ncm-wash);
+  color: var(--ncm-muted);
+  border-radius: 8px;
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(.StyledTableViewer_sv4xczm, .StyledTableViewer_shatmz, .StyledTableViewer_s1h6y92y) .tbody .tr {
+  border-radius: 8px;
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(.cmd-button-surface-sec, .cmd-button-surface-thr) {
+  border-radius: 9px;
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(
+  [data-testid="tid_playlist_search_input"], [data-testid="tid_clouddisk_track_search_input"], [data-testid="tid_myfavorite_search_input"]
+) {
+  border-radius: 9px;
+}
+
+@media (max-width: 1100px) {
+  html[data-ncm-skin] #page_pc_home > :is(.gridWrapperCls_g90gl5l, .gridWrapperCls_gehgh2b, .gridWrapperCls_g9ql74) > div:first-child {
+    padding: 18px 20px 4px;
+  }
+  html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(.StyledCommon_s1pv4hmr, .StyledCommon_s1evt1m3, .StyledCommon_s1uck782) {
+    padding: 16px 0 20px;
+  }
+  html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(.StyledCommon_s1pv4hmr, .StyledCommon_s1evt1m3, .StyledCommon_s1uck782) .info {
+    margin-left: 24px;
+  }
+}
+
+/* The cover display and mastheads retain artwork behind the frosted sheet.
+   Pseudo layers never receive input; focus rings can extend outside headers. */
+html[data-ncm-skin] #page_pc_home > :is(.gridWrapperCls_g90gl5l, .gridWrapperCls_gehgh2b, .gridWrapperCls_g9ql74) > div:first-child {
+  position: relative;
+  isolation: isolate;
+  backdrop-filter: blur(26px) saturate(1.4);
+  -webkit-backdrop-filter: blur(26px) saturate(1.4);
+  box-shadow: inset 0 1px rgba(236, 246, 255, .26), 0 12px 32px rgba(9, 20, 38, .10);
+}
+html[data-ncm-skin] #page_pc_home > :is(.gridWrapperCls_g90gl5l, .gridWrapperCls_gehgh2b, .gridWrapperCls_g9ql74) > div:first-child::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: inherit;
+  background-image: var(--ncm-artwork-image, none);
+  background-position: center 45%;
+  background-size: cover;
+  filter: blur(22px) saturate(1.15) brightness(.72);
+  opacity: .42;
+  clip-path: inset(0 round 16px);
+  pointer-events: none;
+}
+
+/* Details are artwork and information on the shared canvas, not a second
+   frosted card. No filtered ancestor can capture native fixed menus here. */
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(.StyledCommon_s1pv4hmr, .StyledCommon_s1evt1m3, .StyledCommon_s1uck782) {
+  background: transparent !important;
+  isolation: auto;
+  border-radius: 0;
+  box-shadow: none;
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(.StyledCommon_s1pv4hmr, .StyledCommon_s1evt1m3, .StyledCommon_s1uck782)::before {
+  content: none;
+}
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(.StyledTableViewer_sv4xczm, .StyledTableViewer_shatmz, .StyledTableViewer_s1h6y92y) :is(.thead, .thead .tr, .thead .th) {
+  background: transparent !important;
+  border-radius: 0;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}

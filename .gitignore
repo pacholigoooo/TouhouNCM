@@ -1,0 +1,11 @@
+/dist/
+/node_modules/
+/.tmp/
+/assets/characters/*
+!/assets/characters/manifest.json
+!/assets/characters/README.md
+*.user
+*.suo
+*.log
+.env
+.env.*

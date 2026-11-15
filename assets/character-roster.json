@@ -1,0 +1,1836 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-14",
+  "scope": "整数作TH01–TH20及小数点作中的具名角色，包括可操控、Boss、对话、结局、具名伴随角色与已确认的背景人物；同一角色的旧作与新作形态合并；另加秘封俱乐部宇佐见莲子和玛艾露贝莉·赫恩。",
+  "sourceUrls": [
+    "https://thwiki.cc/官方角色顺序",
+    "https://thwiki.cc/官方角色列表",
+    "https://thwiki.cc/东方锦上京",
+    "https://thwiki.cc/官方角色列表/纯文字列表"
+  ],
+  "excluded": [
+    {
+      "character": "云山",
+      "reason": "用户明确排除"
+    },
+    {
+      "character": "稗田阿求/奥野田美宵/宫出口瑞灵/绵月依姬/铃仙二号",
+      "reason": "未确认在本范围官方游戏中实际登场，不因出版物独立加入"
+    },
+    {
+      "character": "冴月麟",
+      "reason": "未实装角色，未在游戏实际登场"
+    },
+    {
+      "character": "大鲶鱼",
+      "reason": "用户明确排除"
+    },
+    {
+      "character": "咪咪号",
+      "reason": "用户明确排除"
+    }
+  ],
+  "boundaryReview": [
+    "玄爷、留琴、玛○奇、苏格拉底依具名旧作伴随或结局角色收录",
+    "森近霖之助、本居小铃依心绮楼实际背景角色收录",
+    "非想天则依用户确认收录具名巨大人偶",
+    "不泛收无名道中、路人、设定中仅被提及者、群体名称以及附属于角色的普通人偶或战车；本清单不是对所有画面物件的穷举"
+  ],
+  "existingCount": 78,
+  "addedCount": 84,
+  "totalCount": 162,
+  "existingCharacters": [
+    "露米娅",
+    "琪露诺",
+    "红美铃",
+    "帕秋莉·诺蕾姬",
+    "十六夜咲夜",
+    "蕾米莉亚·斯卡蕾特",
+    "芙兰朵露·斯卡蕾特",
+    "蕾蒂·霍瓦特洛克",
+    "橙",
+    "爱丽丝·玛格特洛依德",
+    "露娜萨·普莉兹姆利巴",
+    "梅露兰·普莉兹姆利巴",
+    "莉莉卡·普莉兹姆利巴",
+    "魂魄妖梦",
+    "西行寺幽幽子",
+    "八云蓝",
+    "八云紫",
+    "莉格露·奈特巴格",
+    "米斯蒂娅·萝蕾拉",
+    "上白泽慧音",
+    "博丽灵梦",
+    "雾雨魔理沙",
+    "铃仙·优昙华院·因幡",
+    "八意永琳",
+    "蓬莱山辉夜",
+    "藤原妹红",
+    "娜兹玲",
+    "多多良小伞",
+    "云居一轮",
+    "村纱水蜜",
+    "寅丸星",
+    "圣白莲",
+    "封兽鵺",
+    "射命丸文",
+    "霍青娥",
+    "四季映姬·夜摩仙那度",
+    "风见幽香",
+    "桑尼米尔克",
+    "露娜切露德",
+    "河城荷取",
+    "东风谷早苗",
+    "八坂神奈子",
+    "古明地觉",
+    "火焰猫燐",
+    "灵乌路空",
+    "幽谷响子",
+    "物部布都",
+    "今泉影狼",
+    "九十九弁弁",
+    "九十九八桥",
+    "鬼人正邪",
+    "斯塔萨菲雅",
+    "神玉",
+    "魅魔",
+    "菊理",
+    "矜羯罗",
+    "幽幻魔眼",
+    "依莉斯",
+    "萨丽爱尔",
+    "里香",
+    "明罗",
+    "爱莲",
+    "小兔姬",
+    "卡娜·安娜贝拉尔",
+    "朝仓理香子",
+    "北白河千百合",
+    "冈崎梦美",
+    "奥莲姬",
+    "胡桃",
+    "艾丽",
+    "梦月",
+    "幻月",
+    "萨拉",
+    "露易兹",
+    "雪",
+    "舞",
+    "梦子",
+    "神绮"
+  ],
+  "additions": [
+    {
+      "character": "玄爷",
+      "work": "东方封魔录",
+      "gameId": "TH02",
+      "sourceUrl": "https://thwiki.cc/玄爷"
+    },
+    {
+      "character": "留琴",
+      "work": "东方梦时空",
+      "gameId": "TH03",
+      "sourceUrl": "https://thwiki.cc/留琴"
+    },
+    {
+      "character": "玛○奇",
+      "work": "东方梦时空",
+      "gameId": "TH03",
+      "sourceUrl": "https://thwiki.cc/玛○奇"
+    },
+    {
+      "character": "苏格拉底",
+      "work": "东方梦时空",
+      "gameId": "TH03",
+      "sourceUrl": "https://thwiki.cc/苏格拉底"
+    },
+    {
+      "character": "大妖精",
+      "work": "东方红魔乡",
+      "gameId": "TH06",
+      "sourceUrl": "https://thwiki.cc/大妖精"
+    },
+    {
+      "character": "小恶魔",
+      "work": "东方红魔乡",
+      "gameId": "TH06",
+      "sourceUrl": "https://thwiki.cc/小恶魔"
+    },
+    {
+      "character": "莉莉霍瓦特",
+      "work": "东方妖妖梦",
+      "gameId": "TH07",
+      "sourceUrl": "https://thwiki.cc/莉莉霍瓦特"
+    },
+    {
+      "character": "伊吹萃香",
+      "work": "东方萃梦想",
+      "gameId": "TH07.5",
+      "sourceUrl": "https://thwiki.cc/伊吹萃香"
+    },
+    {
+      "character": "因幡帝",
+      "work": "东方永夜抄",
+      "gameId": "TH08",
+      "sourceUrl": "https://thwiki.cc/因幡帝"
+    },
+    {
+      "character": "梅蒂欣·梅兰可莉",
+      "work": "东方花映塚",
+      "gameId": "TH09",
+      "sourceUrl": "https://thwiki.cc/梅蒂欣·梅兰可莉"
+    },
+    {
+      "character": "小野塚小町",
+      "work": "东方花映塚",
+      "gameId": "TH09",
+      "sourceUrl": "https://thwiki.cc/小野塚小町"
+    },
+    {
+      "character": "秋静叶",
+      "work": "东方风神录",
+      "gameId": "TH10",
+      "sourceUrl": "https://thwiki.cc/秋静叶"
+    },
+    {
+      "character": "秋穰子",
+      "work": "东方风神录",
+      "gameId": "TH10",
+      "sourceUrl": "https://thwiki.cc/秋穰子"
+    },
+    {
+      "character": "键山雏",
+      "work": "东方风神录",
+      "gameId": "TH10",
+      "sourceUrl": "https://thwiki.cc/键山雏"
+    },
+    {
+      "character": "犬走椛",
+      "work": "东方风神录",
+      "gameId": "TH10",
+      "sourceUrl": "https://thwiki.cc/犬走椛"
+    },
+    {
+      "character": "洩矢诹访子",
+      "work": "东方风神录",
+      "gameId": "TH10",
+      "sourceUrl": "https://thwiki.cc/洩矢诹访子"
+    },
+    {
+      "character": "永江衣玖",
+      "work": "东方绯想天",
+      "gameId": "TH10.5",
+      "sourceUrl": "https://thwiki.cc/永江衣玖"
+    },
+    {
+      "character": "比那名居天子",
+      "work": "东方绯想天",
+      "gameId": "TH10.5",
+      "sourceUrl": "https://thwiki.cc/比那名居天子"
+    },
+    {
+      "character": "琪斯美",
+      "work": "东方地灵殿",
+      "gameId": "TH11",
+      "sourceUrl": "https://thwiki.cc/琪斯美"
+    },
+    {
+      "character": "黑谷山女",
+      "work": "东方地灵殿",
+      "gameId": "TH11",
+      "sourceUrl": "https://thwiki.cc/黑谷山女"
+    },
+    {
+      "character": "水桥帕露西",
+      "work": "东方地灵殿",
+      "gameId": "TH11",
+      "sourceUrl": "https://thwiki.cc/水桥帕露西"
+    },
+    {
+      "character": "星熊勇仪",
+      "work": "东方地灵殿",
+      "gameId": "TH11",
+      "sourceUrl": "https://thwiki.cc/星熊勇仪"
+    },
+    {
+      "character": "古明地恋",
+      "work": "东方地灵殿",
+      "gameId": "TH11",
+      "sourceUrl": "https://thwiki.cc/古明地恋"
+    },
+    {
+      "character": "非想天则",
+      "work": "东方非想天则",
+      "gameId": "TH12.3",
+      "sourceUrl": "https://thwiki.cc/非想天则"
+    },
+    {
+      "character": "姬海棠果",
+      "work": "东方文花帖DS",
+      "gameId": "TH12.5",
+      "sourceUrl": "https://thwiki.cc/姬海棠果"
+    },
+    {
+      "character": "宫古芳香",
+      "work": "东方神灵庙",
+      "gameId": "TH13",
+      "sourceUrl": "https://thwiki.cc/宫古芳香"
+    },
+    {
+      "character": "苏我屠自古",
+      "work": "东方神灵庙",
+      "gameId": "TH13",
+      "sourceUrl": "https://thwiki.cc/苏我屠自古"
+    },
+    {
+      "character": "丰聪耳神子",
+      "work": "东方神灵庙",
+      "gameId": "TH13",
+      "sourceUrl": "https://thwiki.cc/丰聪耳神子"
+    },
+    {
+      "character": "二岩猯藏",
+      "work": "东方神灵庙",
+      "gameId": "TH13",
+      "sourceUrl": "https://thwiki.cc/二岩猯藏"
+    },
+    {
+      "character": "秦心",
+      "work": "东方心绮楼",
+      "gameId": "TH13.5",
+      "sourceUrl": "https://thwiki.cc/秦心"
+    },
+    {
+      "character": "森近霖之助",
+      "work": "东方心绮楼",
+      "gameId": "TH13.5",
+      "sourceUrl": "https://thwiki.cc/森近霖之助"
+    },
+    {
+      "character": "本居小铃",
+      "work": "东方心绮楼",
+      "gameId": "TH13.5",
+      "sourceUrl": "https://thwiki.cc/本居小铃"
+    },
+    {
+      "character": "若鹭姬",
+      "work": "东方辉针城",
+      "gameId": "TH14",
+      "sourceUrl": "https://thwiki.cc/若鹭姬"
+    },
+    {
+      "character": "赤蛮奇",
+      "work": "东方辉针城",
+      "gameId": "TH14",
+      "sourceUrl": "https://thwiki.cc/赤蛮奇"
+    },
+    {
+      "character": "少名针妙丸",
+      "work": "东方辉针城",
+      "gameId": "TH14",
+      "sourceUrl": "https://thwiki.cc/少名针妙丸"
+    },
+    {
+      "character": "堀川雷鼓",
+      "work": "东方辉针城",
+      "gameId": "TH14",
+      "sourceUrl": "https://thwiki.cc/堀川雷鼓"
+    },
+    {
+      "character": "茨木华扇",
+      "work": "东方深秘录",
+      "gameId": "TH14.5",
+      "sourceUrl": "https://thwiki.cc/茨木华扇"
+    },
+    {
+      "character": "宇佐见堇子",
+      "work": "东方深秘录",
+      "gameId": "TH14.5",
+      "sourceUrl": "https://thwiki.cc/宇佐见堇子"
+    },
+    {
+      "character": "清兰",
+      "work": "东方绀珠传",
+      "gameId": "TH15",
+      "sourceUrl": "https://thwiki.cc/清兰"
+    },
+    {
+      "character": "铃瑚",
+      "work": "东方绀珠传",
+      "gameId": "TH15",
+      "sourceUrl": "https://thwiki.cc/铃瑚"
+    },
+    {
+      "character": "哆来咪·苏伊特",
+      "work": "东方绀珠传",
+      "gameId": "TH15",
+      "sourceUrl": "https://thwiki.cc/哆来咪·苏伊特"
+    },
+    {
+      "character": "稀神探女",
+      "work": "东方绀珠传",
+      "gameId": "TH15",
+      "sourceUrl": "https://thwiki.cc/稀神探女"
+    },
+    {
+      "character": "克劳恩皮丝",
+      "work": "东方绀珠传",
+      "gameId": "TH15",
+      "sourceUrl": "https://thwiki.cc/克劳恩皮丝"
+    },
+    {
+      "character": "纯狐",
+      "work": "东方绀珠传",
+      "gameId": "TH15",
+      "sourceUrl": "https://thwiki.cc/纯狐"
+    },
+    {
+      "character": "赫卡提亚·拉碧斯拉祖利",
+      "work": "东方绀珠传",
+      "gameId": "TH15",
+      "sourceUrl": "https://thwiki.cc/赫卡提亚·拉碧斯拉祖利"
+    },
+    {
+      "character": "依神女苑",
+      "work": "东方凭依华",
+      "gameId": "TH15.5",
+      "sourceUrl": "https://thwiki.cc/依神女苑"
+    },
+    {
+      "character": "依神紫苑",
+      "work": "东方凭依华",
+      "gameId": "TH15.5",
+      "sourceUrl": "https://thwiki.cc/依神紫苑"
+    },
+    {
+      "character": "爱塔妮缇拉尔瓦",
+      "work": "东方天空璋",
+      "gameId": "TH16",
+      "sourceUrl": "https://thwiki.cc/爱塔妮缇拉尔瓦"
+    },
+    {
+      "character": "坂田合欢",
+      "work": "东方天空璋",
+      "gameId": "TH16",
+      "sourceUrl": "https://thwiki.cc/坂田合欢"
+    },
+    {
+      "character": "高丽野阿吽",
+      "work": "东方天空璋",
+      "gameId": "TH16",
+      "sourceUrl": "https://thwiki.cc/高丽野阿吽"
+    },
+    {
+      "character": "矢田寺成美",
+      "work": "东方天空璋",
+      "gameId": "TH16",
+      "sourceUrl": "https://thwiki.cc/矢田寺成美"
+    },
+    {
+      "character": "尔子田里乃",
+      "work": "东方天空璋",
+      "gameId": "TH16",
+      "sourceUrl": "https://thwiki.cc/尔子田里乃"
+    },
+    {
+      "character": "丁礼田舞",
+      "work": "东方天空璋",
+      "gameId": "TH16",
+      "sourceUrl": "https://thwiki.cc/丁礼田舞"
+    },
+    {
+      "character": "摩多罗隐岐奈",
+      "work": "东方天空璋",
+      "gameId": "TH16",
+      "sourceUrl": "https://thwiki.cc/摩多罗隐岐奈"
+    },
+    {
+      "character": "戎璎花",
+      "work": "东方鬼形兽",
+      "gameId": "TH17",
+      "sourceUrl": "https://thwiki.cc/戎璎花"
+    },
+    {
+      "character": "牛崎润美",
+      "work": "东方鬼形兽",
+      "gameId": "TH17",
+      "sourceUrl": "https://thwiki.cc/牛崎润美"
+    },
+    {
+      "character": "庭渡久侘歌",
+      "work": "东方鬼形兽",
+      "gameId": "TH17",
+      "sourceUrl": "https://thwiki.cc/庭渡久侘歌"
+    },
+    {
+      "character": "吉吊八千慧",
+      "work": "东方鬼形兽",
+      "gameId": "TH17",
+      "sourceUrl": "https://thwiki.cc/吉吊八千慧"
+    },
+    {
+      "character": "杖刀偶磨弓",
+      "work": "东方鬼形兽",
+      "gameId": "TH17",
+      "sourceUrl": "https://thwiki.cc/杖刀偶磨弓"
+    },
+    {
+      "character": "埴安神袿姬",
+      "work": "东方鬼形兽",
+      "gameId": "TH17",
+      "sourceUrl": "https://thwiki.cc/埴安神袿姬"
+    },
+    {
+      "character": "骊驹早鬼",
+      "work": "东方鬼形兽",
+      "gameId": "TH17",
+      "sourceUrl": "https://thwiki.cc/骊驹早鬼"
+    },
+    {
+      "character": "饕餮尤魔",
+      "work": "东方刚欲异闻",
+      "gameId": "TH17.5",
+      "sourceUrl": "https://thwiki.cc/饕餮尤魔"
+    },
+    {
+      "character": "豪德寺三花",
+      "work": "东方虹龙洞",
+      "gameId": "TH18",
+      "sourceUrl": "https://thwiki.cc/豪德寺三花"
+    },
+    {
+      "character": "山城高岭",
+      "work": "东方虹龙洞",
+      "gameId": "TH18",
+      "sourceUrl": "https://thwiki.cc/山城高岭"
+    },
+    {
+      "character": "驹草山如",
+      "work": "东方虹龙洞",
+      "gameId": "TH18",
+      "sourceUrl": "https://thwiki.cc/驹草山如"
+    },
+    {
+      "character": "玉造魅须丸",
+      "work": "东方虹龙洞",
+      "gameId": "TH18",
+      "sourceUrl": "https://thwiki.cc/玉造魅须丸"
+    },
+    {
+      "character": "菅牧典",
+      "work": "东方虹龙洞",
+      "gameId": "TH18",
+      "sourceUrl": "https://thwiki.cc/菅牧典"
+    },
+    {
+      "character": "饭纲丸龙",
+      "work": "东方虹龙洞",
+      "gameId": "TH18",
+      "sourceUrl": "https://thwiki.cc/饭纲丸龙"
+    },
+    {
+      "character": "天弓千亦",
+      "work": "东方虹龙洞",
+      "gameId": "TH18",
+      "sourceUrl": "https://thwiki.cc/天弓千亦"
+    },
+    {
+      "character": "姬虫百百世",
+      "work": "东方虹龙洞",
+      "gameId": "TH18",
+      "sourceUrl": "https://thwiki.cc/姬虫百百世"
+    },
+    {
+      "character": "孙美天",
+      "work": "东方兽王园",
+      "gameId": "TH19",
+      "sourceUrl": "https://thwiki.cc/孙美天"
+    },
+    {
+      "character": "三头慧之子",
+      "work": "东方兽王园",
+      "gameId": "TH19",
+      "sourceUrl": "https://thwiki.cc/三头慧之子"
+    },
+    {
+      "character": "天火人血枪",
+      "work": "东方兽王园",
+      "gameId": "TH19",
+      "sourceUrl": "https://thwiki.cc/天火人血枪"
+    },
+    {
+      "character": "豫母都日狭美",
+      "work": "东方兽王园",
+      "gameId": "TH19",
+      "sourceUrl": "https://thwiki.cc/豫母都日狭美"
+    },
+    {
+      "character": "日白残无",
+      "work": "东方兽王园",
+      "gameId": "TH19",
+      "sourceUrl": "https://thwiki.cc/日白残无"
+    },
+    {
+      "character": "尘塚姥芽",
+      "work": "东方锦上京",
+      "gameId": "TH20",
+      "sourceUrl": "https://thwiki.cc/尘塚姥芽"
+    },
+    {
+      "character": "封兽魑魅",
+      "work": "东方锦上京",
+      "gameId": "TH20",
+      "sourceUrl": "https://thwiki.cc/封兽魑魅"
+    },
+    {
+      "character": "道神驯子",
+      "work": "东方锦上京",
+      "gameId": "TH20",
+      "sourceUrl": "https://thwiki.cc/道神驯子"
+    },
+    {
+      "character": "维缦·浅间",
+      "work": "东方锦上京",
+      "gameId": "TH20",
+      "sourceUrl": "https://thwiki.cc/维缦·浅间"
+    },
+    {
+      "character": "绵月丰姬",
+      "work": "东方锦上京",
+      "gameId": "TH20",
+      "sourceUrl": "https://thwiki.cc/绵月丰姬"
+    },
+    {
+      "character": "磐永阿梨夜",
+      "work": "东方锦上京",
+      "gameId": "TH20",
+      "sourceUrl": "https://thwiki.cc/磐永阿梨夜"
+    },
+    {
+      "character": "渡里贝子",
+      "work": "东方锦上京",
+      "gameId": "TH20",
+      "sourceUrl": "https://thwiki.cc/渡里贝子"
+    },
+    {
+      "character": "宇佐见莲子",
+      "work": "秘封俱乐部",
+      "gameId": "music-cd",
+      "sourceUrl": "https://thwiki.cc/宇佐见莲子"
+    },
+    {
+      "character": "玛艾露贝莉·赫恩",
+      "work": "秘封俱乐部",
+      "gameId": "music-cd",
+      "sourceUrl": "https://thwiki.cc/玛艾露贝莉·赫恩"
+    }
+  ],
+  "characters": [
+    "露米娅",
+    "琪露诺",
+    "红美铃",
+    "帕秋莉·诺蕾姬",
+    "十六夜咲夜",
+    "蕾米莉亚·斯卡蕾特",
+    "芙兰朵露·斯卡蕾特",
+    "蕾蒂·霍瓦特洛克",
+    "橙",
+    "爱丽丝·玛格特洛依德",
+    "露娜萨·普莉兹姆利巴",
+    "梅露兰·普莉兹姆利巴",
+    "莉莉卡·普莉兹姆利巴",
+    "魂魄妖梦",
+    "西行寺幽幽子",
+    "八云蓝",
+    "八云紫",
+    "莉格露·奈特巴格",
+    "米斯蒂娅·萝蕾拉",
+    "上白泽慧音",
+    "博丽灵梦",
+    "雾雨魔理沙",
+    "铃仙·优昙华院·因幡",
+    "八意永琳",
+    "蓬莱山辉夜",
+    "藤原妹红",
+    "娜兹玲",
+    "多多良小伞",
+    "云居一轮",
+    "村纱水蜜",
+    "寅丸星",
+    "圣白莲",
+    "封兽鵺",
+    "射命丸文",
+    "霍青娥",
+    "四季映姬·夜摩仙那度",
+    "风见幽香",
+    "桑尼米尔克",
+    "露娜切露德",
+    "河城荷取",
+    "东风谷早苗",
+    "八坂神奈子",
+    "古明地觉",
+    "火焰猫燐",
+    "灵乌路空",
+    "幽谷响子",
+    "物部布都",
+    "今泉影狼",
+    "九十九弁弁",
+    "九十九八桥",
+    "鬼人正邪",
+    "斯塔萨菲雅",
+    "神玉",
+    "魅魔",
+    "菊理",
+    "矜羯罗",
+    "幽幻魔眼",
+    "依莉斯",
+    "萨丽爱尔",
+    "里香",
+    "明罗",
+    "爱莲",
+    "小兔姬",
+    "卡娜·安娜贝拉尔",
+    "朝仓理香子",
+    "北白河千百合",
+    "冈崎梦美",
+    "奥莲姬",
+    "胡桃",
+    "艾丽",
+    "梦月",
+    "幻月",
+    "萨拉",
+    "露易兹",
+    "雪",
+    "舞",
+    "梦子",
+    "神绮",
+    "玄爷",
+    "留琴",
+    "玛○奇",
+    "苏格拉底",
+    "大妖精",
+    "小恶魔",
+    "莉莉霍瓦特",
+    "伊吹萃香",
+    "因幡帝",
+    "梅蒂欣·梅兰可莉",
+    "小野塚小町",
+    "秋静叶",
+    "秋穰子",
+    "键山雏",
+    "犬走椛",
+    "洩矢诹访子",
+    "永江衣玖",
+    "比那名居天子",
+    "琪斯美",
+    "黑谷山女",
+    "水桥帕露西",
+    "星熊勇仪",
+    "古明地恋",
+    "非想天则",
+    "姬海棠果",
+    "宫古芳香",
+    "苏我屠自古",
+    "丰聪耳神子",
+    "二岩猯藏",
+    "秦心",
+    "森近霖之助",
+    "本居小铃",
+    "若鹭姬",
+    "赤蛮奇",
+    "少名针妙丸",
+    "堀川雷鼓",
+    "茨木华扇",
+    "宇佐见堇子",
+    "清兰",
+    "铃瑚",
+    "哆来咪·苏伊特",
+    "稀神探女",
+    "克劳恩皮丝",
+    "纯狐",
+    "赫卡提亚·拉碧斯拉祖利",
+    "依神女苑",
+    "依神紫苑",
+    "爱塔妮缇拉尔瓦",
+    "坂田合欢",
+    "高丽野阿吽",
+    "矢田寺成美",
+    "尔子田里乃",
+    "丁礼田舞",
+    "摩多罗隐岐奈",
+    "戎璎花",
+    "牛崎润美",
+    "庭渡久侘歌",
+    "吉吊八千慧",
+    "杖刀偶磨弓",
+    "埴安神袿姬",
+    "骊驹早鬼",
+    "饕餮尤魔",
+    "豪德寺三花",
+    "山城高岭",
+    "驹草山如",
+    "玉造魅须丸",
+    "菅牧典",
+    "饭纲丸龙",
+    "天弓千亦",
+    "姬虫百百世",
+    "孙美天",
+    "三头慧之子",
+    "天火人血枪",
+    "豫母都日狭美",
+    "日白残无",
+    "尘塚姥芽",
+    "封兽魑魅",
+    "道神驯子",
+    "维缦·浅间",
+    "绵月丰姬",
+    "磐永阿梨夜",
+    "渡里贝子",
+    "宇佐见莲子",
+    "玛艾露贝莉·赫恩"
+  ],
+  "musicAffinityNotice": "8维听感倾向与motifs为趣味匹配策划的听感画像，角色资料独立采用官方设定。",
+  "entries": [
+    {
+      "character": "露米娅",
+      "order": 1,
+      "sourceUrl": "https://thwiki.cc/露米娅"
+    },
+    {
+      "character": "琪露诺",
+      "order": 2,
+      "sourceUrl": "https://thwiki.cc/琪露诺"
+    },
+    {
+      "character": "红美铃",
+      "order": 3,
+      "sourceUrl": "https://thwiki.cc/红美铃"
+    },
+    {
+      "character": "帕秋莉·诺蕾姬",
+      "order": 4,
+      "sourceUrl": "https://thwiki.cc/帕秋莉·诺蕾姬"
+    },
+    {
+      "character": "十六夜咲夜",
+      "order": 5,
+      "sourceUrl": "https://thwiki.cc/十六夜咲夜"
+    },
+    {
+      "character": "蕾米莉亚·斯卡蕾特",
+      "order": 6,
+      "sourceUrl": "https://thwiki.cc/蕾米莉亚·斯卡蕾特"
+    },
+    {
+      "character": "芙兰朵露·斯卡蕾特",
+      "order": 7,
+      "sourceUrl": "https://thwiki.cc/芙兰朵露·斯卡蕾特"
+    },
+    {
+      "character": "蕾蒂·霍瓦特洛克",
+      "order": 8,
+      "sourceUrl": "https://thwiki.cc/蕾蒂·霍瓦特洛克"
+    },
+    {
+      "character": "橙",
+      "order": 9,
+      "sourceUrl": "https://thwiki.cc/橙"
+    },
+    {
+      "character": "爱丽丝·玛格特洛依德",
+      "order": 10,
+      "sourceUrl": "https://thwiki.cc/爱丽丝·玛格特洛依德"
+    },
+    {
+      "character": "露娜萨·普莉兹姆利巴",
+      "order": 11,
+      "sourceUrl": "https://thwiki.cc/露娜萨·普莉兹姆利巴"
+    },
+    {
+      "character": "梅露兰·普莉兹姆利巴",
+      "order": 12,
+      "sourceUrl": "https://thwiki.cc/梅露兰·普莉兹姆利巴"
+    },
+    {
+      "character": "莉莉卡·普莉兹姆利巴",
+      "order": 13,
+      "sourceUrl": "https://thwiki.cc/莉莉卡·普莉兹姆利巴"
+    },
+    {
+      "character": "魂魄妖梦",
+      "order": 14,
+      "sourceUrl": "https://thwiki.cc/魂魄妖梦"
+    },
+    {
+      "character": "西行寺幽幽子",
+      "order": 15,
+      "sourceUrl": "https://thwiki.cc/西行寺幽幽子"
+    },
+    {
+      "character": "八云蓝",
+      "order": 16,
+      "sourceUrl": "https://thwiki.cc/八云蓝"
+    },
+    {
+      "character": "八云紫",
+      "order": 17,
+      "sourceUrl": "https://thwiki.cc/八云紫"
+    },
+    {
+      "character": "莉格露·奈特巴格",
+      "order": 18,
+      "sourceUrl": "https://thwiki.cc/莉格露·奈特巴格"
+    },
+    {
+      "character": "米斯蒂娅·萝蕾拉",
+      "order": 19,
+      "sourceUrl": "https://thwiki.cc/米斯蒂娅·萝蕾拉"
+    },
+    {
+      "character": "上白泽慧音",
+      "order": 20,
+      "sourceUrl": "https://thwiki.cc/上白泽慧音"
+    },
+    {
+      "character": "博丽灵梦",
+      "order": 21,
+      "sourceUrl": "https://thwiki.cc/博丽灵梦"
+    },
+    {
+      "character": "雾雨魔理沙",
+      "order": 22,
+      "sourceUrl": "https://thwiki.cc/雾雨魔理沙"
+    },
+    {
+      "character": "铃仙·优昙华院·因幡",
+      "order": 23,
+      "sourceUrl": "https://thwiki.cc/铃仙·优昙华院·因幡"
+    },
+    {
+      "character": "八意永琳",
+      "order": 24,
+      "sourceUrl": "https://thwiki.cc/八意永琳"
+    },
+    {
+      "character": "蓬莱山辉夜",
+      "order": 25,
+      "sourceUrl": "https://thwiki.cc/蓬莱山辉夜"
+    },
+    {
+      "character": "藤原妹红",
+      "order": 26,
+      "sourceUrl": "https://thwiki.cc/藤原妹红"
+    },
+    {
+      "character": "娜兹玲",
+      "order": 27,
+      "sourceUrl": "https://thwiki.cc/娜兹玲"
+    },
+    {
+      "character": "多多良小伞",
+      "order": 28,
+      "sourceUrl": "https://thwiki.cc/多多良小伞"
+    },
+    {
+      "character": "云居一轮",
+      "order": 29,
+      "sourceUrl": "https://thwiki.cc/云居一轮"
+    },
+    {
+      "character": "村纱水蜜",
+      "order": 30,
+      "sourceUrl": "https://thwiki.cc/村纱水蜜"
+    },
+    {
+      "character": "寅丸星",
+      "order": 31,
+      "sourceUrl": "https://thwiki.cc/寅丸星"
+    },
+    {
+      "character": "圣白莲",
+      "order": 32,
+      "sourceUrl": "https://thwiki.cc/圣白莲"
+    },
+    {
+      "character": "封兽鵺",
+      "order": 33,
+      "sourceUrl": "https://thwiki.cc/封兽鵺"
+    },
+    {
+      "character": "射命丸文",
+      "order": 34,
+      "sourceUrl": "https://thwiki.cc/射命丸文"
+    },
+    {
+      "character": "霍青娥",
+      "order": 35,
+      "sourceUrl": "https://thwiki.cc/霍青娥"
+    },
+    {
+      "character": "四季映姬·夜摩仙那度",
+      "order": 36,
+      "sourceUrl": "https://thwiki.cc/四季映姬·夜摩仙那度"
+    },
+    {
+      "character": "风见幽香",
+      "order": 37,
+      "sourceUrl": "https://thwiki.cc/风见幽香"
+    },
+    {
+      "character": "桑尼米尔克",
+      "order": 38,
+      "sourceUrl": "https://thwiki.cc/桑尼米尔克"
+    },
+    {
+      "character": "露娜切露德",
+      "order": 39,
+      "sourceUrl": "https://thwiki.cc/露娜切露德"
+    },
+    {
+      "character": "河城荷取",
+      "order": 40,
+      "sourceUrl": "https://thwiki.cc/河城荷取"
+    },
+    {
+      "character": "东风谷早苗",
+      "order": 41,
+      "sourceUrl": "https://thwiki.cc/东风谷早苗"
+    },
+    {
+      "character": "八坂神奈子",
+      "order": 42,
+      "sourceUrl": "https://thwiki.cc/八坂神奈子"
+    },
+    {
+      "character": "古明地觉",
+      "order": 43,
+      "sourceUrl": "https://thwiki.cc/古明地觉"
+    },
+    {
+      "character": "火焰猫燐",
+      "order": 44,
+      "sourceUrl": "https://thwiki.cc/火焰猫燐"
+    },
+    {
+      "character": "灵乌路空",
+      "order": 45,
+      "sourceUrl": "https://thwiki.cc/灵乌路空"
+    },
+    {
+      "character": "幽谷响子",
+      "order": 46,
+      "sourceUrl": "https://thwiki.cc/幽谷响子"
+    },
+    {
+      "character": "物部布都",
+      "order": 47,
+      "sourceUrl": "https://thwiki.cc/物部布都"
+    },
+    {
+      "character": "今泉影狼",
+      "order": 48,
+      "sourceUrl": "https://thwiki.cc/今泉影狼"
+    },
+    {
+      "character": "九十九弁弁",
+      "order": 49,
+      "sourceUrl": "https://thwiki.cc/九十九弁弁"
+    },
+    {
+      "character": "九十九八桥",
+      "order": 50,
+      "sourceUrl": "https://thwiki.cc/九十九八桥"
+    },
+    {
+      "character": "鬼人正邪",
+      "order": 51,
+      "sourceUrl": "https://thwiki.cc/鬼人正邪"
+    },
+    {
+      "character": "斯塔萨菲雅",
+      "order": 52,
+      "sourceUrl": "https://thwiki.cc/斯塔萨菲雅"
+    },
+    {
+      "character": "神玉",
+      "order": 53,
+      "sourceUrl": "https://thwiki.cc/神玉"
+    },
+    {
+      "character": "魅魔",
+      "order": 54,
+      "sourceUrl": "https://thwiki.cc/魅魔"
+    },
+    {
+      "character": "菊理",
+      "order": 55,
+      "sourceUrl": "https://thwiki.cc/菊理"
+    },
+    {
+      "character": "矜羯罗",
+      "order": 56,
+      "sourceUrl": "https://thwiki.cc/矜羯罗"
+    },
+    {
+      "character": "幽幻魔眼",
+      "order": 57,
+      "sourceUrl": "https://thwiki.cc/幽幻魔眼"
+    },
+    {
+      "character": "依莉斯",
+      "order": 58,
+      "sourceUrl": "https://thwiki.cc/依莉斯"
+    },
+    {
+      "character": "萨丽爱尔",
+      "order": 59,
+      "sourceUrl": "https://thwiki.cc/萨丽爱尔"
+    },
+    {
+      "character": "里香",
+      "order": 60,
+      "sourceUrl": "https://thwiki.cc/里香"
+    },
+    {
+      "character": "明罗",
+      "order": 61,
+      "sourceUrl": "https://thwiki.cc/明罗"
+    },
+    {
+      "character": "爱莲",
+      "order": 62,
+      "sourceUrl": "https://thwiki.cc/爱莲"
+    },
+    {
+      "character": "小兔姬",
+      "order": 63,
+      "sourceUrl": "https://thwiki.cc/小兔姬"
+    },
+    {
+      "character": "卡娜·安娜贝拉尔",
+      "order": 64,
+      "sourceUrl": "https://thwiki.cc/卡娜·安娜贝拉尔"
+    },
+    {
+      "character": "朝仓理香子",
+      "order": 65,
+      "sourceUrl": "https://thwiki.cc/朝仓理香子"
+    },
+    {
+      "character": "北白河千百合",
+      "order": 66,
+      "sourceUrl": "https://thwiki.cc/北白河千百合"
+    },
+    {
+      "character": "冈崎梦美",
+      "order": 67,
+      "sourceUrl": "https://thwiki.cc/冈崎梦美"
+    },
+    {
+      "character": "奥莲姬",
+      "order": 68,
+      "sourceUrl": "https://thwiki.cc/奥莲姬"
+    },
+    {
+      "character": "胡桃",
+      "order": 69,
+      "sourceUrl": "https://thwiki.cc/胡桃"
+    },
+    {
+      "character": "艾丽",
+      "order": 70,
+      "sourceUrl": "https://thwiki.cc/艾丽"
+    },
+    {
+      "character": "梦月",
+      "order": 71,
+      "sourceUrl": "https://thwiki.cc/梦月"
+    },
+    {
+      "character": "幻月",
+      "order": 72,
+      "sourceUrl": "https://thwiki.cc/幻月"
+    },
+    {
+      "character": "萨拉",
+      "order": 73,
+      "sourceUrl": "https://thwiki.cc/萨拉"
+    },
+    {
+      "character": "露易兹",
+      "order": 74,
+      "sourceUrl": "https://thwiki.cc/露易兹"
+    },
+    {
+      "character": "雪",
+      "order": 75,
+      "sourceUrl": "https://thwiki.cc/雪"
+    },
+    {
+      "character": "舞",
+      "order": 76,
+      "sourceUrl": "https://thwiki.cc/舞"
+    },
+    {
+      "character": "梦子",
+      "order": 77,
+      "sourceUrl": "https://thwiki.cc/梦子"
+    },
+    {
+      "character": "神绮",
+      "order": 78,
+      "sourceUrl": "https://thwiki.cc/神绮"
+    },
+    {
+      "character": "玄爷",
+      "order": 79,
+      "sourceUrl": "https://thwiki.cc/玄爷",
+      "inclusionWork": "东方封魔录",
+      "gameId": "TH02",
+      "aliases": [
+        "玄爺",
+        "Genjii"
+      ]
+    },
+    {
+      "character": "留琴",
+      "order": 80,
+      "sourceUrl": "https://thwiki.cc/留琴",
+      "inclusionWork": "东方梦时空",
+      "gameId": "TH03",
+      "aliases": [
+        "る～こと",
+        "Ru~koto",
+        "Ruukoto",
+        "露柯特"
+      ]
+    },
+    {
+      "character": "玛○奇",
+      "order": 81,
+      "sourceUrl": "https://thwiki.cc/玛○奇",
+      "inclusionWork": "东方梦时空",
+      "gameId": "TH03",
+      "aliases": [
+        "ま○ち",
+        "Ma maru chi",
+        "玛露奇"
+      ]
+    },
+    {
+      "character": "苏格拉底",
+      "order": 82,
+      "sourceUrl": "https://thwiki.cc/苏格拉底",
+      "inclusionWork": "东方梦时空",
+      "gameId": "TH03",
+      "aliases": [
+        "ソクラテス",
+        "Sokuratesu"
+      ]
+    },
+    {
+      "character": "大妖精",
+      "order": 83,
+      "sourceUrl": "https://thwiki.cc/大妖精",
+      "inclusionWork": "东方红魔乡",
+      "gameId": "TH06"
+    },
+    {
+      "character": "小恶魔",
+      "order": 84,
+      "sourceUrl": "https://thwiki.cc/小恶魔",
+      "inclusionWork": "东方红魔乡",
+      "gameId": "TH06"
+    },
+    {
+      "character": "莉莉霍瓦特",
+      "order": 85,
+      "sourceUrl": "https://thwiki.cc/莉莉霍瓦特",
+      "inclusionWork": "东方妖妖梦",
+      "gameId": "TH07"
+    },
+    {
+      "character": "伊吹萃香",
+      "order": 86,
+      "sourceUrl": "https://thwiki.cc/伊吹萃香",
+      "inclusionWork": "东方萃梦想",
+      "gameId": "TH07.5"
+    },
+    {
+      "character": "因幡帝",
+      "order": 87,
+      "sourceUrl": "https://thwiki.cc/因幡帝",
+      "inclusionWork": "东方永夜抄",
+      "gameId": "TH08",
+      "aliases": [
+        "因幡てゐ",
+        "Tewi Inaba"
+      ]
+    },
+    {
+      "character": "梅蒂欣·梅兰可莉",
+      "order": 88,
+      "sourceUrl": "https://thwiki.cc/梅蒂欣·梅兰可莉",
+      "inclusionWork": "东方花映塚",
+      "gameId": "TH09"
+    },
+    {
+      "character": "小野塚小町",
+      "order": 89,
+      "sourceUrl": "https://thwiki.cc/小野塚小町",
+      "inclusionWork": "东方花映塚",
+      "gameId": "TH09"
+    },
+    {
+      "character": "秋静叶",
+      "order": 90,
+      "sourceUrl": "https://thwiki.cc/秋静叶",
+      "inclusionWork": "东方风神录",
+      "gameId": "TH10"
+    },
+    {
+      "character": "秋穰子",
+      "order": 91,
+      "sourceUrl": "https://thwiki.cc/秋穰子",
+      "inclusionWork": "东方风神录",
+      "gameId": "TH10"
+    },
+    {
+      "character": "键山雏",
+      "order": 92,
+      "sourceUrl": "https://thwiki.cc/键山雏",
+      "inclusionWork": "东方风神录",
+      "gameId": "TH10"
+    },
+    {
+      "character": "犬走椛",
+      "order": 93,
+      "sourceUrl": "https://thwiki.cc/犬走椛",
+      "inclusionWork": "东方风神录",
+      "gameId": "TH10"
+    },
+    {
+      "character": "洩矢诹访子",
+      "order": 94,
+      "sourceUrl": "https://thwiki.cc/洩矢诹访子",
+      "inclusionWork": "东方风神录",
+      "gameId": "TH10"
+    },
+    {
+      "character": "永江衣玖",
+      "order": 95,
+      "sourceUrl": "https://thwiki.cc/永江衣玖",
+      "inclusionWork": "东方绯想天",
+      "gameId": "TH10.5"
+    },
+    {
+      "character": "比那名居天子",
+      "order": 96,
+      "sourceUrl": "https://thwiki.cc/比那名居天子",
+      "inclusionWork": "东方绯想天",
+      "gameId": "TH10.5"
+    },
+    {
+      "character": "琪斯美",
+      "order": 97,
+      "sourceUrl": "https://thwiki.cc/琪斯美",
+      "inclusionWork": "东方地灵殿",
+      "gameId": "TH11"
+    },
+    {
+      "character": "黑谷山女",
+      "order": 98,
+      "sourceUrl": "https://thwiki.cc/黑谷山女",
+      "inclusionWork": "东方地灵殿",
+      "gameId": "TH11"
+    },
+    {
+      "character": "水桥帕露西",
+      "order": 99,
+      "sourceUrl": "https://thwiki.cc/水桥帕露西",
+      "inclusionWork": "东方地灵殿",
+      "gameId": "TH11"
+    },
+    {
+      "character": "星熊勇仪",
+      "order": 100,
+      "sourceUrl": "https://thwiki.cc/星熊勇仪",
+      "inclusionWork": "东方地灵殿",
+      "gameId": "TH11"
+    },
+    {
+      "character": "古明地恋",
+      "order": 101,
+      "sourceUrl": "https://thwiki.cc/古明地恋",
+      "inclusionWork": "东方地灵殿",
+      "gameId": "TH11"
+    },
+    {
+      "character": "非想天则",
+      "order": 102,
+      "sourceUrl": "https://thwiki.cc/非想天则",
+      "inclusionWork": "东方非想天则",
+      "gameId": "TH12.3",
+      "aliases": [
+        "非想天則",
+        "Hisoutensoku"
+      ]
+    },
+    {
+      "character": "姬海棠果",
+      "order": 103,
+      "sourceUrl": "https://thwiki.cc/姬海棠果",
+      "inclusionWork": "东方文花帖DS",
+      "gameId": "TH12.5"
+    },
+    {
+      "character": "宫古芳香",
+      "order": 104,
+      "sourceUrl": "https://thwiki.cc/宫古芳香",
+      "inclusionWork": "东方神灵庙",
+      "gameId": "TH13"
+    },
+    {
+      "character": "苏我屠自古",
+      "order": 105,
+      "sourceUrl": "https://thwiki.cc/苏我屠自古",
+      "inclusionWork": "东方神灵庙",
+      "gameId": "TH13"
+    },
+    {
+      "character": "丰聪耳神子",
+      "order": 106,
+      "sourceUrl": "https://thwiki.cc/丰聪耳神子",
+      "inclusionWork": "东方神灵庙",
+      "gameId": "TH13"
+    },
+    {
+      "character": "二岩猯藏",
+      "order": 107,
+      "sourceUrl": "https://thwiki.cc/二岩猯藏",
+      "inclusionWork": "东方神灵庙",
+      "gameId": "TH13"
+    },
+    {
+      "character": "秦心",
+      "order": 108,
+      "sourceUrl": "https://thwiki.cc/秦心",
+      "inclusionWork": "东方心绮楼",
+      "gameId": "TH13.5"
+    },
+    {
+      "character": "森近霖之助",
+      "order": 109,
+      "sourceUrl": "https://thwiki.cc/森近霖之助",
+      "inclusionWork": "东方心绮楼",
+      "gameId": "TH13.5",
+      "aliases": [
+        "Morichika Rinnosuke"
+      ]
+    },
+    {
+      "character": "本居小铃",
+      "order": 110,
+      "sourceUrl": "https://thwiki.cc/本居小铃",
+      "inclusionWork": "东方心绮楼",
+      "gameId": "TH13.5",
+      "aliases": [
+        "本居小鈴",
+        "Motoori Kosuzu"
+      ]
+    },
+    {
+      "character": "若鹭姬",
+      "order": 111,
+      "sourceUrl": "https://thwiki.cc/若鹭姬",
+      "inclusionWork": "东方辉针城",
+      "gameId": "TH14"
+    },
+    {
+      "character": "赤蛮奇",
+      "order": 112,
+      "sourceUrl": "https://thwiki.cc/赤蛮奇",
+      "inclusionWork": "东方辉针城",
+      "gameId": "TH14"
+    },
+    {
+      "character": "少名针妙丸",
+      "order": 113,
+      "sourceUrl": "https://thwiki.cc/少名针妙丸",
+      "inclusionWork": "东方辉针城",
+      "gameId": "TH14"
+    },
+    {
+      "character": "堀川雷鼓",
+      "order": 114,
+      "sourceUrl": "https://thwiki.cc/堀川雷鼓",
+      "inclusionWork": "东方辉针城",
+      "gameId": "TH14"
+    },
+    {
+      "character": "茨木华扇",
+      "order": 115,
+      "sourceUrl": "https://thwiki.cc/茨木华扇",
+      "inclusionWork": "东方深秘录",
+      "gameId": "TH14.5"
+    },
+    {
+      "character": "宇佐见堇子",
+      "order": 116,
+      "sourceUrl": "https://thwiki.cc/宇佐见堇子",
+      "inclusionWork": "东方深秘录",
+      "gameId": "TH14.5"
+    },
+    {
+      "character": "清兰",
+      "order": 117,
+      "sourceUrl": "https://thwiki.cc/清兰",
+      "inclusionWork": "东方绀珠传",
+      "gameId": "TH15"
+    },
+    {
+      "character": "铃瑚",
+      "order": 118,
+      "sourceUrl": "https://thwiki.cc/铃瑚",
+      "inclusionWork": "东方绀珠传",
+      "gameId": "TH15"
+    },
+    {
+      "character": "哆来咪·苏伊特",
+      "order": 119,
+      "sourceUrl": "https://thwiki.cc/哆来咪·苏伊特",
+      "inclusionWork": "东方绀珠传",
+      "gameId": "TH15"
+    },
+    {
+      "character": "稀神探女",
+      "order": 120,
+      "sourceUrl": "https://thwiki.cc/稀神探女",
+      "inclusionWork": "东方绀珠传",
+      "gameId": "TH15"
+    },
+    {
+      "character": "克劳恩皮丝",
+      "order": 121,
+      "sourceUrl": "https://thwiki.cc/克劳恩皮丝",
+      "inclusionWork": "东方绀珠传",
+      "gameId": "TH15"
+    },
+    {
+      "character": "纯狐",
+      "order": 122,
+      "sourceUrl": "https://thwiki.cc/纯狐",
+      "inclusionWork": "东方绀珠传",
+      "gameId": "TH15"
+    },
+    {
+      "character": "赫卡提亚·拉碧斯拉祖利",
+      "order": 123,
+      "sourceUrl": "https://thwiki.cc/赫卡提亚·拉碧斯拉祖利",
+      "inclusionWork": "东方绀珠传",
+      "gameId": "TH15"
+    },
+    {
+      "character": "依神女苑",
+      "order": 124,
+      "sourceUrl": "https://thwiki.cc/依神女苑",
+      "inclusionWork": "东方凭依华",
+      "gameId": "TH15.5"
+    },
+    {
+      "character": "依神紫苑",
+      "order": 125,
+      "sourceUrl": "https://thwiki.cc/依神紫苑",
+      "inclusionWork": "东方凭依华",
+      "gameId": "TH15.5"
+    },
+    {
+      "character": "爱塔妮缇拉尔瓦",
+      "order": 126,
+      "sourceUrl": "https://thwiki.cc/爱塔妮缇拉尔瓦",
+      "inclusionWork": "东方天空璋",
+      "gameId": "TH16"
+    },
+    {
+      "character": "坂田合欢",
+      "order": 127,
+      "sourceUrl": "https://thwiki.cc/坂田合欢",
+      "inclusionWork": "东方天空璋",
+      "gameId": "TH16"
+    },
+    {
+      "character": "高丽野阿吽",
+      "order": 128,
+      "sourceUrl": "https://thwiki.cc/高丽野阿吽",
+      "inclusionWork": "东方天空璋",
+      "gameId": "TH16"
+    },
+    {
+      "character": "矢田寺成美",
+      "order": 129,
+      "sourceUrl": "https://thwiki.cc/矢田寺成美",
+      "inclusionWork": "东方天空璋",
+      "gameId": "TH16"
+    },
+    {
+      "character": "尔子田里乃",
+      "order": 130,
+      "sourceUrl": "https://thwiki.cc/尔子田里乃",
+      "inclusionWork": "东方天空璋",
+      "gameId": "TH16"
+    },
+    {
+      "character": "丁礼田舞",
+      "order": 131,
+      "sourceUrl": "https://thwiki.cc/丁礼田舞",
+      "inclusionWork": "东方天空璋",
+      "gameId": "TH16"
+    },
+    {
+      "character": "摩多罗隐岐奈",
+      "order": 132,
+      "sourceUrl": "https://thwiki.cc/摩多罗隐岐奈",
+      "inclusionWork": "东方天空璋",
+      "gameId": "TH16"
+    },
+    {
+      "character": "戎璎花",
+      "order": 133,
+      "sourceUrl": "https://thwiki.cc/戎璎花",
+      "inclusionWork": "东方鬼形兽",
+      "gameId": "TH17"
+    },
+    {
+      "character": "牛崎润美",
+      "order": 134,
+      "sourceUrl": "https://thwiki.cc/牛崎润美",
+      "inclusionWork": "东方鬼形兽",
+      "gameId": "TH17"
+    },
+    {
+      "character": "庭渡久侘歌",
+      "order": 135,
+      "sourceUrl": "https://thwiki.cc/庭渡久侘歌",
+      "inclusionWork": "东方鬼形兽",
+      "gameId": "TH17"
+    },
+    {
+      "character": "吉吊八千慧",
+      "order": 136,
+      "sourceUrl": "https://thwiki.cc/吉吊八千慧",
+      "inclusionWork": "东方鬼形兽",
+      "gameId": "TH17"
+    },
+    {
+      "character": "杖刀偶磨弓",
+      "order": 137,
+      "sourceUrl": "https://thwiki.cc/杖刀偶磨弓",
+      "inclusionWork": "东方鬼形兽",
+      "gameId": "TH17"
+    },
+    {
+      "character": "埴安神袿姬",
+      "order": 138,
+      "sourceUrl": "https://thwiki.cc/埴安神袿姬",
+      "inclusionWork": "东方鬼形兽",
+      "gameId": "TH17"
+    },
+    {
+      "character": "骊驹早鬼",
+      "order": 139,
+      "sourceUrl": "https://thwiki.cc/骊驹早鬼",
+      "inclusionWork": "东方鬼形兽",
+      "gameId": "TH17"
+    },
+    {
+      "character": "饕餮尤魔",
+      "order": 140,
+      "sourceUrl": "https://thwiki.cc/饕餮尤魔",
+      "inclusionWork": "东方刚欲异闻",
+      "gameId": "TH17.5"
+    },
+    {
+      "character": "豪德寺三花",
+      "order": 141,
+      "sourceUrl": "https://thwiki.cc/豪德寺三花",
+      "inclusionWork": "东方虹龙洞",
+      "gameId": "TH18"
+    },
+    {
+      "character": "山城高岭",
+      "order": 142,
+      "sourceUrl": "https://thwiki.cc/山城高岭",
+      "inclusionWork": "东方虹龙洞",
+      "gameId": "TH18"
+    },
+    {
+      "character": "驹草山如",
+      "order": 143,
+      "sourceUrl": "https://thwiki.cc/驹草山如",
+      "inclusionWork": "东方虹龙洞",
+      "gameId": "TH18"
+    },
+    {
+      "character": "玉造魅须丸",
+      "order": 144,
+      "sourceUrl": "https://thwiki.cc/玉造魅须丸",
+      "inclusionWork": "东方虹龙洞",
+      "gameId": "TH18"
+    },
+    {
+      "character": "菅牧典",
+      "order": 145,
+      "sourceUrl": "https://thwiki.cc/菅牧典",
+      "inclusionWork": "东方虹龙洞",
+      "gameId": "TH18"
+    },
+    {
+      "character": "饭纲丸龙",
+      "order": 146,
+      "sourceUrl": "https://thwiki.cc/饭纲丸龙",
+      "inclusionWork": "东方虹龙洞",
+      "gameId": "TH18"
+    },
+    {
+      "character": "天弓千亦",
+      "order": 147,
+      "sourceUrl": "https://thwiki.cc/天弓千亦",
+      "inclusionWork": "东方虹龙洞",
+      "gameId": "TH18"
+    },
+    {
+      "character": "姬虫百百世",
+      "order": 148,
+      "sourceUrl": "https://thwiki.cc/姬虫百百世",
+      "inclusionWork": "东方虹龙洞",
+      "gameId": "TH18"
+    },
+    {
+      "character": "孙美天",
+      "order": 149,
+      "sourceUrl": "https://thwiki.cc/孙美天",
+      "inclusionWork": "东方兽王园",
+      "gameId": "TH19"
+    },
+    {
+      "character": "三头慧之子",
+      "order": 150,
+      "sourceUrl": "https://thwiki.cc/三头慧之子",
+      "inclusionWork": "东方兽王园",
+      "gameId": "TH19"
+    },
+    {
+      "character": "天火人血枪",
+      "order": 151,
+      "sourceUrl": "https://thwiki.cc/天火人血枪",
+      "inclusionWork": "东方兽王园",
+      "gameId": "TH19"
+    },
+    {
+      "character": "豫母都日狭美",
+      "order": 152,
+      "sourceUrl": "https://thwiki.cc/豫母都日狭美",
+      "inclusionWork": "东方兽王园",
+      "gameId": "TH19"
+    },
+    {
+      "character": "日白残无",
+      "order": 153,
+      "sourceUrl": "https://thwiki.cc/日白残无",
+      "inclusionWork": "东方兽王园",
+      "gameId": "TH19"
+    },
+    {
+      "character": "尘塚姥芽",
+      "order": 154,
+      "sourceUrl": "https://thwiki.cc/尘塚姥芽",
+      "inclusionWork": "东方锦上京",
+      "gameId": "TH20",
+      "aliases": [
+        "塵塚ウバメ",
+        "Chirizuka Ubame"
+      ]
+    },
+    {
+      "character": "封兽魑魅",
+      "order": 155,
+      "sourceUrl": "https://thwiki.cc/封兽魑魅",
+      "inclusionWork": "东方锦上京",
+      "gameId": "TH20",
+      "aliases": [
+        "封獣チミ",
+        "Houju Chimi",
+        "Houjuu Chimi"
+      ]
+    },
+    {
+      "character": "道神驯子",
+      "order": 156,
+      "sourceUrl": "https://thwiki.cc/道神驯子",
+      "inclusionWork": "东方锦上京",
+      "gameId": "TH20",
+      "aliases": [
+        "道神馴子",
+        "Michigami Nareko"
+      ]
+    },
+    {
+      "character": "维缦·浅间",
+      "order": 157,
+      "sourceUrl": "https://thwiki.cc/维缦·浅间",
+      "inclusionWork": "东方锦上京",
+      "gameId": "TH20",
+      "aliases": [
+        "ユイマン・浅間",
+        "Yuiman Asama"
+      ]
+    },
+    {
+      "character": "绵月丰姬",
+      "order": 158,
+      "sourceUrl": "https://thwiki.cc/绵月丰姬",
+      "inclusionWork": "东方锦上京",
+      "gameId": "TH20",
+      "aliases": [
+        "綿月豊姫",
+        "Watatsuki no Toyohime"
+      ]
+    },
+    {
+      "character": "磐永阿梨夜",
+      "order": 159,
+      "sourceUrl": "https://thwiki.cc/磐永阿梨夜",
+      "inclusionWork": "东方锦上京",
+      "gameId": "TH20",
+      "aliases": [
+        "Iwanaga Ariya"
+      ]
+    },
+    {
+      "character": "渡里贝子",
+      "order": 160,
+      "sourceUrl": "https://thwiki.cc/渡里贝子",
+      "inclusionWork": "东方锦上京",
+      "gameId": "TH20",
+      "aliases": [
+        "渡里ニナ",
+        "Watari Nina",
+        "渡里妮娜"
+      ]
+    },
+    {
+      "character": "宇佐见莲子",
+      "order": 161,
+      "sourceUrl": "https://thwiki.cc/宇佐见莲子",
+      "inclusionWork": "秘封俱乐部",
+      "gameId": "music-cd"
+    },
+    {
+      "character": "玛艾露贝莉·赫恩",
+      "order": 162,
+      "sourceUrl": "https://thwiki.cc/玛艾露贝莉·赫恩",
+      "inclusionWork": "秘封俱乐部",
+      "gameId": "music-cd"
+    }
+  ]
+}

@@ -1,0 +1,571 @@
+/* Native auxiliary surfaces, verified against Orpheus web.pack 83304b1.
+ * Sources: app modules 622/624; chunks 71 (3115), 64 (3099), 104 (3134).
+ * Native virtual row heights, list offsets, popup placement and form behavior stay native.
+ * The shared portal observer marks ONLY known queue/search/collection ancestors.
+ */
+
+html[data-ncm-skin] .cmd-portal[data-ncm-panel="queue"] :is(.cmd-sidesheet-inner, .cmd-sidesheet-content, .cmd-sidesheet-body),
+html[data-ncm-skin] .cmd-portal[data-ncm-panel="collection"] :is(.cmd-modal, .cmd-modal-content, .cmd-modal-header, .cmd-modal-body),
+html[data-ncm-skin] .cmd-portal[data-ncm-panel="search"] :is(.cmd-popover, .cmd-popover-content, .cmd-popover-wrapper) {
+  color: var(--ncm-ink) !important;
+  background: var(--ncm-surface) !important;
+}
+
+html[data-ncm-skin] .cmd-portal[data-ncm-panel="queue"] .cmd-sidesheet-inner {
+  box-shadow: inset 1px 0 var(--ncm-line);
+}
+
+html[data-ncm-skin] .cmd-portal[data-ncm-panel="collection"] .cmd-modal-content,
+html[data-ncm-skin] .cmd-portal[data-ncm-panel="search"] .cmd-popover-wrapper {
+  border-radius: 12px;
+  box-shadow: 0 14px 38px var(--ncm-line);
+}
+
+html[data-ncm-skin] .cmd-portal[data-ncm-panel="collection"] :is(.cmd-modal-title, .cmd-modal-header .cmd-typography) {
+  color: var(--ncm-ink) !important;
+  font-weight: 650;
+}
+
+html[data-ncm-skin] .cmd-portal[data-ncm-panel="collection"] .cmd-modal-close {
+  color: var(--ncm-muted) !important;
+  background: transparent !important;
+}
+
+html[data-ncm-skin] .cmd-portal[data-ncm-panel="collection"] .cmd-modal-close:hover {
+  color: var(--ncm-ink) !important;
+  background: var(--ncm-hover) !important;
+}
+
+/* Playback queue: root and content rows are independent of the underlying route. */
+html[data-ncm-skin] #page_pc_playlist {
+  color: var(--ncm-ink);
+  background: var(--ncm-surface) !important;
+}
+
+html[data-ncm-skin] #page_pc_playlist [class^="HeaderWrapper_"] {
+  color: var(--ncm-ink);
+  background: var(--ncm-raised);
+  box-shadow: inset 0 -1px var(--ncm-line);
+}
+
+html[data-ncm-skin] #page_pc_playlist :is([data-testid="tid_playlist_header_left"], .title, .title .cmd-typography) {
+  color: var(--ncm-ink) !important;
+}
+
+html[data-ncm-skin] #page_pc_playlist :is(.alias, .sub-title, .artists, .playing-list-item-duration, [data-testid="tid_playlist_count"], [data-testid="tid_playlist_rcmd_text"]) {
+  color: var(--ncm-muted) !important;
+}
+
+html[data-ncm-skin] #page_pc_playlist :is(.sub-title, .artists) .cmd-typography {
+  color: inherit !important;
+}
+
+html[data-ncm-skin] #page_pc_playlist :is(.title-playing, .title-playing .cmd-typography, .mark-text) {
+  color: var(--ncm-accent) !important;
+}
+
+html[data-ncm-skin] #page_pc_playlist :is([role="row"], [data-testid="tid_playinglist_titlecell"]):hover {
+  background-color: var(--ncm-hover) !important;
+}
+
+html[data-ncm-skin] #page_pc_playlist [aria-selected="true"] {
+  background-color: var(--ncm-selected) !important;
+}
+
+html[data-ncm-skin] #page_pc_playlist :is([data-testid="tid_playlist_collectall_btn"], [data-testid="tid_playlist_clear_btn"]) {
+  color: var(--ncm-muted) !important;
+  background: transparent !important;
+}
+
+html[data-ncm-skin] #page_pc_playlist :is([data-testid="tid_playlist_collectall_btn"], [data-testid="tid_playlist_clear_btn"]):hover {
+  color: var(--ncm-ink) !important;
+  background: var(--ncm-hover) !important;
+}
+
+html[data-ncm-skin] #page_pc_playlist .no-copyright {
+  color: var(--ncm-muted) !important;
+}
+
+/* Search start/history/suggestions. The header input belongs to chrome.css. */
+html[data-ncm-skin] .SearchResults_s92u6ho {
+  color: var(--ncm-ink);
+  background: var(--ncm-surface);
+  border-radius: 10px;
+}
+
+html[data-ncm-skin] .SearchResults_s92u6ho :is(.cmd-typography, .item-title) {
+  color: var(--ncm-ink) !important;
+}
+
+html[data-ncm-skin] .SearchResults_s92u6ho :is(.ModuleTitle_m1b931cn, .ModuleTitleOld_mbt2uy1, .item-index, .prefix-icon, .close-icon) {
+  color: var(--ncm-muted) !important;
+}
+
+html[data-ncm-skin] .SearchResults_s92u6ho :is(.history-tag, .history-tag .tag) {
+  color: var(--ncm-ink) !important;
+  background-color: var(--ncm-raised) !important;
+  border-color: var(--ncm-line) !important;
+  border-radius: 6px;
+}
+
+html[data-ncm-skin] .SearchResults_s92u6ho :is(.history-tag, .item, .Content_c1m1hgyq):hover {
+  background-color: var(--ncm-hover) !important;
+}
+
+/* The native keyboard cursor is a Linaria focus variable, not DOM focus.
+ * In this exact build its inactive value is the literal "none". Preserve the
+ * native ArrowUp/ArrowDown selection while translating only the selected fill.
+ */
+html[data-ncm-skin] .SearchResults_s92u6ho .Content_c1m1hgyq[style*="--c1m1hgyq-0:"]:not([style*="--c1m1hgyq-0: none"]):not([style*="--c1m1hgyq-0:none"]) {
+  background-color: var(--ncm-selected) !important;
+}
+
+html[data-ncm-skin] .SearchResults_s92u6ho :is(.mark, .mark .cmd-typography) {
+  color: var(--ncm-accent) !important;
+}
+
+/* Native settings only. Account/login portals are outside this page root. */
+html[data-ncm-skin] #page_pc_setting {
+  color: var(--ncm-ink);
+  background: var(--ncm-surface);
+}
+
+html[data-ncm-skin] #page_pc_setting :is(h3, h4, .text, .option-item, .version-title, .version-number) {
+  color: var(--ncm-ink) !important;
+}
+
+html[data-ncm-skin] #page_pc_setting h3 {
+  font-weight: 650;
+}
+
+html[data-ncm-skin] #page_pc_setting h4 {
+  font-weight: 600;
+}
+
+html[data-ncm-skin] #page_pc_setting :is(.extra-text, .tip, .right-text, .version-content, .version-content-item, .text-color-black4, .text-color-black7, [class^="DisabledTextContent_"]) {
+  color: var(--ncm-muted) !important;
+}
+
+html[data-ncm-skin] #page_pc_setting :is(.cmd-anchor-link-title, a) {
+  color: var(--ncm-muted);
+}
+
+html[data-ncm-skin] #page_pc_setting :is(.cmd-anchor-link-title, a):hover {
+  color: var(--ncm-accent);
+}
+
+html[data-ncm-skin] #page_pc_setting .cmd-anchor-link-active > .cmd-anchor-link-title {
+  color: var(--ncm-accent) !important;
+  background-color: var(--ncm-selected);
+}
+
+html[data-ncm-skin] #page_pc_setting :is(.cmd-input-wrapper, .cmd-input-number, .cmd-select, .cmd-autocomplete-wrapper) {
+  color: var(--ncm-ink) !important;
+  background: var(--ncm-raised) !important;
+  border-color: var(--ncm-line) !important;
+  border-radius: 7px;
+}
+
+html[data-ncm-skin] #page_pc_setting :is(.cmd-input, .cmd-input-number-input, .cmd-select-selection-text, .cmd-select-arrow) {
+  color: var(--ncm-ink) !important;
+  caret-color: var(--ncm-accent);
+}
+
+/* Select paints its outer combobox; the selection is only the text container. */
+html[data-ncm-skin] #page_pc_setting :is(.cmd-input, .cmd-input-number-input, .cmd-select-selection) {
+  background: transparent !important;
+}
+
+html[data-ncm-skin] #page_pc_setting :is(.cmd-input, .cmd-input-number-input)::placeholder {
+  color: var(--ncm-muted);
+  opacity: 1;
+}
+
+html[data-ncm-skin] #page_pc_setting :is(.cmd-input-wrapper, .cmd-input-number, .cmd-select):focus-within {
+  border-color: var(--ncm-accent) !important;
+}
+
+html[data-ncm-skin] #page_pc_setting :is(.cmd-input-disabled, .cmd-input-number-disabled, .cmd-select-disabled) {
+  color: var(--ncm-muted) !important;
+  background: var(--ncm-surface) !important;
+}
+
+/* Settings mount Select popovers inside their section (normal/play/deskLyric).
+   Keep the list opaque so the following form rows never show through it. */
+html[data-ncm-skin] #page_pc_setting .cmd-select-option-list {
+  color: var(--ncm-ink);
+  background: var(--ncm-popup-surface) !important;
+  border-color: var(--ncm-line);
+}
+
+html[data-ncm-skin] #page_pc_setting .cmd-select-option:not(.cmd-select-option-disabled) {
+  color: var(--ncm-ink);
+}
+
+html[data-ncm-skin] #page_pc_setting .cmd-select-option:not(.cmd-select-option-disabled):is(:hover, .cmd-select-option-focused) {
+  background: var(--ncm-hover);
+}
+
+html[data-ncm-skin] #page_pc_setting .cmd-select-option-selected {
+  background: var(--ncm-selected);
+}
+
+html[data-ncm-skin] #page_pc_setting .cmd-select-option-selected .cmd-select-option-icon {
+  color: var(--ncm-accent);
+}
+
+html[data-ncm-skin] #page_pc_setting :is(.cmd-checkbox-inner, .cmd-radio-inner) {
+  border-color: var(--ncm-line);
+}
+
+html[data-ncm-skin] #page_pc_setting :is(.cmd-checkbox-checked .cmd-checkbox-inner, .cmd-radio-checked .cmd-radio-inner) {
+  border-color: var(--ncm-accent);
+}
+
+/* Independent caption sizes replace the native font row's single size field. */
+html[data-ncm-skin] #page_pc_setting [data-ncm-caption-native-size] {
+  display: none !important;
+}
+
+html[data-ncm-skin] #page_pc_setting #desklyric .ncm-caption-settings {
+  display: grid;
+  gap: 16px;
+}
+
+html[data-ncm-skin] #page_pc_setting .ncm-caption-adjustment {
+  display: grid;
+  grid-template-columns: 116px minmax(120px, 320px) 54px;
+  align-items: center;
+  gap: 16px;
+  color: var(--ncm-ink);
+  font-size: 14px;
+}
+
+html[data-ncm-skin] #page_pc_setting .ncm-caption-adjustment output {
+  color: var(--ncm-muted);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-ncm-skin] #page_pc_setting .ncm-caption-adjustment input {
+  width: 100%;
+  height: 20px;
+  margin: 0;
+  padding: 0;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  accent-color: var(--ncm-accent);
+}
+
+html[data-ncm-skin] #page_pc_setting .ncm-caption-adjustment input::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(to right, var(--ncm-accent) var(--ncm-caption-progress), var(--ncm-line) var(--ncm-caption-progress));
+}
+
+html[data-ncm-skin] #page_pc_setting .ncm-caption-adjustment input::-webkit-slider-thumb {
+  width: 14px;
+  height: 14px;
+  margin-top: -5px;
+  appearance: none;
+  border: 2px solid var(--ncm-accent);
+  border-radius: 50%;
+  background: var(--ncm-popup-surface);
+}
+
+html[data-ncm-skin] #page_pc_setting .ncm-caption-adjustment input:hover::-webkit-slider-thumb {
+  background: var(--ncm-accent);
+}
+
+html[data-ncm-skin] #page_pc_setting .ncm-caption-adjustment input:focus-visible {
+  outline: 2px solid var(--ncm-accent);
+  outline-offset: 4px;
+  border-radius: 3px;
+}
+
+html[data-ncm-skin] #page_pc_setting .ncm-caption-reset {
+  justify-self: start;
+  padding: 6px 12px;
+  border: 1px solid var(--ncm-line);
+  border-radius: 7px;
+  color: var(--ncm-ink);
+  background: var(--ncm-raised);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+html[data-ncm-skin] #page_pc_setting .ncm-caption-reset:hover {
+  background: var(--ncm-hover);
+}
+
+html[data-ncm-skin] #page_pc_setting .ncm-caption-reset:focus-visible {
+  outline: 2px solid var(--ncm-accent);
+  outline-offset: 2px;
+}
+
+html[data-ncm-skin] #page_pc_setting .ncm-caption-background {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ncm-ink);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+html[data-ncm-skin] #page_pc_setting .ncm-caption-background input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--ncm-accent);
+  cursor: pointer;
+}
+
+/* FavouriteModal owns 64px virtual rows; do not alter their box geometry. */
+html[data-ncm-skin] [data-testid="tid_favourite_modal"] {
+  color: var(--ncm-ink);
+  background: var(--ncm-surface);
+}
+
+html[data-ncm-skin] [data-testid="tid_favourite_modal"] :is(.playlist-name, .cmd-typography) {
+  color: var(--ncm-ink) !important;
+}
+
+html[data-ncm-skin] [data-testid="tid_favourite_modal"] .playlist-description {
+  color: var(--ncm-muted) !important;
+}
+
+html[data-ncm-skin] [data-testid="tid_favourite_modal"] .playlist-description .cmd-typography {
+  color: inherit !important;
+}
+
+html[data-ncm-skin] [data-testid="tid_favourite_modal"] [class^="SortHeader_"] {
+  background: var(--ncm-raised);
+  box-shadow: inset 0 -1px var(--ncm-line);
+}
+
+html[data-ncm-skin] [data-testid="tid_favourite_modal"] :is([data-testid="tid_cell_pc_faver_item"], [data-testid="tid_favourite_create_btn"]):hover {
+  background-color: var(--ncm-hover) !important;
+}
+
+html[data-ncm-skin] [data-testid="tid_favourite_modal"] [data-testid="tid_favourite_create_btn"] {
+  color: var(--ncm-accent);
+  box-shadow: inset 0 -1px var(--ncm-line);
+}
+
+html[data-ncm-skin] [data-testid="tid_favourite_modal"] .playlist-cover img {
+  border-radius: 6px;
+}
+
+/* Web menus belonging to native player/search commands, never arbitrary portals. */
+html[data-ncm-skin] :is(.StyledMenu_sizrwh6, .StyledMenu_s1yked2s, .StyledMenu_s14dwa1s, .LyricStyledMenu_l1sazae8, .MenuContainer_mofvt3d) {
+  color: var(--ncm-ink);
+  background: var(--ncm-raised);
+  border-radius: 10px;
+}
+
+html[data-ncm-skin] :is(.StyledMenu_sizrwh6, .StyledMenu_s1yked2s, .StyledMenu_s14dwa1s, .LyricStyledMenu_l1sazae8, .MenuContainer_mofvt3d) .cmd-dropdown-menu {
+  color: var(--ncm-ink);
+  background: var(--ncm-raised) !important;
+  border-color: var(--ncm-line);
+}
+
+html[data-ncm-skin] :is(.StyledMenu_sizrwh6, .StyledMenu_s1yked2s, .StyledMenu_s14dwa1s, .LyricStyledMenu_l1sazae8, .MenuContainer_mofvt3d) .cmd-dropdown-item:not(.cmd-dropdown-item-disabled) {
+  color: var(--ncm-ink) !important;
+}
+
+html[data-ncm-skin] :is(.StyledMenu_sizrwh6, .StyledMenu_s1yked2s, .StyledMenu_s14dwa1s, .LyricStyledMenu_l1sazae8, .MenuContainer_mofvt3d) .cmd-dropdown-item:not(.cmd-dropdown-item-disabled):hover {
+  background: var(--ncm-hover) !important;
+}
+
+html[data-ncm-skin] :is(.StyledMenu_sizrwh6, .StyledMenu_s1yked2s, .StyledMenu_s14dwa1s, .LyricStyledMenu_l1sazae8, .MenuContainer_mofvt3d) :is(.cmd-dropdown-item-active, .cmd-dropdown-item-selected) {
+  background: var(--ncm-selected) !important;
+}
+
+html[data-ncm-skin] :is(.StyledMenu_sizrwh6, .StyledMenu_s1yked2s, .StyledMenu_s14dwa1s, .LyricStyledMenu_l1sazae8, .MenuContainer_mofvt3d) :is(.cmd-dropdown-item-disabled, .cmd-dropdown-item-shortcut, .cmd-dropdown-title) {
+  color: var(--ncm-muted) !important;
+}
+
+html[data-ncm-skin] :is(.StyledMenu_sizrwh6, .StyledMenu_s1yked2s, .StyledMenu_s14dwa1s, .LyricStyledMenu_l1sazae8, .MenuContainer_mofvt3d) .cmd-dropdown-divider {
+  border-color: var(--ncm-line);
+  background-color: var(--ncm-line);
+}
+
+/* Visible focus and scrollbar ink, scoped to these surfaces only. */
+html[data-ncm-skin] :is(#page_pc_playlist, #page_pc_setting, .SearchResults_s92u6ho, [data-testid="tid_favourite_modal"], .StyledMenu_sizrwh6, .StyledMenu_s1yked2s, .StyledMenu_s14dwa1s, .LyricStyledMenu_l1sazae8, .MenuContainer_mofvt3d) :is(button, input, select, a, [tabindex]):focus-visible {
+  outline: 2px solid var(--ncm-accent);
+  outline-offset: -2px;
+}
+
+html[data-ncm-skin] :is(#page_pc_playlist, #page_pc_setting, .SearchResults_s92u6ho, [data-testid="tid_favourite_modal"], .StyledMenu_sizrwh6, .StyledMenu_s1yked2s, .StyledMenu_s14dwa1s, .LyricStyledMenu_l1sazae8, .MenuContainer_mofvt3d) ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+html[data-ncm-skin] :is(#page_pc_playlist, #page_pc_setting, .SearchResults_s92u6ho, [data-testid="tid_favourite_modal"], .StyledMenu_sizrwh6, .StyledMenu_s1yked2s, .StyledMenu_s14dwa1s, .LyricStyledMenu_l1sazae8, .MenuContainer_mofvt3d) ::-webkit-scrollbar-thumb {
+  background-color: var(--ncm-line);
+  border-radius: 6px;
+}
+
+html[data-ncm-skin] :is(#page_pc_playlist, #page_pc_setting, .SearchResults_s92u6ho, [data-testid="tid_favourite_modal"], .StyledMenu_sizrwh6, .StyledMenu_s1yked2s, .StyledMenu_s14dwa1s, .LyricStyledMenu_l1sazae8, .MenuContainer_mofvt3d) ::-webkit-scrollbar-thumb:hover {
+  background-color: var(--ncm-muted);
+}
+
+/* Auxiliary surfaces use the same clean sheet and typography as route content. */
+html[data-ncm-skin] .cmd-portal[data-ncm-panel="queue"] .cmd-sidesheet-inner {
+  border-radius: 16px 0 0 16px;
+  box-shadow: -14px 0 44px #08182e22;
+  overflow: hidden;
+}
+
+html[data-ncm-skin] .cmd-portal[data-ncm-panel="collection"] .cmd-modal-content,
+html[data-ncm-skin] .cmd-portal[data-ncm-panel="search"] .cmd-popover-wrapper {
+  border-radius: 16px;
+  box-shadow: 0 18px 58px #08182e2b;
+}
+
+html[data-ncm-skin] #page_pc_playlist [class^="HeaderWrapper_"] {
+  background: var(--ncm-wash);
+}
+
+html[data-ncm-skin] #page_pc_playlist [data-testid="tid_playlist_header_left"] {
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: -.025em;
+}
+
+html[data-ncm-skin] #page_pc_playlist [data-testid="tid_playlist_count"] {
+  font-size: 12px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-ncm-skin] .SearchResults_s92u6ho {
+  padding: 12px 4px;
+  border-radius: 14px;
+}
+
+html[data-ncm-skin] .SearchResults_s92u6ho :is(.ModuleTitle_m1b931cn, .ModuleTitleOld_mbt2uy1) {
+  font-size: 15px;
+  font-weight: 650;
+}
+
+html[data-ncm-skin] .SearchResults_s92u6ho :is(.history-tag, .history-tag .tag) {
+  border-radius: 8px;
+  background: var(--ncm-wash) !important;
+}
+
+/* A stable horizontal index, then clear title / form columns in each section. */
+html[data-ncm-skin] #page_pc_setting {
+  background: var(--ncm-canvas);
+  padding-bottom: 32px;
+}
+
+html[data-ncm-skin] #page_pc_setting .cmd-anchor {
+  padding: 8px 12px;
+  background: var(--ncm-raised);
+  border-radius: 12px;
+}
+
+html[data-ncm-skin] #page_pc_setting .cmd-anchor-link-title {
+  padding: 8px 10px;
+  margin-right: 10px;
+  color: var(--ncm-muted);
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 7px;
+}
+
+html[data-ncm-skin] #page_pc_setting .cmd-anchor-link-title.cmd-anchor-link-title-active {
+  background: var(--ncm-selected);
+  color: var(--ncm-ink) !important;
+  font-weight: 700;
+}
+
+html[data-ncm-skin] #page_pc_setting .cmd-anchor-link-title.cmd-anchor-link-title-active::after {
+  display: none;
+}
+
+html[data-ncm-skin] #page_pc_setting section[class^="Content_"] {
+  padding-top: 32px;
+  padding-bottom: 8px;
+  border-color: var(--ncm-line);
+}
+
+html[data-ncm-skin] #page_pc_setting h3 {
+  width: 150px;
+  font-size: 21px;
+  line-height: 1.4;
+  font-weight: 700;
+  letter-spacing: -.025em;
+}
+
+html[data-ncm-skin] #page_pc_setting h4 {
+  font-size: 14px;
+  line-height: 1.6;
+  font-weight: 650;
+}
+
+html[data-ncm-skin] #page_pc_setting :is(.extra-text, .tip, .text-des) {
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+html[data-ncm-skin] #page_pc_setting :is(.cmd-button-surface-sec, .cmd-button-surface-thr) {
+  color: var(--ncm-ink);
+  background: var(--ncm-raised);
+  border-color: var(--ncm-line);
+  border-radius: 8px;
+}
+
+html[data-ncm-skin] [data-testid="tid_favourite_modal"] [class^="SortHeader_"] {
+  background: var(--ncm-wash);
+}
+
+html[data-ncm-skin] [data-testid="tid_favourite_modal"] .playlist-cover img {
+  border-radius: 8px;
+}
+
+@media (max-width: 1100px) {
+  html[data-ncm-skin] #page_pc_setting h3 {
+    width: 122px;
+    font-size: 19px;
+  }
+}
+
+/* Apply frost once per portal. Nested wrappers stay clear, avoiding several
+   translucent backgrounds adding up to an opaque drawer. */
+html[data-ncm-skin] .cmd-portal[data-ncm-panel="queue"] .cmd-sidesheet-inner,
+html[data-ncm-skin] .cmd-portal[data-ncm-panel="collection"] .cmd-modal-content,
+html[data-ncm-skin] .cmd-portal[data-ncm-panel="search"] .cmd-popover-wrapper {
+  background: var(--ncm-glass-panel) !important;
+  backdrop-filter: blur(28px) saturate(1.4);
+  -webkit-backdrop-filter: blur(28px) saturate(1.4);
+  box-shadow: inset 0 1px var(--ncm-glass-edge), 0 16px 54px rgba(7, 18, 35, .22);
+}
+html[data-ncm-skin] .cmd-portal[data-ncm-panel="queue"] :is(.cmd-sidesheet-content, .cmd-sidesheet-body),
+html[data-ncm-skin] .cmd-portal[data-ncm-panel="collection"] :is(.cmd-modal, .cmd-modal-header, .cmd-modal-body),
+html[data-ncm-skin] .cmd-portal[data-ncm-panel="search"] :is(.cmd-popover, .cmd-popover-content),
+html[data-ncm-skin] :is(#page_pc_playlist, #page_pc_setting, .SearchResults_s92u6ho, [data-testid="tid_favourite_modal"]) {
+  background: transparent !important;
+}
+html[data-ncm-skin] #page_pc_setting .cmd-anchor,
+html[data-ncm-skin] #page_pc_playlist [class^="HeaderWrapper_"],
+html[data-ncm-skin] [data-testid="tid_favourite_modal"] [class^="SortHeader_"] {
+  background: var(--ncm-wash);
+  backdrop-filter: blur(20px) saturate(1.25);
+  -webkit-backdrop-filter: blur(20px) saturate(1.25);
+  box-shadow: inset 0 1px var(--ncm-glass-edge);
+}
+html[data-ncm-skin] #page_pc_setting [class^="Header_"] {
+  background: transparent !important;
+}
+html[data-ncm-skin] :is(.StyledMenu_sizrwh6, .StyledMenu_s1yked2s, .StyledMenu_s14dwa1s, .LyricStyledMenu_l1sazae8, .MenuContainer_mofvt3d) {
+  background: var(--ncm-glass-panel);
+  backdrop-filter: blur(24px) saturate(1.25);
+  -webkit-backdrop-filter: blur(24px) saturate(1.25);
+  box-shadow: inset 0 1px var(--ncm-glass-edge), 0 12px 38px rgba(7, 18, 35, .20);
+}
+html[data-ncm-skin] :is(.StyledMenu_sizrwh6, .StyledMenu_s1yked2s, .StyledMenu_s14dwa1s, .LyricStyledMenu_l1sazae8, .MenuContainer_mofvt3d) .cmd-dropdown-menu {
+  background: transparent !important;
+}

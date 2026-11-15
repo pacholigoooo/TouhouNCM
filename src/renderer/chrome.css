@@ -1,0 +1,586 @@
+/* Tint the shared artwork slightly to mark the navigation column. */
+html[data-ncm-skin] #page_pc_main_tab {
+  --colorSidebar1: var(--ncm-ink);
+  --colorSidebar2: var(--ncm-muted);
+  --colorSidebar3: var(--ncm-muted);
+  --colorSidebar4: var(--ncm-muted);
+  --colorSidebar5: var(--ncm-line);
+  --colorSidebar6: var(--ncm-hover);
+  --colorSidebar7: var(--ncm-canvas);
+  --colorSidebar8: var(--ncm-ink);
+  color: var(--ncm-ink) !important;
+  background: linear-gradient(var(--ncm-line), var(--ncm-line)), var(--ncm-canvas) !important;
+  box-shadow: inset -1px 0 var(--ncm-line);
+}
+html[data-ncm-skin] #page_pc_main_tab :is(#contentContainer, [data-testid="tid_left_scroll_container"]) {
+  background: transparent !important;
+}
+html[data-ncm-skin] #page_pc_main_tab #topArea :is(.cmd-icon-title, .cmd-icon-title svg, .cmd-icon-logo, .cmd-icon-logo svg) {
+  color: var(--ncm-ink) !important;
+}
+html[data-ncm-skin] #page_pc_main_tab [class*="NavItemContainer_"] {
+  padding-top: 18px;
+  padding-bottom: 18px;
+}
+html[data-ncm-skin] #page_pc_main_tab [class*="NavItemContainer_"].first-group {
+  padding-top: 6px;
+}
+html[data-ncm-skin] #page_pc_main_tab :is([data-testid^="tid_navitem_"], [data-testid="tid_nav_more_btn"]) {
+  min-height: 40px;
+  padding-left: 12px;
+  padding-right: 10px;
+  color: var(--ncm-ink) !important;
+  border-radius: 10px;
+  transition: background-color .18s ease, color .18s ease;
+}
+html[data-ncm-skin] #page_pc_main_tab :is([data-testid^="tid_navitem_"] .title, [data-testid="tid_nav_more_btn"] .text) {
+  color: inherit !important;
+  font-size: 14px;
+}
+html[data-ncm-skin] #page_pc_main_tab :is([data-testid^="tid_navitem_"] .cmd-icon, [data-testid^="tid_navitem_"] .cmd-icon svg, [data-testid="tid_nav_more_btn"] .cmd-icon, [data-testid="tid_nav_more_btn"] .cmd-icon svg) {
+  color: var(--ncm-muted) !important;
+}
+html[data-ncm-skin] #page_pc_main_tab :is([data-testid^="tid_navitem_"]:not(.selected):hover, [data-testid^="tid_navitem_"].focused:not(.selected), [data-testid="tid_nav_more_btn"]:hover) {
+  background: var(--ncm-hover) !important;
+}
+html[data-ncm-skin] #page_pc_main_tab [data-testid^="tid_navitem_"].selected,
+html[data-ncm-skin] #page_pc_main_tab [class*="PlayListItemContent_"].selected > .background {
+  color: var(--ncm-ink) !important;
+  background: var(--ncm-raised) !important;
+  box-shadow: inset 0 0 0 1px var(--ncm-glass-edge);
+}
+html[data-ncm-skin] #page_pc_main_tab [data-testid^="tid_navitem_"].selected .title {
+  font-weight: 700;
+}
+html[data-ncm-skin] #page_pc_main_tab [data-testid^="tid_navitem_"].selected :is(.cmd-icon, .cmd-icon svg) {
+  color: var(--ncm-ink) !important;
+}
+html[data-ncm-skin] #page_pc_main_tab :is([data-testid="tid_sidebar_mine_area"] > .text, [data-testid="tid_collectingplaylist_title"], [data-testid="tid_createplaylist_add_btn"]) {
+  color: var(--ncm-muted) !important;
+  font-size: 12px;
+  font-weight: 500;
+}
+html[data-ncm-skin] #page_pc_main_tab [data-testid="tid_left_scroll_container"]::-webkit-scrollbar-thumb {
+  /* Inset the ink within NetEase's 14px drag target. */
+  border: 5px solid transparent;
+  background-clip: content-box;
+  background-color: transparent;
+}
+html[data-ncm-skin] #page_pc_main_tab [data-testid="tid_left_scroll_container"]:hover::-webkit-scrollbar-thumb {
+  background-color: var(--colorBlack9);
+}
+html[data-ncm-skin] #page_pc_main_tab [data-testid="tid_left_scroll_container"]:hover::-webkit-scrollbar-thumb:hover {
+  background-color: var(--colorBlack6);
+}
+
+/* Preserve the native 72px titlebar and all drag/no-drag regions. */
+html[data-ncm-skin] #page_pc_main_nav {
+  --colorSidebar1: var(--ncm-ink);
+  --colorSidebar3: var(--ncm-muted);
+  color: var(--ncm-ink) !important;
+  background: var(--ncm-canvas) !important;
+  box-shadow: inset 0 -1px var(--ncm-line);
+}
+html[data-ncm-skin] #page_pc_main_nav [data-testid="tid_header_back_btn"] {
+  color: var(--ncm-muted);
+  background: var(--ncm-raised) !important;
+  border-color: transparent !important;
+  border-radius: 10px;
+}
+html[data-ncm-skin] #page_pc_main_nav [data-testid="tid_header_back_btn"] :is(.cmd-icon, .cmd-icon svg) {
+  color: var(--ncm-muted) !important;
+}
+html[data-ncm-skin] #page_pc_main_nav [data-testid="tid_header_back_btn"]:not(.disable):hover {
+  background: var(--ncm-hover) !important;
+}
+html[data-ncm-skin] #page_pc_main_nav [data-testid="tid_header_back_btn"].disable {
+  background: transparent !important;
+}
+html[data-ncm-skin] #page_pc_main_nav [data-testid="tid_searchbox"] .searchbox {
+  background: var(--ncm-raised) !important;
+  background-image: none !important;
+  border-radius: 11px;
+  box-shadow: 0 2px 8px #13243d06;
+}
+html[data-ncm-skin] #page_pc_main_nav [data-testid="tid_searchbox"] .searchbox::after {
+  background: none !important;
+}
+html[data-ncm-skin] #page_pc_main_nav [data-testid="tid_searchbox"] .searchbox:focus-within {
+  outline: 2px solid var(--ncm-accent);
+  outline-offset: 2px;
+}
+html[data-ncm-skin] #page_pc_main_nav [data-testid="tid_searchbox_input"] {
+  color: var(--ncm-ink) !important;
+  caret-color: var(--ncm-accent) !important;
+}
+html[data-ncm-skin] #page_pc_main_nav [data-testid="tid_searchbox_input"]::placeholder,
+html[data-ncm-skin] #page_pc_main_nav [data-testid="tid_searchbox"] .searchbox :is(.cmd-icon, .cmd-icon svg) {
+  color: var(--ncm-muted) !important;
+  opacity: 1;
+}
+html[data-ncm-skin] #page_pc_main_nav [data-testid="tid_searchbox_btn"] {
+  background: transparent !important;
+}
+html[data-ncm-skin] #page_pc_main_nav [data-testid="tid_searchbox_btn"]:hover :is(.cmd-icon, .cmd-icon svg) {
+  color: var(--ncm-accent) !important;
+}
+html[data-ncm-skin] #page_pc_main_nav [data-testid="tid_header_recognize_btn"] {
+  background: var(--ncm-raised) !important;
+  border-color: transparent !important;
+  border-radius: 10px;
+  color: var(--ncm-muted) !important;
+}
+html[data-ncm-skin] #page_pc_main_nav [data-testid="tid_header_recognize_btn"]::after {
+  background: none !important;
+}
+html[data-ncm-skin] #page_pc_main_nav [data-testid="tid_header_recognize_btn"]:hover {
+  background: var(--ncm-hover) !important;
+}
+html[data-ncm-skin] #page_pc_main_nav [data-testid="tid_pc_nav_bar_account"] [class*="Name_"] {
+  color: var(--ncm-ink) !important;
+  font-weight: 600;
+}
+html[data-ncm-skin] #page_pc_main_nav [class*="Divider_"] {
+  background: var(--ncm-line) !important;
+}
+html[data-ncm-skin] #ncm-immersive-settings-entry {
+  display: inline-flex;
+  flex: 0 0 28px;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
+  margin: 0 10px 0 0;
+  padding: 4px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ncm-muted);
+  font: 12px/1 var(--ncm-font);
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+}
+html[data-ncm-skin] #ncm-immersive-settings-entry svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+html[data-ncm-skin] #ncm-immersive-settings-entry:hover,
+html[data-ncm-skin] #ncm-immersive-settings-entry[aria-expanded="true"] {
+  background: var(--ncm-hover);
+  color: var(--ncm-ink);
+}
+html[data-ncm-skin] #ncm-immersive-settings-entry:focus-visible {
+  outline: 2px solid var(--ncm-accent);
+  outline-offset: 2px;
+}
+html[data-ncm-skin] #page_pc_main_nav [class*="WindowOpBarContainer_"] > .cmd-icon {
+  color: var(--ncm-muted) !important;
+  border-radius: 7px;
+}
+html[data-ncm-skin] #page_pc_main_nav [class*="WindowOpBarContainer_"] > .cmd-icon svg {
+  color: inherit !important;
+}
+html[data-ncm-skin] #page_pc_main_nav [class*="WindowOpBarContainer_"] > .cmd-icon:not(.cmd-icon-close):hover {
+  background: var(--ncm-hover) !important;
+  color: var(--ncm-ink) !important;
+}
+html[data-ncm-skin] #page_pc_main_nav [class*="WindowOpBarContainer_"] > .cmd-icon-close:hover {
+  background: #d93643 !important;
+  color: #fff !important;
+}
+
+/* Main footer: app.chunk modules 396/405/109, verified direct children
+   .side / .middle / .side.right-side. Keep the native 80px reservation and
+   the progress input's horizontal geometry; adapt only the bar's own layout.
+   Optional cover colors inherit from html: --ncm-player-tint (subtle alpha)
+   and --ncm-player-accent (contrast-safe color), with ordinary skin fallbacks. */
+html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 1.18fr) minmax(0, 1fr);
+  align-items: center;
+  column-gap: clamp(12px, 1.8vw, 28px);
+  height: 80px;
+  padding: 0 clamp(18px, 2.2vw, 32px);
+  background: var(--ncm-surface) !important;
+  color: var(--ncm-ink) !important;
+  border-top: 0;
+  border-radius: 0;
+  box-shadow: inset 0 1px var(--ncm-line), 0 -5px 22px rgba(6, 16, 30, .045);
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper > .side {
+  width: auto;
+  min-width: 0;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper > .side:not(.right-side) {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper .left {
+  width: 100%;
+  min-width: 0;
+  height: 80px;
+  align-self: stretch;
+  gap: 12px;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper .left > * {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper :is(.songPlayInfo_s1140jsx, .togetherSongPlayInfo_tugxiga) {
+  flex: 1 1 0;
+  width: auto;
+  min-width: 0;
+  height: auto;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper .info-wrapper {
+  width: 100%;
+  min-width: 0;
+}
+
+/* Show the actual cover as the same quiet square used by the immersive page.
+   The source node retains its native detail-opening and drag handlers. */
+html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper [data-testid="tid_btn_pc_minibar_vinyl"] {
+  flex: 0 0 56px;
+  width: 56px !important;
+  min-width: 56px !important;
+  max-width: 56px !important;
+  height: 56px !important;
+  min-height: 56px !important;
+  max-height: 56px !important;
+  border-radius: 9px;
+  overflow: hidden;
+  background: var(--ncm-surface);
+  animation: none;
+  transform: none;
+  will-change: auto;
+  box-shadow: 0 5px 15px rgba(6, 16, 30, .17);
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper [data-testid="tid_btn_pc_minibar_vinyl"] :is(img, .mv-slot) {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: inherit;
+  object-fit: cover;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper [data-testid="tid_minibar_title"] {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper [data-testid="tid_minibar_title"] .main-title {
+  max-width: 100%;
+  margin-bottom: 3px;
+  line-height: 21px;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper [data-testid="tid_minibar_title"] .main-title .title {
+  min-width: 0;
+  font-family: var(--ncm-font);
+  font-size: 15px;
+  font-weight: 650;
+  letter-spacing: -.015em;
+  line-height: 21px;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper [data-testid="tid_minibar_title"] .author {
+  max-width: 100%;
+  min-height: 17px;
+  font-size: 12px;
+  line-height: 17px;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper [data-testid="tid_minibar_title"] .author a {
+  display: inline;
+  font-size: inherit;
+  font-weight: 450;
+  line-height: inherit;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper .red-star-comment-wrapper {
+  flex-shrink: 0;
+  gap: 10px;
+}
+
+/* Native middle and right controls remain reachable, including FM/voice extras. */
+html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper > .middle {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
+  justify-self: center;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper [data-testid="tid_playbar_controls"] {
+  justify-content: center;
+  align-items: center;
+  column-gap: clamp(10px, 1.2vw, 18px);
+  padding-top: 0;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper [data-testid="tid_playbar_controls"] > * {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper > .right-side {
+  grid-column: 3;
+  grid-row: 1;
+  justify-content: flex-end;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper .right {
+  width: auto;
+  max-width: 100%;
+  height: 80px;
+  column-gap: 8px;
+  justify-content: flex-end;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper .right > * {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper :is(
+  [data-testid="tid_playbar_prev_btn"],
+  [data-testid="tid_playbar_next_btn"],
+  [data-testid="tid_playmode_btn"] > .cmd-button
+) {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  padding: 0;
+  border-radius: 9px;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper :is(
+  [data-testid="tid_playbar_prev_btn"],
+  [data-testid="tid_playbar_next_btn"]
+) svg {
+  width: 22px;
+  height: 22px;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar [class*="MinibarHoverMask_"] {
+  background: none !important;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar [data-testid="tid_minibar_title"] .main-title,
+html[data-ncm-skin] footer #page_pc_mini_bar [data-testid="tid_minibar_title"] .main-title .title {
+  color: var(--ncm-ink) !important;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar [data-testid="tid_minibar_title"] .author,
+html[data-ncm-skin] footer #page_pc_mini_bar [data-testid="tid_minibar_title"] .author a {
+  color: var(--ncm-muted) !important;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar [data-testid^="tid_playbar_"].cmd-button,
+html[data-ncm-skin] footer #page_pc_mini_bar [data-testid="tid_playmode_btn"] > .cmd-button {
+  background: transparent !important;
+  color: var(--ncm-ink) !important;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar [data-testid^="tid_playbar_"].cmd-button .cmd-icon,
+html[data-ncm-skin] footer #page_pc_mini_bar [data-testid^="tid_playbar_"].cmd-button .cmd-icon svg,
+html[data-ncm-skin] footer #page_pc_mini_bar [data-testid="tid_playmode_btn"] .cmd-icon,
+html[data-ncm-skin] footer #page_pc_mini_bar [data-testid="tid_playmode_btn"] .cmd-icon svg {
+  color: inherit !important;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar [data-testid^="tid_playbar_"].cmd-button:not(:disabled):hover,
+html[data-ncm-skin] footer #page_pc_mini_bar [data-testid="tid_playmode_btn"] > .cmd-button:not(:disabled):hover {
+  background: var(--ncm-hover) !important;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar [data-testid="tid_playbar_play_btn"].cmd-button,
+html[data-ncm-skin] footer #page_pc_mini_bar [data-testid="tid_playbar_play_btn"].cmd-button:not(:disabled):hover {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  padding: 0;
+  border-radius: 50%;
+  background: var(--ncm-player-accent, var(--ncm-accent)) !important;
+  color: var(--ncm-player-on-accent, #fff) !important;
+  box-shadow: 0 4px 12px rgba(6, 16, 30, .12);
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper [data-testid="tid_playbar_play_btn"] svg {
+  width: 23px !important;
+  height: 23px !important;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper .likenumber-red path {
+  fill: var(--colorPrimary1) !important;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar [data-testid="tid_playbar_lyric_btn"].lyric-icon-on {
+  color: var(--ncm-accent) !important;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar [data-testid="tid_playbar_soundquality"] .cmd-tag {
+  background: var(--ncm-surface) !important;
+  border-color: var(--ncm-line) !important;
+  border-radius: 5px;
+  color: var(--ncm-muted) !important;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar [aria-label="播放进度调节"] {
+  background: transparent !important;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar [aria-label="播放进度调节"]::before {
+  background: var(--ncm-line) !important;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar [aria-label="播放进度调节"] .cache {
+  background: var(--ncm-selected) !important;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar [aria-label="播放进度调节"] .track,
+html[data-ncm-skin] footer #page_pc_mini_bar [aria-label="播放进度调节"] .thumb.loading {
+  background: var(--ncm-player-accent, var(--ncm-accent)) !important;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar [aria-label="播放进度调节"] .thumb:not(.loading) {
+  background: var(--ncm-ink) !important;
+}
+
+html[data-ncm-skin] footer #page_pc_mini_bar .curtime-thumb .btn {
+  color: var(--ncm-ink);
+  background: var(--ncm-raised);
+  border-radius: 7px;
+  box-shadow: 0 4px 14px rgba(6, 16, 30, .14);
+  font-family: var(--ncm-font);
+  font-size: 12px;
+  font-weight: 550;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 1100px) {
+  html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper {
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 1.1fr) minmax(180px, 1fr);
+    column-gap: 12px;
+    padding-right: 18px;
+    padding-left: 18px;
+  }
+
+  html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper .left {
+    gap: 10px;
+  }
+
+  html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper [data-testid="tid_playbar_controls"] {
+    column-gap: 10px;
+  }
+
+  html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper .right {
+    column-gap: 6px;
+  }
+}
+
+/* Compact windows retain every native action; only auxiliary tools move down. */
+@media (max-width: 800px) {
+  html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: 40px 28px;
+    row-gap: 4px;
+    column-gap: 14px;
+    padding: 4px 14px;
+  }
+
+  html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper .left {
+    height: 40px;
+    gap: 9px;
+  }
+
+  html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper [data-testid="tid_btn_pc_minibar_vinyl"] {
+    flex-basis: 48px;
+    width: 48px !important;
+    min-width: 48px !important;
+    max-width: 48px !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    max-height: 48px !important;
+    border-radius: 8px;
+  }
+
+  html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper > .middle {
+    width: auto;
+    justify-self: end;
+  }
+
+  html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper > .right-side {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    width: 100%;
+  }
+
+  html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper .right {
+    height: 28px;
+    column-gap: 8px;
+  }
+
+  html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper [data-testid="tid_minibar_title"] .main-title {
+    margin-bottom: 1px;
+    line-height: 19px;
+  }
+
+  html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper [data-testid="tid_minibar_title"] .main-title .title {
+    font-size: 14px;
+    line-height: 19px;
+  }
+
+  html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper [data-testid="tid_minibar_title"] .author {
+    min-height: 16px;
+    font-size: 11px;
+    line-height: 16px;
+  }
+}
+
+html[data-ncm-skin] #page_pc_main_tab [data-testid^="tid_navitem_"]:focus-visible,
+html[data-ncm-skin] #page_pc_main_nav button:focus-visible,
+html[data-ncm-skin] footer #page_pc_mini_bar .cmd-button:focus-visible {
+  outline: 2px solid var(--ncm-accent);
+  outline-offset: 2px;
+}
+
+html[data-ncm-skin] #page_pc_main_nav :is(
+  [data-testid="tid_searchbox"] .searchbox,
+  [data-testid="tid_header_back_btn"],
+  [data-testid="tid_header_recognize_btn"]
+) {
+  background: var(--ncm-raised) !important;
+  box-shadow: inset 0 1px var(--ncm-glass-edge), 0 3px 12px rgba(10, 25, 47, .05);
+}
+
+html[data-ncm-skin] footer,
+html[data-ncm-skin] footer #page_pc_mini_bar {
+  background: transparent !important;
+}
+html[data-ncm-skin] footer #page_pc_mini_bar .default-bar-wrapper {
+  background: var(--ncm-surface) !important;
+  backdrop-filter: blur(28px) saturate(1.4);
+  -webkit-backdrop-filter: blur(28px) saturate(1.4);
+  box-shadow: inset 0 1px var(--ncm-glass-edge), 0 -8px 30px rgba(9, 20, 38, .08);
+}
+
+html[data-touhouncm-update] #ncm-immersive-settings-entry { position: relative; }
+html[data-touhouncm-update] #ncm-immersive-settings-entry::after { content: ""; position: absolute; top: 3px; right: 3px; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }

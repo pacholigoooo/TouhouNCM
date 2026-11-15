@@ -1,0 +1,190 @@
+/* Orpheus updates its semantic palette on the document element when the native
+   skin changes. Reuse the same tokens for route content and body-level portals. */
+html[data-ncm-skin] {
+  --ncm-surface: rgba(248, 251, 255, .70);
+  --ncm-canvas: rgba(248, 251, 255, .36);
+  --ncm-wash: rgba(244, 249, 255, .36);
+  --ncm-content-width: 1280px;
+  --ncm-page-gutter: clamp(24px, 3.4vw, 54px);
+  --ncm-raised: rgba(255, 255, 255, .56);
+  --ncm-glass-panel: rgba(247, 251, 255, .76);
+  --ncm-popup-surface: #f7fbff;
+  --ncm-glass-edge: rgba(255, 255, 255, .65);
+  --ncm-glass-shade: rgba(244, 248, 255, .38);
+  --ncm-glass-art-opacity: .18;
+  --ncm-glass-blur: 24px;
+  --ncm-ink: var(--colorBlack1, #283248);
+  --ncm-muted: var(--colorBlack3, #596276);
+  --ncm-line: var(--colorBlack10, #dadee5);
+  --ncm-hover: var(--colorBlack11, #e9ecf1);
+  --ncm-selected: var(--colorPrimary7, #fce8e8);
+  --ncm-accent: var(--colorPrimary1, #e83940);
+  --ncm-font: "Segoe UI", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
+}
+
+html[data-ncm-skin] :is(#page_pc_main_tab, #topArea, #page_pc_main_nav, [data-testid="tid_scroll_container"], footer, .cmd-portal[data-ncm-panel]) :is(a[href], button, [role="button"], [role="tab"], input, select, [tabindex="0"]):focus-visible {
+  outline: 2px solid var(--ncm-accent);
+  outline-offset: -2px;
+}
+
+html[data-ncm-skin] [data-testid="tid_scroll_container"] ::selection {
+  background: var(--colorPrimary6);
+  color: var(--ncm-ink);
+}
+
+/* Fill fractional-DPI edges, including the frame behind the composited cover. */
+html[data-ncm-player-fullscreen],
+html[data-ncm-player-fullscreen] body,
+html[data-ncm-player-fullscreen] #ncm-immersive-host {
+  background-color: #121b29 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+html[data-ncm-player-fullscreen] :is(#topArea, #page_pc_main_nav, #page_pc_mini_bar) {
+  visibility: hidden;
+}
+html[data-ncm-player-open] #ncm-glass-backdrop {
+  display: none;
+}
+
+/* Secondary routes share typography, while artwork, video controls and badges
+   continue to use the colors assigned to them by NetEase. */
+html[data-ncm-skin] :is([data-testid="tid_commentpage_header_info"], [data-testid="tid_download_header"], [data-testid="tid_msgsheet_header"]) {
+  box-shadow: inset 0 -1px var(--ncm-line);
+}
+
+html[data-ncm-skin] :is([data-testid="tid_scenefm_title"], [data-testid="tid_audioeffect_recommend"] .module-title,
+  [data-testid="tid_themecard_item"] .tit, [data-testid="tid_privateitem_nickname"]) {
+  font-weight: 650;
+  letter-spacing: normal;
+}
+
+html[data-ncm-skin] [data-testid="tid_eventcard_message"] .massage {
+  line-height: 1.65;
+  overflow-wrap: break-word;
+}
+
+html[data-ncm-skin] [data-testid="tid_themecard_item"] .subtext,
+html[data-ncm-skin] [data-testid="tid_localmusic_total"] > span {
+  color: var(--ncm-muted);
+}
+
+html[data-ncm-skin] :is([data-testid="tid_themecard_item"], [data-testid="tid_audiocard_item"]) img {
+  border-radius: 8px;
+}
+
+html[data-ncm-skin] [data-testid="tid_mv_relate_song_info"]:hover .track-name {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* One continuous canvas joins native routes to the album-first player.
+   Native skin variables still own light/dark switching and branded actions. */
+html[data-ncm-skin] :is(main, [data-testid="tid_scroll_container"]) {
+  background-color: var(--ncm-canvas);
+  color: var(--ncm-ink);
+  font-family: var(--ncm-font);
+}
+html[data-ncm-skin] [data-testid="tid_scroll_container"] {
+  scrollbar-color: var(--ncm-line) transparent;
+}
+html[data-ncm-skin] [data-testid="tid_scroll_container"]::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background: var(--ncm-line);
+}
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(.duration, .play-count, .count, .index, .num) {
+  font-variant-numeric: tabular-nums;
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-ncm-skin] :is(#page_pc_main_tab, #page_pc_main_nav, #page_pc_home, #page_pc_choice, #page_pc_setting) * {
+    scroll-behavior: auto;
+    transition-duration: 0s;
+  }
+}
+
+/* Artwork is supplied by the existing bridge. Negative depth stays inside the
+   body isolation group; root and native portals keep their original stacking. */
+html[data-ncm-skin][data-ncm-glass-tone="dark"] {
+  --ncm-surface: rgba(18, 27, 41, .70);
+  --ncm-canvas: rgba(17, 26, 40, .30);
+  --ncm-wash: rgba(163, 191, 225, .10);
+  --ncm-raised: rgba(39, 53, 73, .58);
+  --ncm-glass-panel: rgba(24, 36, 53, .78);
+  --ncm-popup-surface: #182435;
+  --ncm-glass-edge: rgba(219, 237, 255, .18);
+  --ncm-glass-shade: rgba(9, 16, 29, .42);
+  --ncm-glass-art-opacity: .16;
+}
+
+html[data-ncm-skin] body {
+  isolation: isolate;
+}
+
+html[data-ncm-skin] :is(#root, #root > div) {
+  background: transparent !important;
+}
+
+html[data-ncm-skin] #ncm-glass-backdrop {
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  overflow: hidden;
+  background: var(--colorBackground, #e8eef6);
+  pointer-events: none;
+}
+
+html[data-ncm-skin] #ncm-glass-backdrop::before,
+html[data-ncm-skin] .StyledStickyOper_svzrh3b > .StyledStickyMask_s1iiif9f::before,
+html[data-ncm-skin] #page_pc_songplay_comment .Mask_mp3nchl > .StyledStickyMask_s1iiif9f::before {
+  content: "";
+  position: absolute;
+  inset: -48px;
+  background-image: var(--ncm-artwork-image, none);
+  background-size: cover;
+  background-position: center;
+  filter: blur(32px) saturate(1.35);
+  opacity: .90;
+}
+
+html[data-ncm-skin] #ncm-glass-backdrop::after,
+html[data-ncm-skin] .StyledStickyOper_svzrh3b > .StyledStickyMask_s1iiif9f::after,
+html[data-ncm-skin] #page_pc_songplay_comment .Mask_mp3nchl > .StyledStickyMask_s1iiif9f::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--ncm-glass-shade);
+}
+
+/* The scroll viewport is the full-width reading canvas. Native <main> is an
+   inset content column whose height excludes its absolute virtual rows; painting
+   it creates a short rectangle with rows spilling beyond its bottom. */
+html[data-ncm-skin] [data-testid="tid_scroll_container"] {
+  background: var(--ncm-canvas) !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+/* Cached routes can nest several scrollports. Paint the wash just once. */
+html[data-ncm-skin] [data-testid="tid_scroll_container"] [data-testid="tid_scroll_container"] {
+  background: transparent !important;
+}
+html[data-ncm-skin] [data-testid="tid_scroll_container"] main {
+  background: transparent !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+html[data-ncm-skin] [data-testid="tid_scroll_container"] :is(
+  .StyledContent_s1n040op, .StyledContent_s130uktw,
+  #page_mine_like_music, #page_pc_songlist_songflow, #page_pc_songlist_commentflow,
+  #page_pc_artist, #page_pc_album, #page_pc_album_detail
+) {
+  background: transparent !important;
+}
+/* These hidden elements measure resizes; their geometry remains native. */
+html[data-ncm-skin] [data-testid="tid_scroll_container"] .resize-triggers,
+html[data-ncm-skin] [data-testid="tid_scroll_container"] .resize-triggers :is(.expand-trigger, .contract-trigger),
+html[data-ncm-skin] [data-testid="tid_scroll_container"] .resize-triggers .contract-trigger::before {
+  background: transparent !important;
+}

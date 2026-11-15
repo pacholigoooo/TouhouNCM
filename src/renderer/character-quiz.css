@@ -1,0 +1,46 @@
+.character-heading { margin: 0 0 10px; font-size: 17px; line-height: 1.5; font-weight: 650; color: inherit; }
+.character-description, .character-counts, .character-note { color: var(--touhou-muted, var(--origin-accent)); font-size: 12px; line-height: 1.7; }
+.character-description { margin: 0 0 18px; }
+.character-online { display: flex; align-items: center; gap: 8px; font-size: 12px; cursor: pointer; }
+.character-online input { flex: 0 0 auto; width: 15px; height: 15px; margin: 0; accent-color: var(--touhou-accent, var(--origin-accent)); cursor: pointer; }
+.character-online-hint { margin: 5px 0 18px 23px; color: var(--touhou-muted, var(--origin-accent)); font-size: 11px; line-height: 1.6; }
+.character-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+.character-options { margin-top: 16px; color: var(--touhou-muted, var(--origin-accent)); font-size: 12px; line-height: 1.7; }
+.character-options summary { cursor: pointer; width: fit-content; }
+.character-options .character-description { margin: 10px 0; }
+.character-options .character-online-hint { margin-bottom: 0; }
+.character-profile { margin-bottom: 20px; }
+.character-profile-title { margin: 0 0 7px; font-size: 13px; font-weight: 550; }
+.character-profile-description { margin: 0 0 7px; font-size: 13px; line-height: 1.9; color: var(--touhou-muted, var(--origin-accent)); }
+.character-listener-summary { margin: 12px 0; padding-left: 12px; border-left: 2px solid var(--touhou-accent, var(--origin-accent)); font-size: 13px; line-height: 1.85; color: var(--touhou-ink, inherit); }
+.character-profile a { font-size: 11px; color: var(--touhou-accent, var(--origin-accent)); text-underline-offset: 3px; }
+.character-evidence h4 { margin: 18px 0 8px; font-size: 15px; }
+.character-progress { display: block; width: 100%; height: 5px; margin: 12px 0 22px; overflow: hidden; border: 0; border-radius: 3px; background: var(--touhou-control, #ffffff18); accent-color: var(--touhou-accent, var(--origin-accent)); }
+.character-progress::-webkit-progress-bar { background: var(--touhou-control, #ffffff18); }
+.character-progress::-webkit-progress-value { background: var(--touhou-accent, var(--origin-accent)); }
+[data-character-result] { margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--touhou-line, #ffffff24); }
+.character-result-heading { margin: 0; font-size: 14px; line-height: 1.5; font-weight: 500; }
+.character-winner { margin: 8px 0 12px; color: var(--touhou-ink, #f4f1ed); font-size: 28px; line-height: 1.35; font-weight: 650; letter-spacing: -.02em; }
+.character-counts { margin: 0 0 18px; font-variant-numeric: tabular-nums; }
+.character-ranking { margin: 0; padding: 0; list-style: none; }
+.character-ranking li { padding: 10px 0; }
+.character-ranking li > div:first-child { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 8px; }
+.character-ranking strong { font-size: 13px; font-weight: 550; }
+.character-ranking li > div > span { font-size: 11px; font-variant-numeric: tabular-nums; color: var(--touhou-muted, var(--origin-accent)); }
+.character-score-track { height: 4px; overflow: hidden; border-radius: 3px; background: var(--touhou-control, #ffffff18); }
+.character-score-track span { display: block; height: 100%; border-radius: inherit; background: var(--touhou-accent, var(--origin-accent)); }
+.character-note { margin: 12px 0 20px; font-size: 11px; }
+.character-evidence { padding: 14px 0; border-top: 1px solid var(--touhou-line, #ffffff24); }
+.character-evidence summary { cursor: pointer; font-size: 12px; }
+.character-evidence ul { list-style: none; margin: 0; padding: 0; }
+.character-evidence li { padding: 14px 0 0; }
+.character-evidence li > strong { font-size: 12px; font-weight: 550; }
+.character-meta { display: block; margin-top: 4px; }
+.character-evidence li > p { margin: 6px 0; }
+.character-meta, .character-evidence li > p { color: var(--touhou-muted, var(--origin-accent)); font-size: 11px; }
+.character-sources { display: flex; flex-wrap: wrap; gap: 12px; }
+.character-sources a { color: var(--touhou-accent, var(--origin-accent)); font-size: 11px; text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 620px) {
+  .origin-tabs { gap: 2px; }
+  .origin-tabs button { padding-right: 6px; padding-left: 6px; }
+}
