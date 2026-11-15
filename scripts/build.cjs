@@ -94,7 +94,7 @@ fs.mkdirSync(out, {recursive:true});
 try {
   fs.writeFileSync(bundle, code);
   const compiler = path.join(process.env.WINDIR, "Microsoft.NET", "Framework64", "v4.0.30319", "csc.exe");
-  const args = ["/nologo","/target:winexe","/optimize+","/platform:x64",
+  const args = ["/nologo","/codepage:65001","/target:winexe","/optimize+","/platform:x64",
     "/reference:System.Management.dll","/reference:System.Windows.Forms.dll","/reference:System.Web.Extensions.dll",
     "/reference:Microsoft.CSharp.dll","/reference:System.Drawing.dll","/resource:"+bundle+",client.js", "/out:"+path.join(out,"NcmImmersive.exe"),
     ...Array.from(artResources, ([name, file]) => "/resource:" + file + "," + name),

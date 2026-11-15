@@ -15,7 +15,7 @@ internal static class ClientDiscoveryTests
     {
         // All fixtures are local to the supplied temporary directory; no registry
         // writes, installed-client launches, or changes to user settings.
-        string root = args[0];
+        string root = Path.GetFullPath(args[0]);
         string validDir = Path.Combine(root, "网易云 custom path");
         Directory.CreateDirectory(validDir);
         string exe = Path.Combine(validDir, "cloudmusic.exe");
