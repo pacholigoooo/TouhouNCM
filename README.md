@@ -4,6 +4,8 @@
 
 TouhouNCM 在网易云桌面客户端里提供沉浸播放页、封面流动背景、逐字歌词和东方音乐工具。日常听歌、桌面歌词与迷你窗口使用同一套主题。
 
+1.1.0 优化了内存占用。收起播放页后会释放大封面和背景图，关闭桌面歌词后会释放绘制资源。网易云最小化时会自动回收闲置缓存，桌面歌词和迷你窗口仍可正常使用。
+
 ## 功能
 
 - **沉浸播放**：封面取色、流动背景、全屏播放、逐字高亮、译文、字体选择和弧形歌词排版。
@@ -20,7 +22,7 @@ TouhouNCM 在网易云桌面客户端里提供沉浸播放页、封面流动背�
 
 **下载 Windows 安装程序：[GitHub Releases](https://github.com/pacholigoooo/TouhouNCM/releases/latest) · [百度网盘](https://pan.baidu.com/s/59iNZvDIhNRovi_kg5-X7-g)**。
 
-选择 `TouhouNCM-1.0.0-Setup-x64.exe`，其中包含程序和全部 162 项角色立绘资源。
+在 GitHub Releases 下载 `TouhouNCM-1.1.0-Setup-x64.exe`，其中包含程序和全部 162 项角色立绘资源。
 
 1. 双击下载的 EXE，点击“安装”。
 2. 安装程序自动解包，并创建桌面和开始菜单快捷方式。
@@ -42,7 +44,7 @@ npm run build:code
 
 `build:code` 构建完整程序逻辑，角色卡 PNG 导出需要另行准备立绘。按 [素材说明](docs/assets.md) 放入图片后，运行 `npm run build` 生成带本地立绘的程序。输出为 `dist/NcmImmersive.exe`。
 
-安装 [Inno Setup 6.5+](https://jrsoftware.org/isdl.php) 后，运行 `npm run build:installer`，生成 `dist/TouhouNCM-1.0.0-Setup-x64.exe`。自定义编译器路径可通过环境变量 `ISCC_PATH` 指定。安装向导源码位于 `installer/`。
+安装 [Inno Setup 6.5+](https://jrsoftware.org/isdl.php) 后，运行 `npm run build:installer`，生成 `dist/TouhouNCM-1.1.0-Setup-x64.exe`。自定义编译器路径可通过环境变量 `ISCC_PATH` 指定。安装向导源码位于 `installer/`。
 
 ## 项目结构
 

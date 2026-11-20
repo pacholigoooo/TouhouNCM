@@ -9,6 +9,17 @@ function fixture(failure) {
   const active = new Set(["bridge"]);
   const errors = [];
   const listeners = new Map();
+  const rules = ["html { color: red; }", "body { margin: 0; }"];
+  let ruleEdits = 0;
+  const sheet = {
+    isConnected: false,
+    sheet: {
+      cssRules: rules,
+      insertRule(rule, index) { rules.splice(index, 0, rule); ruleEdits++; },
+      deleteRule(index) { rules.splice(index, 1); ruleEdits++; }
+    },
+    remove() { active.delete("style"); this.isConnected = false; }
+  };
   const mount = name => {
     active.add(name);
     return () => active.delete(name);
@@ -35,10 +46,11 @@ function fixture(failure) {
   };
   const context = {
     window,
-    console: { error(...args) { errors.push(args); } },
+    console: { error(...args) { errors.push(args); }, warn(...args) { errors.push(args); } },
     document: {
-      head: { appendChild() { active.add("style"); } },
-      createElement() { return { remove() { active.delete("style"); } }; },
+      hidden: false,
+      head: { appendChild() { active.add("style"); sheet.isConnected = true; } },
+      createElement() { return sheet; },
       documentElement: {
         setAttribute() { active.add("skin"); },
         removeAttribute() { active.delete("skin"); }
@@ -69,19 +81,45 @@ function fixture(failure) {
   vm.runInContext(source, context);
   return {
     start: () => context.mountImmersiveRuntime("test", "", "", {version:"1.0.0"}),
-    window, active, listeners, errors
+    window, active, listeners, errors,
+    document: context.document, rules, get ruleEdits() { return ruleEdits; }
   };
 }
 
 const loaded = fixture();
+const wakes = [];
+loaded.window.__pachiNcmImmersiveNativeWake = payload => wakes.push(payload);
 assert.equal(loaded.start(), "ready");
+assert.deepEqual(wakes, ["ready"]);
 const runtime = loaded.window.__pachiImmersive;
+assert.equal(runtime.reclaimNativeStyleCache(), false);
+assert.equal(loaded.ruleEdits, 0);
+loaded.document.hidden = true;
+const originalRules = loaded.rules.slice();
+assert.equal(runtime.reclaimNativeStyleCache(), true);
+assert.deepEqual(loaded.rules, originalRules);
+assert.equal(loaded.ruleEdits, 2);
+loaded.document.hidden = false;
+assert.equal(runtime.reclaimNativeStyleCache(), false);
+assert.equal(loaded.ruleEdits, 2);
 runtime.destroy();
 runtime.destroy();
+assert.equal(runtime.reclaimNativeStyleCache(), false);
+assert.equal(loaded.ruleEdits, 2);
 assert.equal(loaded.active.size, 0);
 assert.equal(loaded.listeners.size, 0);
 assert.equal(loaded.window.__pachiImmersive, undefined);
 console.log("PASS runtime teardown is complete and repeatable");
+console.log("PASS native style cache reclaim preserves rules and runs only while hidden");
+
+const disconnected = fixture();
+disconnected.window.__pachiNcmImmersiveNativeWake = () => { throw Error("disconnected binding"); };
+// A stale native binding must not prevent a fresh renderer from mounting.
+assert.equal(disconnected.start(), "ready");
+assert.equal(disconnected.errors.length, 1);
+disconnected.window.__pachiImmersive.destroy();
+assert.equal(disconnected.active.size, 0);
+console.log("PASS a stale native wake binding preserves renderer mounting and teardown");
 
 const failed = fixture("subscribe");
 assert.throws(failed.start, /subscription failed/);

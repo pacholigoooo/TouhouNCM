@@ -118,10 +118,23 @@ function mountImmersiveRuntime(version, viewCss, nativeCss, config) {
       characterExportTake: () => characterExport?.takeRequest() || null,
       characterExportChunk: (id, offset) => characterExport?.readChunk(id, offset),
       characterExportFinish: (id, result) => characterExport?.finish(id, result),
+      reclaimNativeStyleCache() {
+        if (destroyed || !document.hidden || !sheet.isConnected) return false;
+        // CEF 91 retains native style allocations across repeated updates.
+        // A no-op rule edit invalidates that cache while preserving every rule.
+        const css = sheet.sheet;
+        if (!css) return false;
+        const index = css.cssRules.length;
+        css.insertRule(":root {}", index);
+        css.deleteRule(index);
+        return true;
+      },
       destroy: cleanup
     };
     window.__pachiImmersive = runtime;
     window.addEventListener("pagehide", cleanup, { once: true });
+    try { window.__pachiNcmImmersiveNativeWake?.("ready"); }
+    catch (error) { console.warn("TouhouNCM 原生窗口唤醒", error.message); }
     return "ready";
   } catch (error) {
     cleanup();

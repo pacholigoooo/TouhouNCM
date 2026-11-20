@@ -17,10 +17,6 @@ internal sealed class MiniPlayerForm : Form
     [DllImport("user32.dll")] static extern bool GetClientRect(IntPtr window, out NativeRect rect);
     [DllImport("user32.dll")] static extern bool ClientToScreen(IntPtr window, ref NativePoint point);
     [DllImport("user32.dll")] static extern IntPtr GetWindow(IntPtr window, uint command);
-    [DllImport("user32.dll", EntryPoint = "SetWindowLongPtrW")] static extern IntPtr SetWindowLongPtr64(IntPtr window, int index, IntPtr value);
-    [DllImport("user32.dll", EntryPoint = "SetWindowLongW")] static extern int SetWindowLong32(IntPtr window, int index, int value);
-    [DllImport("user32.dll", EntryPoint = "GetWindowLongPtrW")] static extern IntPtr GetWindowLongPtr64(IntPtr window, int index);
-    [DllImport("user32.dll", EntryPoint = "GetWindowLongW")] static extern int GetWindowLong32(IntPtr window, int index);
     [DllImport("user32.dll")] static extern bool SetWindowPos(IntPtr window, IntPtr after, int x, int y, int width, int height, uint flags);
     [DllImport("user32.dll")] static extern bool ReleaseCapture();
     [DllImport("user32.dll")] static extern bool PostMessage(IntPtr window, int message, IntPtr wParam, IntPtr lParam);
@@ -136,17 +132,6 @@ internal sealed class MiniPlayerForm : Form
         }
     }
 
-    static IntPtr ReadWindowLong(IntPtr window, int index)
-    {
-        return IntPtr.Size == 8 ? GetWindowLongPtr64(window, index) : new IntPtr(GetWindowLong32(window, index));
-    }
-
-    static void WriteWindowLong(IntPtr window, int index, IntPtr value)
-    {
-        if (IntPtr.Size == 8) SetWindowLongPtr64(window, index, value);
-        else SetWindowLong32(window, index, value.ToInt32());
-    }
-
     void IssueCommand(string action, double value)
     {
         if (action == "restore" || action == "close")
@@ -175,7 +160,7 @@ internal sealed class MiniPlayerForm : Form
         {
             Detach();
             nativeWindow = window;
-            WriteWindowLong(Handle, -8, window); // GWLP_HWNDPARENT: an owner for this top-level popup.
+            WindowLong.Write(Handle, -8, window); // GWLP_HWNDPARENT: an owner for this top-level popup.
             if (GetWindow(Handle, 4) != window) // GW_OWNER
             {
                 nativeWindow = IntPtr.Zero;
@@ -221,8 +206,8 @@ internal sealed class MiniPlayerForm : Form
         int stripHeight = nativeStripHeight > 0 ? nativeStripHeight : (int)Math.Round(74 * dpi / 96.0);
         int width = Math.Max(1, rect.Right - rect.Left);
         int height = Math.Max(1, Math.Min(stripHeight, rect.Bottom - rect.Top));
-        bool nativeTopmost = (ReadWindowLong(nativeWindow, -20).ToInt64() & 8) != 0;
-        bool popupTopmost = (ReadWindowLong(Handle, -20).ToInt64() & 8) != 0;
+        bool nativeTopmost = (WindowLong.Read(nativeWindow, -20).ToInt64() & 8) != 0;
+        bool popupTopmost = (WindowLong.Read(Handle, -20).ToInt64() & 8) != 0;
         if (Left != location.X || Top != location.Y || Width != width || Height != height || nativeTopmost != popupTopmost)
             SetWindowPos(Handle, nativeTopmost ? new IntPtr(-1) : new IntPtr(-2), location.X, location.Y, width, height,
                 0x0010 | (nativeTopmost == popupTopmost ? 0x0004u : 0));
@@ -233,7 +218,7 @@ internal sealed class MiniPlayerForm : Form
     {
         HideSurface();
         if (eventHook != IntPtr.Zero) { UnhookWinEvent(eventHook); eventHook = IntPtr.Zero; }
-        if (IsHandleCreated) WriteWindowLong(Handle, -8, IntPtr.Zero);
+        if (IsHandleCreated) WindowLong.Write(Handle, -8, IntPtr.Zero);
         nativeWindow = IntPtr.Zero;
         nativeWasVisible = dismissed = false;
     }

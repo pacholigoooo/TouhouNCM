@@ -921,11 +921,11 @@
       backdrop.setCover(null, animate);
       if (options.onCover) options.onCover(null);
     }
-    function updateCover(url, title) {
+    function updateCover(url, title, force = false) {
       const alt = title ? title + " · 专辑封面" : "专辑封面";
       $("[data-cover]").alt = alt;
       if (pendingCover) pendingCover.alt = alt;
-      if (url === coverUrl) return;
+      if (url === coverUrl && (!force || pendingCover)) return;
       coverUrl = url;
       releaseCover(pendingCover);
       pendingCover = null;
@@ -948,6 +948,11 @@
         clearTimeout(coverRetireTimer);
         image.onload = image.onerror = null;
         finishCoverTransition();
+        if (!opened) {
+          if (options.onCover) options.onCover(image, url);
+          releaseCover(image);
+          return;
+        }
         const old = $("[data-cover]"), animate = artworkMotion();
         if (animate && old.naturalWidth && !old.hidden) {
           old.removeAttribute("data-cover");
@@ -1131,6 +1136,7 @@
       view.hidden = false;
       view.dataset.open = "true";
       document.documentElement.setAttribute("data-ncm-player-open", "");
+      updateCover(coverUrl, snapshot && snapshot.track && snapshot.track.title, true);
       buildLyrics();
       onFullscreenChange();
       syncBackdrop();
@@ -1158,6 +1164,9 @@
       view.hidden = true;
       view.dataset.open = "false";
       clearLyrics();
+      finishCoverTransition();
+      $("[data-cover]").removeAttribute("src");
+      backdrop.setCover(null);
       document.documentElement.removeAttribute("data-ncm-player-open");
       syncBackdrop();
       if (requestedFullscreen) setFullscreen(false).catch(() => {});

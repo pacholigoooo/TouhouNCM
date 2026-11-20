@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Net.WebSockets;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -20,6 +19,7 @@ internal sealed class MiniSession : ApplicationContext
     [DllImport("user32.dll", CharSet = CharSet.Unicode)] static extern IntPtr FindWindowEx(IntPtr parent, IntPtr after, string type, string title);
     [DllImport("user32.dll")] static extern uint GetWindowThreadProcessId(IntPtr window, out int pid);
     [DllImport("user32.dll")] static extern bool IsWindowVisible(IntPtr window);
+    [DllImport("user32.dll")] static extern bool IsIconic(IntPtr window);
     [DllImport("user32.dll")] static extern bool SetProcessDpiAwarenessContext(IntPtr context);
     [DllImport("user32.dll")] static extern bool SetProcessDPIAware();
 
@@ -34,11 +34,12 @@ internal sealed class MiniSession : ApplicationContext
     MiniPlayerForm form;
     DesktopCaptionForm captionForm;
     DesktopCaptionState captionState;
-    ClientWebSocket socket;
+    NativeCdpConnection connection;
     string artworkKey = "";
     Bitmap artwork;
-    int sequence;
-    bool ticking, ended, exporting;
+    bool ticking, ended, exporting, exportRequested, rendererReady;
+    bool memoryReclaimed, memoryReclaimDisabled;
+    DateTime memoryIdleSince, nextMemoryReclaim;
 
     internal static async Task Start(int pid)
     {
@@ -165,12 +166,17 @@ internal sealed class MiniSession : ApplicationContext
 
     IntPtr VisibleWindow(string windowClass)
     {
+        return PlayerWindow(windowClass, true);
+    }
+
+    IntPtr PlayerWindow(string windowClass, bool visibleOnly)
+    {
         IntPtr h = IntPtr.Zero;
         while ((h = FindWindowEx(IntPtr.Zero, h, windowClass, null)) != IntPtr.Zero)
         {
             int pid;
             GetWindowThreadProcessId(h, out pid);
-            if (pid == player.Id && IsWindowVisible(h)) return h;
+            if (pid == player.Id && (!visibleOnly || IsWindowVisible(h))) return h;
         }
         return IntPtr.Zero;
     }
@@ -182,6 +188,7 @@ internal sealed class MiniSession : ApplicationContext
         {
             ended = true;
             timer.Stop();
+            await DisconnectRenderer();
             ReleaseSurfaces();
             ExitThread();
             return;
@@ -193,17 +200,22 @@ internal sealed class MiniSession : ApplicationContext
             IntPtr miniWindow = VisibleWindow("MiniPlayer");
             IntPtr lyricWindow = VisibleWindow("DesktopLyrics");
             if (miniWindow == IntPtr.Zero) ResetMini();
-            if (lyricWindow == IntPtr.Zero) SuspendCaption();
+            if (lyricWindow == IntPtr.Zero) ResetCaption();
+            await ReclaimIdleMemory();
             if (miniWindow == IntPtr.Zero && lyricWindow == IntPtr.Zero)
             {
                 timer.Interval = 700;
+                // The receive loop wakes export requests; HWND discovery and
+                // the one-shot idle reclaim share this sleeping cadence.
+                if (!exporting && !exportRequested && rendererReady && connection != null && connection.IsOpen && !connection.NeedsRebind) return;
             }
+            exportRequested = false;
             // Read only the visible surfaces. Keep failures separate so a bad
             // artwork or caption does not take the other surface down.
             string expression = "(()=>{const a=window.__pachiImmersive;" +
                 "a?.characterExportReady?.(" + json.Serialize(exportSession) + ");" +
                 "const read=(name,key)=>{try{const value=a?.[name]?.(key);return {value,sampledAt:Date.now()}}catch(e){return {error:String(e)}}};" +
-                "return JSON.stringify({mini:" + (miniWindow == IntPtr.Zero ? "null" :
+                "return JSON.stringify({ready:!!a,mini:" + (miniWindow == IntPtr.Zero ? "null" :
                     "read('miniSnapshot'," + json.Serialize(artworkKey) + ")") +
                 ",caption:" + (lyricWindow == IntPtr.Zero ? "null" :
                 "read('desktopCaption'," + json.Serialize(captionState == null ? "" : captionState.key) + ")") +
@@ -219,6 +231,7 @@ internal sealed class MiniSession : ApplicationContext
             }
 
             var data = json.Deserialize<SurfaceSnapshots>(snapshot);
+            rendererReady = data.ready;
             if (data.pngExport != null && !exporting) HandleCharacterRequest(data.pngExport);
             bool miniPlaying = false, captionPlaying = false;
             if (miniWindow != IntPtr.Zero)
@@ -241,7 +254,7 @@ internal sealed class MiniSession : ApplicationContext
             }
             // A paused caption still needs to notice resume and track changes
             // promptly; the slow idle poll is only for inactive surfaces.
-            timer.Interval = captionPlaying ? 90 : miniPlaying || captionState != null ? 300 : 700;
+            timer.Interval = captionPlaying ? 90 : miniPlaying || captionState != null ? 300 : exporting ? 2000 : 700;
         }
         catch (Exception ex)
         {
@@ -252,6 +265,67 @@ internal sealed class MiniSession : ApplicationContext
             timer.Interval = 1000;
         }
         finally { ticking = false; }
+    }
+
+    bool MainWindowInBackground()
+    {
+        // Process.MainWindowHandle may point at DesktopLyrics while it is open.
+        IntPtr window = PlayerWindow("OrpheusBrowserHost", false);
+        return window != IntPtr.Zero && (IsIconic(window) || !IsWindowVisible(window));
+    }
+
+    bool MemoryConnectionReady()
+    {
+        return !ended && !exporting && !exportRequested && rendererReady &&
+            connection != null && connection.IsOpen && !connection.NeedsRebind;
+    }
+
+    async Task ReclaimIdleMemory()
+    {
+        bool background = MainWindowInBackground();
+        if (!background) memoryReclaimed = false;
+        if (!background || !MemoryConnectionReady())
+        {
+            memoryIdleSince = DateTime.MinValue;
+            return;
+        }
+        if (memoryReclaimDisabled || memoryReclaimed) return;
+        DateTime now = DateTime.UtcNow;
+        if (memoryIdleSince == DateTime.MinValue) memoryIdleSince = now;
+        if ((now - memoryIdleSince).TotalSeconds < 20 || now < nextMemoryReclaim) return;
+
+        await exchange.WaitAsync();
+        try
+        {
+            // A command/export may have held the connection since the idle check.
+            bool stillBackground = MainWindowInBackground();
+            if (!stillBackground) memoryReclaimed = false;
+            if (!stillBackground || !MemoryConnectionReady() || stop.WaitOne(0))
+            {
+                memoryIdleSince = DateTime.MinValue;
+                return;
+            }
+            memoryReclaimed = true;
+            nextMemoryReclaim = DateTime.UtcNow.AddMinutes(5);
+            using (var timeout = new CancellationTokenSource(3000))
+                if (await connection.ReclaimIdleMemory(timeout.Token))
+                    Debug.WriteLine("TouhouNCM idle style and native cache reclaim completed");
+        }
+        catch (Exception error)
+        {
+            memoryReclaimDisabled = true;
+            Debug.WriteLine("TouhouNCM idle memory reclaim disabled for this session: " + error);
+        }
+        finally { exchange.Release(); }
+    }
+
+    void NativeWake(string payload)
+    {
+        if (ended || (payload != exportSession && payload != "ready" && payload != "context")) return;
+        memoryIdleSince = DateTime.MinValue;
+        if (payload == "context") rendererReady = false;
+        exportRequested = true;
+        Tick(null, EventArgs.Empty);
     }
 
     bool PresentMini(IntPtr window, SurfaceSnapshot snapshot)
@@ -496,16 +570,16 @@ internal sealed class MiniSession : ApplicationContext
             if (ended) return null;
             using (var timeout = new CancellationTokenSource(3000))
             {
-                if (socket == null || socket.State != WebSocketState.Open)
+                if (connection == null || !connection.IsOpen)
                 {
                     DropConnection();
                     var endpoint = await Launch.MainSocket(port);
                     if (ended || endpoint == null) return null;
-                    socket = new ClientWebSocket();
-                    socket.Options.Proxy = null;
-                    await socket.ConnectAsync(endpoint, timeout.Token);
+                    connection = new NativeCdpConnection(NativeWake);
+                    await connection.Connect(endpoint, timeout.Token);
                 }
-                return await Launch.Evaluate(socket, expression, ++sequence, timeout.Token);
+                await connection.RebindIfNeeded(timeout.Token);
+                return await connection.Evaluate(expression, timeout.Token);
             }
         }
         catch { DropConnection(); throw; }
@@ -514,7 +588,25 @@ internal sealed class MiniSession : ApplicationContext
 
     void DropConnection()
     {
-        if (socket != null) { socket.Dispose(); socket = null; }
+        memoryIdleSince = DateTime.MinValue;
+        rendererReady = false;
+        if (connection != null) { connection.Dispose(); connection = null; }
+    }
+    async Task DisconnectRenderer()
+    {
+        await exchange.WaitAsync();
+        try
+        {
+            if (connection != null && connection.IsOpen)
+                using (var timeout = new CancellationTokenSource(1000))
+                {
+                    await connection.Evaluate("(()=>{window.__pachiImmersive?.characterExportReady?.('');delete window." +
+                        NativeCdpConnection.WakeBinding + ";return 'closed'})()", timeout.Token);
+                    await connection.RemoveBinding(timeout.Token);
+                }
+        }
+        catch (Exception error) { Debug.WriteLine(error); }
+        finally { DropConnection(); exchange.Release(); }
     }
     void ResetMini()
     {
@@ -531,12 +623,12 @@ internal sealed class MiniSession : ApplicationContext
     void ResetCaption()
     {
         SuspendCaption();
+        if (captionForm != null) { captionForm.Dispose(); captionForm = null; }
     }
     void ReleaseSurfaces()
     {
         ResetMini();
         ResetCaption();
-        if (captionForm != null) { captionForm.Dispose(); captionForm = null; }
         DropConnection();
     }
     protected override void Dispose(bool disposing)
@@ -557,6 +649,7 @@ internal sealed class MiniSession : ApplicationContext
     }
     public sealed class SurfaceSnapshots
     {
+        public bool ready { get; set; }
         public SurfaceSnapshot mini { get; set; }
         public SurfaceSnapshot caption { get; set; }
         public PngExportRequest pngExport { get; set; }

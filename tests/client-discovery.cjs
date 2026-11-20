@@ -8,7 +8,7 @@ try {
   const executable = path.join(temp, 'discovery-tests.exe');
   const compiler = path.join(process.env.WINDIR, 'Microsoft.NET', 'Framework64', 'v4.0.30319', 'csc.exe');
   for (const [command, args] of [
-    [compiler, ['/nologo', '/codepage:65001', '/target:exe', '/platform:x64', '/reference:System.Management.dll', '/out:' + executable,
+    [compiler, ['/nologo', '/codepage:65001', '/target:exe', '/platform:x86', '/reference:System.Management.dll', '/out:' + executable,
       path.join(project, 'src/native/ClientDiscovery.cs'), path.join(__dirname, 'ClientDiscoveryTests.cs')]],
     [executable, [temp]],
   ]) {

@@ -32,13 +32,19 @@ function watchDesktopLyrics(bridge, getPalette = () => null) {
   let lastLines = null;
   let interceptedWrites = 0;
   let supplementalYrc = "";
-  let captionSignature = "";
   let captionRevision = 0;
   // The launcher can retain its last caption across a renderer reinjection.
   // A new module instance must resend the full line even at the same revision.
   const captionInstance = Date.now().toString(36) + "-" + Math.random().toString(36).slice(2);
   let captionLineCache = null;
+  let captionFrameCache = null;
   let captionNativeClock = null;
+
+  function clearCaption() {
+    captionLineCache = null;
+    captionFrameCache = null;
+    captionNativeClock = null;
+  }
 
   function preference(key, fallback) {
     try { return localStorage.getItem("ncm-immersive." + key) || fallback; }
@@ -120,6 +126,9 @@ function watchDesktopLyrics(bridge, getPalette = () => null) {
     if (disposed) return;
     snapshot = next;
     setting = store.getState().setting || {};
+    // Closing the native window stops caption polling. Release its lyric
+    // inputs here, while the existing bridge still observes setting changes.
+    if (setting.showLyric !== true) clearCaption();
     const selectedFont = String(setting.lyricFont || "");
     if (selectedFont !== nativeFont) {
       nativeFont = selectedFont;
@@ -374,7 +383,10 @@ function watchDesktopLyrics(bridge, getPalette = () => null) {
     const mode = native.lyricMode || "translate";
     const composition = native.lyricComposition || "horizontal";
     if (!native.showLyric || !["horizontal", "vertical"].includes(composition) || ![0, 1].includes(lineMode) ||
-        ![0, 1, 2, 3].includes(align) || !["translate", "roman", "none"].includes(mode)) return "null";
+        ![0, 1, 2, 3].includes(align) || !["translate", "roman", "none"].includes(mode)) {
+      clearCaption();
+      return "null";
+    }
     if (!trackId || String(nativeLyric.resourceTrackId || "") !== trackId || !playback) return transient();
     if (nativeLyric.displayType !== "default") return nativeLyric.displayType ? "null" : transient();
     const clock = captionClock(next, state.playing || {});
@@ -401,58 +413,66 @@ function watchDesktopLyrics(bridge, getPalette = () => null) {
       Number.isFinite(playback.durationMs) ? playback.durationMs : Infinity));
     if (!Number.isFinite(endMs)) return transient();
     const silent = !line || positionMs >= endMs || !line.nonEmpty;
-    const text = silent ? "" : line.text;
     const translate = preference("translation", "on") === "on";
-    let translation = "";
-    if (!silent) {
-      if (mode === "roman") translation = line.romanization;
-      else if (mode === "translate" && translate) translation = line.translation;
-    }
-    let secondaryIsNext = false;
-    if (!captionTextKey(translation)) translation = "";
-    // Translation is independent of native original-line count. Keep the
-    // caption surface across translated/untranslated lines in either mode.
-    if (!silent && lineMode === 0 && !translation && line.nextNonEmpty >= 0) {
-      const upcoming = lines[line.nextNonEmpty];
-      const gap = upcoming.startMs - endMs;
-      // Explicit YRC endings/empty LRC rows identify interludes. Plain LRC has
-      // no sung ending, so a widely separated next timestamp is kept hidden.
-      if (gap <= 2000 && (Number.isFinite(line.endMs) || upcoming.startMs - line.startMs <= 8000)) {
-        translation = upcoming.text;
-        secondaryIsNext = true;
-      }
-    }
     const font = fontPreference();
     const nativeFamily = String(native.lyricFont || "");
     const fontFamily = font === lastFont && (nativeFontEdited || nativeFamily !== nativeFont) ? nativeFamily : fonts[font];
     const silentStart = line && line.nonEmpty ? endMs : Math.max(0, startMs);
+    const captionEnd = silent && line ? Number.isFinite(nextStart) ? nextStart : playback.durationMs : endMs;
+    if (!Number.isFinite(captionEnd)) return transient();
     const palette = preference("captionTheme", "on") === "on" ? getPalette() : null;
     const sizing = captionPreferences(native);
-    const full = {
-      text, translation, font: fontFamily, fontSize: sizing.captionFontSize,
-      translationFontSize: sizing.captionTranslationSize, captionScale: sizing.captionScale,
-      background: sizing.captionBackground, composition, lineMode, alignment: align, secondaryIsNext,
-      color: palette ? [palette.muted, palette.muted, palette.accent, palette.accent] : native.lyricColor,
-      outline: palette ? [palette.background, palette.background] : native.lyricOutLine,
-      palette,
-      outlineEnabled: native.lyricFontOutlineEnabled === true,
-      word: !!(word && !silent && line.words.length),
-      startMs: silent ? silentStart : startMs,
-      endMs: silent && line ? Number.isFinite(nextStart) ? nextStart : playback.durationMs : endMs,
-      locked: native.desktopLyricLockState === true,
-      words: word && !silent ? line.words : []
-    };
-    if (!Number.isFinite(full.endMs)) return transient();
-    const signature = JSON.stringify([identity, playback.clockEpoch, nativeLyric.offset,
-      lineMode, mode, word, translate, native.lyricOneLineAlign, native.lyricDoubleLineAlign, native.lyricFontStyle, native.lyricTop, full]);
-    if (signature !== captionSignature) {
-      captionSignature = signature;
+    // Compare small style values and the parsed line revision. The word array
+    // only enters a full packet when its line or presentation actually changes.
+    const inputs = [identity, playback.clockEpoch, nativeLyric.offset, lines, index, silent, captionEnd,
+      lineMode, mode, word, translate, align, composition, fontFamily,
+      sizing.captionFontSize, sizing.captionTranslationSize, sizing.captionScale, sizing.captionBackground,
+      native.lyricOneLineAlign, native.lyricDoubleLineAlign, native.lyricFontStyle, native.lyricTop,
+      native.lyricFontOutlineEnabled, native.desktopLyricLockState,
+      palette?.id, palette?.background, palette?.foreground, palette?.muted, palette?.accent, palette?.accentText,
+      palette ? null : native.lyricColor?.length, ...(palette ? [] : native.lyricColor || []),
+      palette ? null : native.lyricOutLine?.length, ...(palette ? [] : native.lyricOutLine || [])];
+    if (!captionFrameCache || inputs.length !== captionFrameCache.inputs.length ||
+        !inputs.every((value, inputIndex) => value === captionFrameCache.inputs[inputIndex])) {
+      let translation = "";
+      if (!silent) {
+        if (mode === "roman") translation = line.romanization;
+        else if (mode === "translate" && translate) translation = line.translation;
+      }
+      let secondaryIsNext = false;
+      if (!captionTextKey(translation)) translation = "";
+      // Translation is independent of native original-line count. Keep the
+      // caption surface across translated/untranslated lines in either mode.
+      if (!silent && lineMode === 0 && !translation && line.nextNonEmpty >= 0) {
+        const upcoming = lines[line.nextNonEmpty];
+        const gap = upcoming.startMs - endMs;
+        // Explicit YRC endings/empty LRC rows identify interludes. Plain LRC has
+        // no sung ending, so a widely separated next timestamp is kept hidden.
+        if (gap <= 2000 && (Number.isFinite(line.endMs) || upcoming.startMs - line.startMs <= 8000)) {
+          translation = upcoming.text;
+          secondaryIsNext = true;
+        }
+      }
+      const full = {
+        text: silent ? "" : line.text, translation, font: fontFamily, fontSize: sizing.captionFontSize,
+        translationFontSize: sizing.captionTranslationSize, captionScale: sizing.captionScale,
+        background: sizing.captionBackground, composition, lineMode, alignment: align, secondaryIsNext,
+        color: palette ? [palette.muted, palette.muted, palette.accent, palette.accent] : native.lyricColor,
+        outline: palette ? [palette.background, palette.background] : native.lyricOutLine,
+        palette,
+        outlineEnabled: native.lyricFontOutlineEnabled === true,
+        word: !!(word && !silent && line.words.length),
+        startMs: silent ? silentStart : startMs, endMs: captionEnd,
+        locked: native.desktopLyricLockState === true,
+        words: word && !silent ? line.words : []
+      };
+      captionFrameCache = { inputs, full };
       captionRevision++;
     }
     const key = captionInstance + ":" + trackId + ":" + captionRevision;
     const progress = { key, identity, status: "ready", positionMs, playing: clock.playing,
       rate: clock.rate, interpolationMs: clock.interpolationMs };
-    return JSON.stringify(key === knownLineKey ? progress : Object.assign(progress, full));
+    return JSON.stringify(key === knownLineKey ? progress : Object.assign(progress, captionFrameCache.full));
   }
 
   function desktopAction(type) {
@@ -467,8 +487,7 @@ function watchDesktopLyrics(bridge, getPalette = () => null) {
   const stop = () => {
     if (disposed) return;
     disposed = true;
-    captionLineCache = null;
-    captionNativeClock = null;
+    clearCaption();
     if (channel.call === desktopCall) channel.call = nativeCall;
     if (stopWatching) stopWatching();
     const native = store.getState().setting || {};

@@ -169,11 +169,14 @@ function fixture() {
   } } } } };
   const captionDocument = { hidden: false, getElementById: () => captionRoot };
   const captionPrefs = new Map();
+  const captionSerializations = [];
   const captionContext = { window: { channel: { call() {} } }, document: captionDocument,
-    localStorage: { getItem: key => captionPrefs.get(key) }, Date: { now: () => captionNow } };
+    localStorage: { getItem: key => captionPrefs.get(key) }, Date: { now: () => captionNow },
+    JSON: { stringify(value) { captionSerializations.push(value); return JSON.stringify(value); } } };
   vm.runInNewContext(desktopSource, captionContext);
+  let syncCaption;
   const captionBridge = { getSnapshot: () => captionSnapshot, sample: () => captionSnapshot,
-    subscribe(fn) { fn(captionSnapshot); return () => {}; } };
+    subscribe(fn) { syncCaption = fn; fn(captionSnapshot); return () => {}; } };
   const captions = captionContext.watchDesktopLyrics(captionBridge);
   const readyCaption = JSON.parse(captions.caption(''));
   assert.equal(readyCaption.status, 'ready');
@@ -227,6 +230,11 @@ function fixture() {
   const wordRomanized = JSON.parse(captions.caption(''));
   assert.equal(wordRomanized.translation, 'word songu A');
   assert.equal(wordRomanized.words[0].startMs, 0, 'native YRC romanization shares the original word offset');
+  captionSerializations.length = 0;
+  const compactWordCaption = JSON.parse(captions.caption(wordRomanized.key));
+  assert.equal(compactWordCaption.text, undefined);
+  assert.equal(captionSerializations.length, 1, 'steady word progress serializes only the compact packet');
+  assert.equal(captionSerializations[0].words, undefined, 'steady progress does not serialize the full word data');
   nativeCaptionLyrics.yrcInfo.yrcRoma = '[00:02]updated word songu A';
   assert.equal(JSON.parse(captions.caption(wordRomanized.key)).translation, 'updated word songu A');
   nativeCaptionLyrics.yrcInfo = {};
@@ -264,6 +272,18 @@ function fixture() {
   assert.notEqual(nextCaption.key, readyCaption.key);
   captionState.playing.playId = 'repeat-play';
   assert.notEqual(JSON.parse(captions.caption(nextCaption.key)).key, nextCaption.key, 'a new play identity resends the full line');
+  let reopenedLineReads = 0;
+  captionState['async:lyric'].lyricLines = [{ time: 0, get lyric() { reopenedLineReads++; return 'song B'; } }];
+  const beforeClose = JSON.parse(captions.caption(''));
+  const readsBeforeClose = reopenedLineReads;
+  captionState.setting.showLyric = false;
+  syncCaption(captionSnapshot);
+  captionState.setting.showLyric = true;
+  syncCaption(captionSnapshot);
+  const reopenedCaption = JSON.parse(captions.caption(beforeClose.key));
+  assert.notEqual(reopenedCaption.key, beforeClose.key, 'closing without a final caption poll releases the cached full line');
+  assert.equal(reopenedCaption.text, 'song B');
+  assert.ok(reopenedLineReads > readsBeforeClose, 'reopening rebuilds parsed lyrics released by the setting subscription');
   captionState.setting.showLyric = false;
   assert.equal(captions.caption(nextCaption.key), 'null', 'closing immediately releases the native surface');
   captionState.setting.showLyric = true; captionState.setting.lyricComposition = 'vertical';

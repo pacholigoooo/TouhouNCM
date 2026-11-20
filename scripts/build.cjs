@@ -87,18 +87,26 @@ const code = `(() => {
 new Function(code);
 const temp = fs.mkdtempSync(path.join(os.tmpdir(), "ncm-immersive-build-"));
 const bundle = path.join(temp, "client.js");
+const versionInfo = path.join(temp, "VersionInfo.cs");
 const response = path.join(temp, "compile.rsp");
 const checkOnly = process.argv.includes("--check");
 const out = checkOnly ? temp : path.join(root, "dist");
 fs.mkdirSync(out, {recursive:true});
 try {
   fs.writeFileSync(bundle, code);
+  const fileVersion = pkg.version.split(/[+-]/, 1)[0] + ".0";
+  fs.writeFileSync(versionInfo, [
+    "using System.Reflection;",
+    '[assembly: AssemblyProduct("TouhouNCM")]',
+    `[assembly: AssemblyVersion("${fileVersion}")]`,
+    `[assembly: AssemblyInformationalVersion("${pkg.version}")]`
+  ].join("\n"));
   const compiler = path.join(process.env.WINDIR, "Microsoft.NET", "Framework64", "v4.0.30319", "csc.exe");
-  const args = ["/nologo","/codepage:65001","/target:winexe","/optimize+","/platform:x64",
+  const args = ["/nologo","/codepage:65001","/target:winexe","/optimize+","/platform:x86",
     "/reference:System.Management.dll","/reference:System.Windows.Forms.dll","/reference:System.Web.Extensions.dll",
-    "/reference:Microsoft.CSharp.dll","/reference:System.Drawing.dll","/resource:"+bundle+",client.js", "/out:"+path.join(out,"NcmImmersive.exe"),
+    "/reference:System.Drawing.dll","/resource:"+bundle+",client.js", "/out:"+path.join(out,"NcmImmersive.exe"), versionInfo,
     ...Array.from(artResources, ([name, file]) => "/resource:" + file + "," + name),
-    ...["Launch.cs","ClientDiscovery.cs","MiniSession.cs","MiniPlayerForm.cs","DesktopCaptionForm.cs","DesktopCaptionPainter.cs","SurfacePalette.cs"].map(file=>path.join(root,"src/native",file))];
+    ...["Launch.cs","ClientDiscovery.cs","MiniSession.cs","NativeCdpConnection.cs","WindowLong.cs","MiniPlayerForm.cs","DesktopCaptionForm.cs","DesktopCaptionPainter.cs","SurfacePalette.cs"].map(file=>path.join(root,"src/native",file))];
   // Keep embedded artwork outside the renderer bundle; only the requested
   // portrait crosses the native connection during an export.
   fs.writeFileSync(response, "\uFEFF" + args.map(arg => '"' + arg + '"').join("\n"));
@@ -106,6 +114,7 @@ try {
   if (result.status !== 0) throw Error("C# 编译失败");
 } finally {
   if(fs.existsSync(bundle)) fs.unlinkSync(bundle);
+  if(fs.existsSync(versionInfo)) fs.unlinkSync(versionInfo);
   if(fs.existsSync(response)) fs.unlinkSync(response);
   if (checkOnly && fs.existsSync(path.join(temp, "NcmImmersive.exe"))) fs.unlinkSync(path.join(temp, "NcmImmersive.exe"));
   fs.rmdirSync(temp);

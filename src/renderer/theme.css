@@ -48,6 +48,22 @@ html[data-ncm-player-open] #ncm-glass-backdrop {
   display: none;
 }
 
+/* The immersive view covers the native vinyl, lyrics and comments. Keep its
+   header/footer mounted: their progress input supplies the playback clock. */
+html[data-ncm-player-open] #page_pc_songplay {
+  display: none !important;
+}
+html[data-ncm-player-open] #vinyl-page-container {
+  /* Its controls still provide the native clock and playlist actions. */
+  visibility: hidden !important;
+  will-change: auto !important;
+}
+
+/* Our opaque artwork backdrop already covers these native skin layers. */
+html[data-ncm-skin] .should-hide-under-vinyl-mode[class*="StyledBackground_"] {
+  display: none !important;
+}
+
 /* Secondary routes share typography, while artwork, video controls and badges
    continue to use the colors assigned to them by NetEase. */
 html[data-ncm-skin] :is([data-testid="tid_commentpage_header_info"], [data-testid="tid_download_header"], [data-testid="tid_msgsheet_header"]) {

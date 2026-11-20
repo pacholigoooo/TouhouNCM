@@ -194,11 +194,18 @@
   }
   function nativeRequest(payload) {
     if (pending) return Promise.reject(new Error("另一张图片正在保存，请先完成另存为。"));
-    if (!nativeSession || Date.now() - heartbeat > 5000) return Promise.reject(new Error("图片保存通道尚未连接，请重新打开 TouhouNCM 入口。"));
+    const wake = host.__pachiNcmImmersiveNativeWake;
+    if (!nativeSession || (typeof wake !== "function" && Date.now() - heartbeat > 5000)) return Promise.reject(new Error("图片保存通道尚未连接，请重新打开 TouhouNCM 入口。"));
     return new Promise((resolve, reject) => {
-      const id = nativeSession + ":" + (++serial);
+      const id = nativeSession + ":" + (++serial), requestedAt = Date.now();
       pending = { ...payload, id, resolve, reject, claimed: false,
-        watch: host.setInterval(() => { if (pending?.id === id && Date.now() - heartbeat > 8000) finish(id, { error: "图片保存通道已断开，请重新打开入口后重试。" }); }, 2000) };
+        watch: host.setInterval(() => { if (pending?.id === id && Date.now() - Math.max(heartbeat, requestedAt) > 8000) finish(id, { error: "图片保存通道已断开，请重新打开入口后重试。" }); }, 2000) };
+      // A dormant host keeps its CDP event receiver, without polling this page.
+      // The request timeout also covers a binding left behind by a dead host.
+      if (typeof wake === "function") {
+        try { wake(nativeSession); }
+        catch { finish(id, { error: "图片保存通道已断开，请重新打开入口后重试。" }); }
+      }
     });
   }
   function save(image) {

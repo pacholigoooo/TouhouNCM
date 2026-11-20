@@ -195,6 +195,7 @@ internal static class ClientDiscovery
     static void AddCommonLocations(List<ClientHint> hints)
     {
         foreach (string root in new[] {
+            Environment.GetEnvironmentVariable("ProgramW6432"),
             Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
             Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),

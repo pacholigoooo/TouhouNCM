@@ -212,10 +212,17 @@ internal sealed class DesktopCaptionPainter : IDisposable
         {
             if (glass != null) { glass.Dispose(); glass = null; }
         }
-        else if (glass == null || glass.Size != bounds.Size || scaleChanged || paletteChanged)
+        else
         {
-            if (glass != null) glass.Dispose();
-            glass = BuildGlass(bounds.Size, nextScale, surfaceColors);
+            // Each fixed edge needs a full third of the source for DrawGlass.
+            // The centre only carries the smooth vertical colour/alpha gradient.
+            Size glassSize = new Size(Math.Min(bounds.Width, 3 * (int)Math.Ceiling(25 * scale)),
+                Math.Min(bounds.Height, 3 * (int)Math.Ceiling(22 * scale)));
+            if (glass == null || glass.Size != glassSize || scaleChanged || paletteChanged)
+            {
+                if (glass != null) glass.Dispose();
+                glass = BuildGlass(glassSize, nextScale, surfaceColors);
+            }
         }
         return layoutChanged || paletteChanged || backgroundChanged;
     }
@@ -264,7 +271,7 @@ internal sealed class DesktopCaptionPainter : IDisposable
 
     void DrawGlass(Graphics g)
     {
-        // The smoke surface is generated once per window size/DPI. Nine slices
+        // A compact smoke texture is cached per DPI/palette. Nine slices
         // preserve its feather, corners and rim when a short lyric narrows it.
         int capX = Math.Min((int)Math.Ceiling(25 * scale), Math.Min(glass.Width, panelBounds.Width) / 3);
         int capY = Math.Min((int)Math.Ceiling(22 * scale), Math.Min(glass.Height, panelBounds.Height) / 3);

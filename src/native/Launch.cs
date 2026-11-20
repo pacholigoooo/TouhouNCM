@@ -385,14 +385,23 @@ internal static class Launch
                         if (part.MessageType == WebSocketMessageType.Close) return null;
                         output.Write(buffer, 0, part.Count);
                     } while (!part.EndOfMessage);
-                    dynamic msg = Json.DeserializeObject(Encoding.UTF8.GetString(output.ToArray()));
-                    if (!msg.ContainsKey("id") || msg["id"] != id) continue;
-                    if (msg.ContainsKey("error") || msg["result"].ContainsKey("exceptionDetails"))
-                        throw new InvalidOperationException("沉浸听歌界面加载失败。请用原入口继续听歌。");
-                    return msg["result"]["result"].ContainsKey("value") ? msg["result"]["result"]["value"] as string : null;
+                    var msg = Json.Deserialize<Dictionary<string, object>>(Encoding.UTF8.GetString(output.GetBuffer(), 0, checked((int)output.Length)));
+                    object messageId;
+                    if (!msg.TryGetValue("id", out messageId) || Convert.ToInt32(messageId) != id) continue;
+                    return ReadEvaluationResult(msg);
                 }
             }
             return null;
+    }
+
+    internal static string ReadEvaluationResult(Dictionary<string, object> message)
+    {
+        if (message.ContainsKey("error")) throw new InvalidOperationException("沉浸听歌界面加载失败。请用原入口继续听歌。");
+        var result = (Dictionary<string, object>)message["result"];
+        if (result.ContainsKey("exceptionDetails")) throw new InvalidOperationException("沉浸听歌界面加载失败。请用原入口继续听歌。");
+        var value = (Dictionary<string, object>)result["result"];
+        object data;
+        return value.TryGetValue("value", out data) ? data as string : null;
     }
 
     static string EmbeddedScript()

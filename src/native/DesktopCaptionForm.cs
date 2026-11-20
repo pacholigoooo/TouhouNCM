@@ -70,8 +70,6 @@ internal sealed class DesktopCaptionForm : Form
     [DllImport("user32.dll")] static extern uint GetDpiForWindow(IntPtr h);
     [DllImport("user32.dll")] static extern bool GetCursorPos(out Point point);
     [DllImport("user32.dll")] static extern IntPtr SendMessageTimeout(IntPtr h, uint msg, IntPtr w, IntPtr l, uint flags, uint timeout, out IntPtr result);
-    [DllImport("user32.dll", EntryPoint="GetWindowLongPtrW")] static extern IntPtr GetStyle(IntPtr h, int index);
-    [DllImport("user32.dll", EntryPoint="SetWindowLongPtrW")] static extern IntPtr SetWindowLong(IntPtr h, int index, IntPtr value);
     [DllImport("user32.dll")] static extern IntPtr GetWindow(IntPtr h, uint cmd);
     [DllImport("user32.dll")] static extern bool ShowWindow(IntPtr h, int cmd);
     [DllImport("user32.dll")] static extern bool SetWindowPos(IntPtr h, IntPtr after, int x, int y, int w, int height, uint flags);
@@ -256,7 +254,7 @@ internal sealed class DesktopCaptionForm : Form
         {
             Suspend();
             if (source != IntPtr.Zero) return false;
-            SetWindowLong(Handle, -8, native);
+            WindowLong.Write(Handle, -8, native);
             if (GetWindow(Handle, 4) != native) return false;
             source = native;
         }
@@ -331,8 +329,8 @@ internal sealed class DesktopCaptionForm : Form
         bool passInput = line.locked && hot != 4 && !Capture;
         if (clickThrough != passInput)
         {
-            long style = GetStyle(Handle, -20).ToInt64();
-            SetWindowLong(Handle, -20, new IntPtr(passInput ? style | 0x20 : style & ~0x20L));
+            long style = WindowLong.Read(Handle, -20).ToInt64();
+            WindowLong.Write(Handle, -20, new IntPtr(passInput ? style | 0x20 : style & ~0x20L));
             clickThrough = passInput;
         }
         double position = anchor + (line.playing && !waitingForSnapshot ? Math.Min(sampleAge.Elapsed.TotalMilliseconds, budget) * rate : 0);
@@ -344,7 +342,7 @@ internal sealed class DesktopCaptionForm : Form
             drawnKey = line.key; drawnRect = area; drawnScale = scale; lastFrame = position; drawnPlaying = line.playing;
             controlsDirty = false;
         }
-        bool nativeTop = (GetStyle(source, -20).ToInt64() & 8) != 0;
+        bool nativeTop = (WindowLong.Read(source, -20).ToInt64() & 8) != 0;
         if (!shown || nativeTop != topmost)
         {
             if (!SetWindowPos(Handle, new IntPtr(nativeTop ? -1 : -2), 0, 0, 0, 0, 0x253)) { Suspend(); return false; }
@@ -702,7 +700,7 @@ internal sealed class DesktopCaptionForm : Form
         waitingForSnapshot = pendingTrackChange = false;
         if (HideOverlay())
         {
-            if (source != IntPtr.Zero && IsHandleCreated) SetWindowLong(Handle, -8, IntPtr.Zero);
+            if (source != IntPtr.Zero && IsHandleCreated) WindowLong.Write(Handle, -8, IntPtr.Zero);
             source = IntPtr.Zero;
         }
         line = null; drawnKey = null;
