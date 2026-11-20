@@ -51,5 +51,14 @@
       return { definition, nativeBridge: sdk.Bridge };
     });
   }
-  host.NcmClientApi = { method, desktopMenu };
+  function openExternal(value) {
+    const url = new URL(value);
+    if (url.protocol !== "https:" || url.username || url.password) throw new Error("外部链接无效");
+    return withLoader(loader => {
+      const sdk = loader(findModule(loader, ["os.navigateExternal", "appendRegisterCall"], 4));
+      if (typeof sdk.Os?.openExternal !== "function") throw new Error("当前网易云版本无法打开系统浏览器");
+      return sdk.Os.openExternal(url.href);
+    });
+  }
+  host.NcmClientApi = { method, desktopMenu, openExternal };
 })(window);

@@ -51,7 +51,7 @@
             !url.pathname.startsWith("/" + config.repository + "/releases/tag/")) throw new Error("发布信息无效");
         const newer = compareVersions(release.tag_name, config.version) > 0;
         const result = { status: newer ? "available" : "current", latest: release.tag_name,
-          url: newer ? url.href : "", message: newer ? "新版 " + release.tag_name + " 已发布" : "已是最新版本" };
+          url: url.href, message: newer ? "新版 " + release.tag_name + " 已发布" : "已是最新版本" };
         write("release", JSON.stringify({ tag: release.tag_name, url: url.href }));
         publish(result);
       } catch (error) {
@@ -98,27 +98,50 @@ function mountUpdateSettings(ui, config) {
   section.innerHTML = `<summary>TouhouNCM 更新</summary>
     <label class="setting-row"><span class="setting-copy"><span>自动检查更新</span><small data-version></small></span><input type="checkbox" data-update-auto></label>
     <p class="setting-description" data-update-status role="status" aria-live="polite"></p>
-    <div class="theme-actions"><button type="button" class="settings-text-button" data-update-check>检查更新</button><a class="settings-text-button" data-update-link target="_blank" rel="noopener noreferrer" hidden>查看新版</a></div>`;
+    <div class="theme-actions"><button type="button" class="settings-text-button" data-update-check>检查更新</button><a class="settings-text-button" data-update-link target="_blank" rel="noopener noreferrer" hidden>打开下载页</a></div>
+    <p class="setting-description" data-update-fallback hidden style="user-select:text;overflow-wrap:anywhere"></p>`;
   ui.shadowRoot.querySelector(".keyboard-hints").before(section);
   const auto = section.querySelector("[data-update-auto]"), button = section.querySelector("[data-update-check]");
   const link = section.querySelector("[data-update-link]"), status = section.querySelector("[data-update-status]");
+  const fallback = section.querySelector("[data-update-fallback]");
+  let disposed = false;
   section.querySelector("[data-version]").textContent = "当前版本 " + config.version + " · GitHub Releases";
   function render(state) {
     auto.checked = state.automatic;
     button.disabled = state.status === "checking";
-    status.textContent = state.message || "自动检查每 12 小时进行一次";
+    status.textContent = state.message || "每 12 小时自动检查。发现新版后，下载并运行安装包更新。";
+    fallback.hidden = true;
+    fallback.textContent = "";
     link.hidden = !state.url;
     if (state.url) link.href = state.url;
     else link.removeAttribute("href");
-    document.documentElement.toggleAttribute("data-touhouncm-update", !!state.url);
+    document.documentElement.toggleAttribute("data-touhouncm-update", state.status === "available");
   }
   const checker = window.NcmUpdates.create(config, render);
   const check = () => checker.check(), toggle = () => checker.setAutomatic(auto.checked);
+  async function openRelease(event) {
+    // CEF does not route an ordinary target=_blank link to the system browser.
+    event.preventDefault();
+    const url = checker.getState().url;
+    if (!url) return;
+    try {
+      await window.NcmClientApi.openExternal(url);
+      if (!disposed) status.textContent = "已请求在系统浏览器打开下载页。下载后运行安装包即可更新。";
+    } catch (_) {
+      if (disposed) return;
+      status.textContent = "未能打开系统浏览器。请复制下方地址到浏览器中下载：";
+      fallback.textContent = url;
+      fallback.hidden = false;
+    }
+  }
   button.addEventListener("click", check);
   auto.addEventListener("change", toggle);
+  link.addEventListener("click", openRelease);
   render(checker.getState());
   return { check, getState: checker.getState, destroy() {
+    disposed = true;
     checker.destroy(); button.removeEventListener("click", check); auto.removeEventListener("change", toggle);
+    link.removeEventListener("click", openRelease);
     section.remove(); document.documentElement.removeAttribute("data-touhouncm-update");
   } };
 }
