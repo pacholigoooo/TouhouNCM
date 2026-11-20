@@ -50,15 +50,13 @@ const code = `(() => {
   if (!document.body || !document.getElementById("root") || !document.querySelector("footer")) return "pending";
   const previous=window.__pachiImmersive;
   if (previous && previous.version===${JSON.stringify(version)}) return "ready";
-  // The legacy clock displaced the client's progress handler for this renderer.
-  // Reload once so NetEase can register it again; the launcher retries on "pending".
-  if (previous && window.NCMImmersiveBridge && window.NCMImmersiveBridge.clockSource!=="native-minibar") {
-    previous.destroy();
+  const legacyClock = previous && window.NCMImmersiveBridge && window.NCMImmersiveBridge.clockSource!=="native-minibar";
+  if (previous) previous.destroy();
+  ${clientApi}
+  if (legacyClock || window.NcmClientApi.needsMenuReload()) {
     setTimeout(()=>location.reload(),0);
     return "pending";
   }
-  if (previous) previous.destroy();
-  ${clientApi}
   ${updates}
   ${bridge}
   ${touhouNames}

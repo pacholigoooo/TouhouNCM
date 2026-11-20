@@ -23,6 +23,26 @@ for (const [id, exported] of [[15, "dg"], [204, "renamedSearch"], [83, "q"]]) {
 }
 console.log("PASS client module and export renumbering; temporary entries released on success and failure");
 
+{
+  const slots = {}, session = new Map();
+  const sdk = { exports: { Bridge: { _Adapter: { registerCallMap: slots } } } };
+  const loader = Object.assign(() => {}, { m: { 4: "winhelper.popupMenu registerCallOnce" }, c: { 4: sdk } });
+  const jsonp = [];
+  jsonp.push = entry => { const init = Object.values(entry[1])[0]; init({}, {}, loader); };
+  const window = { webpackJsonp: jsonp, sessionStorage: { getItem: key => session.get(key), setItem: (k, v) => session.set(k, v), removeItem: key => session.delete(key) } };
+  vm.runInNewContext(source, { window });
+  const check = window.NcmClientApi.needsMenuReload;
+  for (const owner of [undefined, () => {}, [() => {}]]) {
+    slots["winhelper.onmenuclick"] = owner;
+    assert.equal(check(), false);
+    assert.equal(slots["winhelper.onmenuclick"], owner);
+  }
+  slots["winhelper.onmenuclick"] = [];
+  assert.equal(check(), true);
+  assert.equal(check(), false);
+  console.log("PASS an orphaned native menu requests one reload; healthy and uninitialized menus stay intact");
+}
+
 (async () => {
   for (const id of [4, 94]) {
     const opened = [], failure = new Error("native browser unavailable");

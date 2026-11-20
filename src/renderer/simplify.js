@@ -5,7 +5,7 @@ function createSimplifyControls() {
     { id: "podcasts", label: "播客与我的播客", selector: '#page_pc_main_tab [data-testid="tid_navitem_audio"], #page_pc_main_tab [data-testid="tid_navitem_myAudio"]' },
     { id: "roam", label: "漫游入口", selector: '#page_pc_main_tab [data-testid="tid_navitem_privateFm"]' },
     { id: "community", label: "关注动态入口", selector: '#page_pc_main_tab [data-testid="tid_navitem_community"]' },
-    { id: "pet", label: "宠物模式", selector: '#page_pc_main_nav [data-ncm-simplify-entry="pet"]' },
+    { id: "pet", label: "顶部宠物模式入口", selector: '[data-ncm-pet-entry]' },
     { id: "messages", label: "顶部消息入口", selector: '#page_pc_main_nav [data-ncm-simplify-entry="messages"]' },
     { id: "decoration", label: "顶部换肤入口", selector: '#page_pc_main_nav [data-ncm-simplify-entry="decoration"]' }
   ];
@@ -15,6 +15,12 @@ function createSimplifyControls() {
     { id: "ads", label: "屏蔽页面广告", selector: '#root [class*="AdvertisementContainer_"], #root [class*="AdvertisementCardWrapper_"], #root [class*="ClosableBannerWrapper_"]' }
   ];
   const controls = entries.concat(distractionEntries);
+  const toolbarSlot = '[class*="MiniModeIconBar_"] > *';
+  // The same header slot shows an egg before the first visit, a cat after
+  // visiting, or an icon with a progress bar while a pet is being generated.
+  const petIcons = '.cmd-icon-mini-pet, [class*="EggFlashWrap_"], [class*="PetEntryIconWrap_"], [title="宠物模式"], [aria-label="宠物模式"]';
+  const petPopovers = ["mod_pc_desktop_pet_guide", "mod_pc_desktop_pet_entry_float", "mod_pc_desktop_pet_progress"]
+    .map(oid => '[data-log*=\'"' + oid + '"\']').join(", ");
   // Native marketing components confirmed in the client's bundled source.
   // Keep ordinary toasts, playback notices and user-opened dialogs available.
   const marketingSelector = [
@@ -32,6 +38,7 @@ function createSimplifyControls() {
   ).join(",\n") + " { display: none !important; }").join("\n");
   document.head.appendChild(sheet);
   const marked = new Set();
+  let petNodes = new Set();
 
   function mark(node, attribute, value = "") {
     if (!node) return;
@@ -39,18 +46,37 @@ function createSimplifyControls() {
     marked.add(node);
   }
 
+  function syncPetEntry(nav) {
+    if (!state.pet && !petNodes.size) return;
+    const next = new Set();
+    if (state.pet) {
+      for (const icon of nav?.querySelectorAll(petIcons) || []) {
+        next.add(icon.closest(toolbarSlot) || icon.closest('button, [role="button"], .cmd-badge') || icon);
+      }
+      for (const portal of document.querySelectorAll(".cmd-portal")) {
+        for (const content of portal.querySelectorAll(petPopovers)) {
+          next.add(content.closest(".cmd-popover-wrapper") || content);
+        }
+      }
+    }
+    for (const node of petNodes) if (!next.has(node)) node.removeAttribute("data-ncm-pet-entry");
+    for (const node of next) if (!node.hasAttribute("data-ncm-pet-entry")) node.setAttribute("data-ncm-pet-entry", "");
+    petNodes = next;
+  }
+
   function sync() {
     for (const node of marked) {
       if (!node.isConnected) marked.delete(node);
     }
+    const nav = document.getElementById("page_pc_main_nav");
+    syncPetEntry(nav);
     for (const [id, selector] of [
       ["messages", '[data-testid="tid_header_msg_btn"]'],
-      ["decoration", '[data-testid="tid_header_skin_btn"]'],
-      ["pet", '.cmd-icon-mini-pet']
+      ["decoration", '[data-testid="tid_header_skin_btn"]']
     ]) {
-      const icon = document.querySelector('#page_pc_main_nav ' + selector);
+      const icon = nav?.querySelector(selector);
       // The badge owns the red dot and toolbar slot, not the icon inside it.
-      const item = icon?.closest('[class*="MiniModeIconBar_"] > *');
+      const item = icon?.closest(toolbarSlot);
       mark(item || icon?.closest(".cmd-badge") || icon, "data-ncm-simplify-entry", id);
     }
     document.querySelectorAll(marketingSelector).forEach(content => {
@@ -99,6 +125,8 @@ function createSimplifyControls() {
     destroy() {
       observer.disconnect();
       sheet.remove();
+      for (const node of petNodes) node.removeAttribute("data-ncm-pet-entry");
+      petNodes.clear();
       for (const node of marked) {
         node.removeAttribute("data-ncm-simplify-entry");
         node.removeAttribute("data-ncm-marketing-notification");

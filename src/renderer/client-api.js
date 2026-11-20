@@ -45,11 +45,25 @@
       const getter = Object.values(registry).find(value => typeof value === "function" &&
         /^\s*([\w$]+)\s*=>\s*[\w$]+\[\1\]\s*$/.test(String(value)));
       const definition = getter?.("desktopLyric");
-      const sdk = loader(findModule(loader, ["winhelper.popupMenu", "appendRegisterCall"], 4));
-      if (typeof definition?.generate !== "function" || typeof sdk.Bridge?.appendRegisterCall !== "function" ||
-          typeof sdk.Bridge?.removeRegisterCall !== "function") throw new Error("当前网易云版本的桌面歌词菜单需要适配");
-      return { definition, nativeBridge: sdk.Bridge };
+      if (typeof definition?.generate !== "function") throw new Error("当前网易云版本的桌面歌词菜单需要适配");
+      return definition;
     });
+  }
+  function needsMenuReload() {
+    // Detaching 1.1.0 could leave an empty callback list. NetEase treats it as
+    // occupied even after an upgrade. Reload that renderer once to restore its owner.
+    const key = "ncm-immersive.recover-menu";
+    try {
+      const orphaned = withLoader(loader => {
+        const id = findModule(loader, ["winhelper.popupMenu", "registerCallOnce"], 4);
+        const callbacks = loader.c?.[id]?.exports?.Bridge?._Adapter?.registerCallMap?.["winhelper.onmenuclick"];
+        return Array.isArray(callbacks) && callbacks.length === 0;
+      });
+      if (!orphaned) { host.sessionStorage.removeItem(key); return false; }
+      if (host.sessionStorage.getItem(key)) return false;
+      host.sessionStorage.setItem(key, "1");
+      return true;
+    } catch (_) { return false; }
   }
   function openExternal(value) {
     const url = new URL(value);
@@ -60,5 +74,5 @@
       return sdk.Os.openExternal(url.href);
     });
   }
-  host.NcmClientApi = { method, desktopMenu, openExternal };
+  host.NcmClientApi = { method, desktopMenu, needsMenuReload, openExternal };
 })(window);

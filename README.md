@@ -4,9 +4,9 @@
 
 TouhouNCM 在网易云桌面客户端里提供沉浸播放页、封面流动背景、逐字歌词和东方音乐工具。日常听歌、桌面歌词与迷你窗口使用同一套主题。
 
-1.1.0 优化了内存占用。收起播放页后会释放大封面和背景图，关闭桌面歌词后会释放绘制资源。网易云最小化时会自动回收闲置缓存，桌面歌词和迷你窗口仍可正常使用。
+**1.2.0** 修复了网易云托盘的「退出」和桌面歌词菜单的字号调节。在「界面简化」中勾选「顶部宠物模式入口」，可以隐藏宠物蛋、猫形图标和生成进度三种样式。
 
-1.1.0 安装包已补充更新链接修复：“打开下载页”通过网易云的原生接口打开系统浏览器；打开失败时会显示可复制的下载地址。
+收起播放页后会释放大封面和背景图，关闭桌面歌词后会释放绘制资源。网易云最小化时会自动回收闲置缓存，桌面歌词和迷你窗口仍可正常使用。
 
 ## 功能
 
@@ -24,7 +24,7 @@ TouhouNCM 在网易云桌面客户端里提供沉浸播放页、封面流动背�
 
 **下载 Windows 安装程序：[GitHub Releases](https://github.com/pacholigoooo/TouhouNCM/releases/latest) · [百度网盘](https://pan.baidu.com/s/59iNZvDIhNRovi_kg5-X7-g)**。
 
-在 GitHub Releases 下载 `TouhouNCM-1.1.0-Setup-x64.exe`，其中包含程序和全部 162 项角色立绘资源。
+在 GitHub Releases 下载 `TouhouNCM-1.2.0-Setup-x64.exe`，其中包含程序和全部 162 项角色立绘资源。
 
 1. 双击下载的 EXE，点击“安装”。
 2. 安装程序自动解包，并创建桌面和开始菜单快捷方式。
@@ -32,7 +32,7 @@ TouhouNCM 在网易云桌面客户端里提供沉浸播放页、封面流动背�
 
 开始菜单中的“重新选择网易云路径”可更换客户端位置。卸载时，在 Windows 的“已安装的应用”中找到 **TouhouNCM**，点击卸载。辅助程序负责加载页面扩展与原生歌词窗口，网易云安装目录由原客户端维护。
 
-自动检查只提供新版提醒。点击“打开下载页”后，下载 EXE 并运行安装程序完成更新。若旧包中的“查看新版”没有反应，请从上方 GitHub Releases 手动下载当前安装包并覆盖安装，已有设置会保留。本次修复沿用 1.1.0 版本号，已经安装过 1.1.0 的用户需要手动重新下载安装。
+收到新版提醒后，点击「打开下载页」即可在系统浏览器中打开 GitHub Releases。也可以从上方链接下载安装包，双击覆盖安装即可沿用已有设置。
 
 ## 构建
 
@@ -48,7 +48,7 @@ npm run build:code
 
 `build:code` 构建完整程序逻辑，角色卡 PNG 导出需要另行准备立绘。按 [素材说明](docs/assets.md) 放入图片后，运行 `npm run build` 生成带本地立绘的程序。输出为 `dist/NcmImmersive.exe`。
 
-安装 [Inno Setup 6.5+](https://jrsoftware.org/isdl.php) 后，运行 `npm run build:installer`，生成 `dist/TouhouNCM-1.1.0-Setup-x64.exe`。自定义编译器路径可通过环境变量 `ISCC_PATH` 指定。安装向导源码位于 `installer/`。
+安装 [Inno Setup 6.5+](https://jrsoftware.org/isdl.php) 后，运行 `npm run build:installer`，生成 `dist/TouhouNCM-1.2.0-Setup-x64.exe`。自定义编译器路径可通过环境变量 `ISCC_PATH` 指定。安装向导源码位于 `installer/`。
 
 ## 项目结构
 
