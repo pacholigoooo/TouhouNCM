@@ -101,10 +101,10 @@ try {
   ].join("\n"));
   const compiler = path.join(process.env.WINDIR, "Microsoft.NET", "Framework64", "v4.0.30319", "csc.exe");
   const args = ["/nologo","/codepage:65001","/target:winexe","/optimize+","/platform:x86",
-    "/reference:System.Management.dll","/reference:System.Windows.Forms.dll","/reference:System.Web.Extensions.dll",
+    "/reference:System.Management.dll","/reference:System.Windows.Forms.dll","/reference:System.Web.Extensions.dll","/reference:System.Net.Http.dll",
     "/reference:System.Drawing.dll","/resource:"+bundle+",client.js", "/out:"+path.join(out,"NcmImmersive.exe"), versionInfo,
     ...Array.from(artResources, ([name, file]) => "/resource:" + file + "," + name),
-    ...["Launch.cs","ClientDiscovery.cs","MiniSession.cs","NativeCdpConnection.cs","WindowLong.cs","MiniPlayerForm.cs","DesktopCaptionForm.cs","DesktopCaptionPainter.cs","SurfacePalette.cs"].map(file=>path.join(root,"src/native",file))];
+    ...["Launch.cs","ClientDiscovery.cs","MiniSession.cs","ReleaseUpdater.cs","NativeCdpConnection.cs","WindowLong.cs","MiniPlayerForm.cs","DesktopCaptionForm.cs","DesktopCaptionPainter.cs","SurfacePalette.cs"].map(file=>path.join(root,"src/native",file))];
   // Keep embedded artwork outside the renderer bundle; only the requested
   // portrait crosses the native connection during an export.
   fs.writeFileSync(response, "\uFEFF" + args.map(arg => '"' + arg + '"').join("\n"));

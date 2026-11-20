@@ -26,6 +26,7 @@ internal sealed class MiniSession : ApplicationContext
     readonly Process player;
     readonly int port;
     readonly EventWaitHandle stop;
+    readonly ReleaseUpdater updates;
     readonly System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
     readonly JavaScriptSerializer json = new JavaScriptSerializer();
     readonly SemaphoreSlim exchange = new SemaphoreSlim(1, 1);
@@ -38,6 +39,7 @@ internal sealed class MiniSession : ApplicationContext
     string artworkKey = "";
     Bitmap artwork;
     bool ticking, ended, exporting, exportRequested, rendererReady;
+    bool updateDirty = true;
     bool memoryReclaimed, memoryReclaimDisabled;
     DateTime memoryIdleSince, nextMemoryReclaim;
 
@@ -134,11 +136,18 @@ internal sealed class MiniSession : ApplicationContext
 
     internal static void Run(Process player, int port)
     {
+        using (var updates = new ReleaseUpdater())
+            if (RunHost(player, port, updates)) updates.InstallOnExit();
+    }
+
+    static bool RunHost(Process player, int port, ReleaseUpdater updates)
+    {
         using (var gate = new Mutex(false, HostGate))
         {
-            if (!TryAcquire(gate, TimeSpan.Zero)) return;
+            if (!TryAcquire(gate, TimeSpan.Zero)) return false;
             try
             {
+                updates.CleanOldFiles();
                 try { SetProcessDpiAwarenessContext(new IntPtr(-4)); }
                 catch (EntryPointNotFoundException) { SetProcessDPIAware(); }
                 Application.EnableVisualStyles();
@@ -147,18 +156,21 @@ internal sealed class MiniSession : ApplicationContext
                 using (var ready = new EventWaitHandle(false, EventResetMode.ManualReset, HostGate + "." + player.Id))
                 {
                     signal.Reset();
-                    using (var session = new MiniSession(player, port, signal)) Application.Run(session);
+                    using (var session = new MiniSession(player, port, signal, updates)) Application.Run(session);
+                    return player.HasExited && !signal.WaitOne(0);
                 }
             }
             finally { gate.ReleaseMutex(); }
         }
     }
 
-    MiniSession(Process player, int port, EventWaitHandle stop)
+    MiniSession(Process player, int port, EventWaitHandle stop, ReleaseUpdater updates)
     {
         this.player = player;
         this.port = port;
         this.stop = stop;
+        this.updates = updates;
+        updates.Changed += WakeUpdates;
         timer.Interval = 350;
         timer.Tick += Tick;
         timer.Start();
@@ -207,15 +219,18 @@ internal sealed class MiniSession : ApplicationContext
                 timer.Interval = 700;
                 // The receive loop wakes export requests; HWND discovery and
                 // the one-shot idle reclaim share this sleeping cadence.
-                if (!exporting && !exportRequested && rendererReady && connection != null && connection.IsOpen && !connection.NeedsRebind) return;
+                if (!exporting && !exportRequested && !updateDirty && rendererReady && connection != null && connection.IsOpen && !connection.NeedsRebind) return;
             }
             exportRequested = false;
+            string updateSync = updateDirty || !rendererReady
+                ? "a?.updates?.nativeSync?.(" + json.Serialize(updates.Snapshot) + ")||''" : "''";
+            updateDirty = false;
             // Read only the visible surfaces. Keep failures separate so a bad
             // artwork or caption does not take the other surface down.
             string expression = "(()=>{const a=window.__pachiImmersive;" +
                 "a?.characterExportReady?.(" + json.Serialize(exportSession) + ");" +
                 "const read=(name,key)=>{try{const value=a?.[name]?.(key);return {value,sampledAt:Date.now()}}catch(e){return {error:String(e)}}};" +
-                "return JSON.stringify({ready:!!a,mini:" + (miniWindow == IntPtr.Zero ? "null" :
+                "return JSON.stringify({ready:!!a,updateCommand:" + updateSync + ",mini:" + (miniWindow == IntPtr.Zero ? "null" :
                     "read('miniSnapshot'," + json.Serialize(artworkKey) + ")") +
                 ",caption:" + (lyricWindow == IntPtr.Zero ? "null" :
                 "read('desktopCaption'," + json.Serialize(captionState == null ? "" : captionState.key) + ")") +
@@ -232,6 +247,7 @@ internal sealed class MiniSession : ApplicationContext
 
             var data = json.Deserialize<SurfaceSnapshots>(snapshot);
             rendererReady = data.ready;
+            if (!String.IsNullOrEmpty(data.updateCommand)) updates.Command(data.updateCommand);
             if (data.pngExport != null && !exporting) HandleCharacterRequest(data.pngExport);
             bool miniPlaying = false, captionPlaying = false;
             if (miniWindow != IntPtr.Zero)
@@ -319,10 +335,19 @@ internal sealed class MiniSession : ApplicationContext
         finally { exchange.Release(); }
     }
 
+    void WakeUpdates()
+    {
+        if (ended) return;
+        updateDirty = true;
+        Tick(null, EventArgs.Empty);
+    }
+
     void NativeWake(string payload)
     {
+        if (payload == "updates") { WakeUpdates(); return; }
         if (ended || (payload != exportSession && payload != "ready" && payload != "context")) return;
         memoryIdleSince = DateTime.MinValue;
+        if (payload == "context" || payload == "ready") updateDirty = true;
         if (payload == "context") rendererReady = false;
         exportRequested = true;
         Tick(null, EventArgs.Empty);
@@ -636,6 +661,7 @@ internal sealed class MiniSession : ApplicationContext
         if (disposing)
         {
             ended = true;
+            updates.Changed -= WakeUpdates;
             timer.Dispose();
             ReleaseSurfaces();
         }
@@ -650,6 +676,7 @@ internal sealed class MiniSession : ApplicationContext
     public sealed class SurfaceSnapshots
     {
         public bool ready { get; set; }
+        public string updateCommand { get; set; }
         public SurfaceSnapshot mini { get; set; }
         public SurfaceSnapshot caption { get; set; }
         public PngExportRequest pngExport { get; set; }

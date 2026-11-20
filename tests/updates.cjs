@@ -50,17 +50,33 @@ const response = (tag, url = "https://github.com/pacholigoooo/TouhouNCM/releases
   }
   const section = element(), root = element(), actions = [];
   const url = "https://github.com/pacholigoooo/TouhouNCM/releases/tag/v1.1.0";
-  let state = { status: "available", automatic: true, url }, render, destroyed = false;
+  let state = { status: "available", automatic: true, latest: "v1.1.0", url }, render, destroyed = false, retries = 0;
   const window = { NcmClientApi: { openExternal: async value => actions.push(value) } };
   const context = { window, URL, console, document: { createElement: () => section, documentElement: root } };
   vm.runInNewContext(source, context);
   window.NcmUpdates.create = (config, changed) => {
     render = changed;
-    return { getState: () => state, check: async () => render(state), setAutomatic() {}, destroy() { destroyed = true; } };
+    return { getState: () => state, check: async () => render(state), retryLater: () => retries++,
+      setAutomatic: value => { state = { ...state, automatic: value }; render(state); }, destroy() { destroyed = true; } };
   };
   const ui = { shadowRoot: { querySelector: () => ({ before: value => assert.equal(value, section) }) } };
   const mounted = context.mountUpdateSettings(ui, { version: "1.0.0" });
   const link = elements.get("[data-update-link]"), status = elements.get("[data-update-status]"), fallback = elements.get("[data-update-fallback]");
+  const install = elements.get("[data-update-install]"), auto = elements.get("[data-update-auto]");
+  assert.equal(mounted.nativeSync({ phase: "idle" }), "download");
+  assert.equal(mounted.nativeSync({ phase: "downloading" }), "");
+  mounted.nativeSync({ phase: "ready", latest: "v1.1.0" });
+  assert.match(status.textContent, /退出网易云时会自动安装/);
+  auto.checked = false;
+  auto.listeners.get("change")();
+  assert.equal(mounted.nativeSync({ phase: "ready", latest: "v1.1.0" }), "cancel");
+  assert.equal(mounted.nativeSync({ phase: "idle" }), "");
+  install.listeners.get("click")();
+  assert.equal(mounted.nativeSync({ phase: "idle" }), "download");
+  assert.equal(mounted.nativeSync({ phase: "error" }), "");
+  assert.equal(install.textContent, "重试下载"); assert.equal(retries, 1);
+  mounted.nativeSync({ phase: "portable" });
+  assert.equal(install.hidden, true);
   let prevented = 0;
   await link.listeners.get("click")({ preventDefault() { prevented++; } });
   assert.equal(prevented, 1); assert.deepEqual(actions, [url]); assert.equal(fallback.hidden, true);
@@ -78,4 +94,18 @@ const response = (tag, url = "https://github.com/pacholigoooo/TouhouNCM/releases
   assert.equal(destroyed, true); assert.equal(link.listeners.size, 0); assert.equal(section.removed, true);
   assert.equal(status.textContent, previousStatus);
   console.log("PASS update button native handoff, failure address, same-version download and teardown");
+  const cp = require("node:child_process");
+  const temp = path.join(__dirname, "../.tmp");
+  fs.mkdirSync(temp, { recursive: true });
+  const dir = fs.mkdtempSync(path.join(temp, "update-test-"));
+  try {
+    const exe = path.join(dir, "update-tests.exe");
+    const compiler = path.join(process.env.WINDIR, "Microsoft.NET", "Framework64", "v4.0.30319", "csc.exe");
+    cp.execFileSync(compiler, ["/nologo", "/codepage:65001", "/target:exe", "/reference:System.Net.Http.dll",
+      "/reference:System.Windows.Forms.dll", "/reference:System.Web.Extensions.dll", "/out:" + exe,
+      path.join(__dirname, "../src/native/ReleaseUpdater.cs"), path.join(__dirname, "ReleaseUpdaterTests.cs")], { stdio: "inherit" });
+    cp.execFileSync(exe, [dir], { stdio: "inherit", windowsHide: true });
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true, maxRetries: 8, retryDelay: 50 });
+  }
 })().catch(error=>{console.error(error);process.exitCode=1});

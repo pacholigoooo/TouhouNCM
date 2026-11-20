@@ -19,7 +19,7 @@ MinVersion=10.0
 DisableDirPage=yes
 DisableProgramGroupPage=yes
 DisableWelcomePage=yes
-UsePreviousTasks=no
+UsePreviousTasks=yes
 OutputDir=..\dist
 OutputBaseFilename=TouhouNCM-{#AppVersion}-Setup-x64
 Compression=lzma2
@@ -69,6 +69,9 @@ Type: files; Name: "{app}\session.txt"
 Type: files; Name: "{app}\attach-error.txt"
 Type: files; Name: "{app}\caption-region.txt"
 Type: files; Name: "{app}\caption-region.txt.tmp"
+Type: files; Name: "{app}\updates\setup-*.exe"
+Type: files; Name: "{app}\updates\last-install.log"
+Type: dirifempty; Name: "{app}\updates"
 
 [Code]
 function StopSession: Boolean;
@@ -88,6 +91,12 @@ end;
 function PrepareToInstall(var NeedsRestart: Boolean): String;
 begin
   Result := '';
+  if WizardSilent and (ExpandConstant('{param:TOUHOUNCMAUTO|0}') = '1') then
+  begin
+    if CheckForMutexes('Local\Pachi.NcmImmersive.Launch,Local\Pachi.NcmImmersive.Mini.Host') then
+      Result := '网易云已重新打开，将在下次退出时更新。';
+    Exit;
+  end;
   if not StopSession then
     Result := '请先从系统托盘退出网易云音乐，再点击“安装”。';
 end;
