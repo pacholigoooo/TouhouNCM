@@ -10,6 +10,8 @@
 
 客户端发现更高版本后会后台下载，等玩家退出网易云再安装。发布页链接供用户手动获取安装包。同版重新上传时可沿用下载链接，已经装过该版号的用户需要覆盖安装一次才会得到重发的内容。
 
-用户网站可链接到 GitHub Releases，并保留安装说明和项目介绍。
+国内备用源的根目录为 `https://www.touhou-life.top/updates/touhouncm/`。将与 GitHub 相同的安装包放入版本子目录，例如 `v1.2.1/TouhouNCM-1.2.1-Setup-x64.exe`。完整下载并核对文件后，再替换根目录的 `latest.json`。这个文件使用 GitHub 正式 Release 的 `tag_name`、`html_url`、`draft`、`prerelease` 和 `assets` 字段。安装包条目保留其 GitHub 下载地址、文件名、发布状态和字节数。JSON 支持跨域 GET 和缓存重新验证，安装包直接返回二进制内容。
+
+网站的 TouhouNCM 介绍页提供 GitHub、国内直链和百度网盘三个下载入口。
 
 安装程序由 `installer/TouhouNCM.iss` 构建，版本号从 `package.json` 读取。安装位置为当前用户的 `%LOCALAPPDATA%\Pachi\NcmImmersive`，与旧 ZIP 安装方式保持一致。程序更新保留客户端路径和网易云自身设置。

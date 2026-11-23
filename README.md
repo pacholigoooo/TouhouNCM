@@ -4,7 +4,7 @@
 
 TouhouNCM 在网易云桌面客户端里提供沉浸播放页、封面流动背景、逐字歌词和东方音乐工具。日常听歌、桌面歌词与迷你窗口使用同一套主题。
 
-**1.2.0** 支持后台下载新版，在退出网易云时自动安装。本版还修复了托盘「退出」、桌面歌词字号调节，以及界面简化对宠物蛋、猫形图标和生成进度的隐藏。
+**1.2.1** 修复了播放页左上角偶尔无法收起的问题。自动更新新增国内备用源，版本查询和安装包下载都能切换。「听歌设置 → TouhouNCM 更新」里也可以直接打开百度网盘。
 
 收起播放页后会释放大封面和背景图，关闭桌面歌词后会释放绘制资源。网易云最小化时会自动回收闲置缓存，桌面歌词和迷你窗口仍可正常使用。
 
@@ -16,15 +16,15 @@ TouhouNCM 在网易云桌面客户端里提供沉浸播放页、封面流动背�
 - **界面简化**：按需隐藏入口、通知红点与推广组件。
 - **东方工具**：原曲溯源、东方找歌、版本筛选、加入播放队列。
 - **听歌角色测试**：根据常听与最近曲目、歌曲标签和歌词线索匹配角色，提供说明和 PNG 导出。角色立绘由本地素材提供。
-- **自动更新**：每 12 小时检查 GitHub 正式版，听歌时后台下载，退出网易云后安装。可在听歌设置中关闭。
+- **自动更新**：每 12 小时检查正式版，GitHub 连接失败时自动使用国内备用源。听歌时后台下载，从托盘退出网易云后安装。
 
 ## 安装与使用
 
 项目面向 **Windows 10/11 x64、网易云音乐 3.x 的 Orpheus 客户端**。已实机核对版本为 **3.1.43.205627**；其他版本的适配状态见 [兼容性说明](docs/compatibility.md)。
 
-**下载 Windows 安装程序：[GitHub Releases](https://github.com/pacholigoooo/TouhouNCM/releases/latest) · [百度网盘](https://pan.baidu.com/s/59iNZvDIhNRovi_kg5-X7-g)**。
+**下载 Windows 安装程序**　[GitHub Releases](https://github.com/pacholigoooo/TouhouNCM/releases/latest) · [国内直链](https://www.touhou-life.top/updates/touhouncm/v1.2.1/TouhouNCM-1.2.1-Setup-x64.exe) · [百度网盘](https://pan.baidu.com/s/59iNZvDIhNRovi_kg5-X7-g)
 
-在 GitHub Releases 下载 `TouhouNCM-1.2.0-Setup-x64.exe`，其中包含程序和全部 162 项角色立绘资源。
+下载 `TouhouNCM-1.2.1-Setup-x64.exe`，其中包含程序和全部 162 项角色立绘资源。
 
 1. 双击下载的 EXE，点击“安装”。
 2. 安装程序自动解包，并创建桌面和开始菜单快捷方式。
@@ -32,7 +32,7 @@ TouhouNCM 在网易云桌面客户端里提供沉浸播放页、封面流动背�
 
 开始菜单中的“重新选择网易云路径”可更换客户端位置。卸载时，在 Windows 的“已安装的应用”中找到 **TouhouNCM**，点击卸载。辅助程序负责加载页面扩展与原生歌词窗口，网易云安装目录由原客户端维护。
 
-如果原来的 1.2.0 设置中写着「自动检查更新」，请从上方链接覆盖安装一次。看到「听歌设置 → TouhouNCM 更新 → 自动更新」即已启用新版更新器；之前关闭自动检查的用户可在这里开启。以后的新版会在后台下载，从系统托盘选择「退出」后自动安装，下次照常用原快捷方式打开。关闭自动更新后，仍可在这里手动检查并选择「下载并在退出时更新」。
+如果 1.2.0 设置中写着「自动检查更新」，或当前网络无法连接 GitHub，可以从上方国内直链覆盖安装一次。装好后打开「听歌设置 → TouhouNCM 更新」，可切换自动更新、手动检查新版或打开百度网盘。
 
 ## 构建
 
@@ -48,7 +48,7 @@ npm run build:code
 
 `build:code` 构建完整程序逻辑，角色卡 PNG 导出需要另行准备立绘。按 [素材说明](docs/assets.md) 放入图片后，运行 `npm run build` 生成带本地立绘的程序。输出为 `dist/NcmImmersive.exe`。
 
-安装 [Inno Setup 6.5+](https://jrsoftware.org/isdl.php) 后，运行 `npm run build:installer`，生成 `dist/TouhouNCM-1.2.0-Setup-x64.exe`。自定义编译器路径可通过环境变量 `ISCC_PATH` 指定。安装向导源码位于 `installer/`。
+安装 [Inno Setup 6.5+](https://jrsoftware.org/isdl.php) 后，运行 `npm run build:installer`，安装包位于 `dist/`，文件名包含当前版本号。自定义编译器路径可通过环境变量 `ISCC_PATH` 指定。安装向导源码位于 `installer/`。
 
 ## 项目结构
 

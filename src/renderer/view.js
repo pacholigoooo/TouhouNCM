@@ -214,7 +214,11 @@
       <section class="immersion" data-ncm-view data-open="false" data-playing="false" data-lyric-mode="none" role="dialog" aria-modal="true" aria-label="沉浸听歌" tabindex="-1" hidden>
         <div class="ambient" aria-hidden="true"><canvas class="ambient-field" width="128" height="80"></canvas><div class="ambient-shade"></div></div>
         <header class="topbar">
-          <div class="header-leading"><button class="icon-button back-button" data-ncm-action="close" type="button" title="返回网易云音乐 · Esc" aria-label="返回网易云音乐">${icon("down")}</button><button class="brand" data-ncm-action="close" type="button" aria-label="返回网易云音乐"><svg class="brand-mark" viewBox="0 0 28 28" aria-hidden="true"><path d="M17.2 3.6a10.8 10.8 0 1 0 6.7 7.2M16 4.7v10.4a3.4 3.4 0 1 1-3.4-3.4H16m0-7 5-1.6"/></svg><span>网易云音乐</span></button></div>
+          <button class="header-leading" data-ncm-action="close" type="button" title="收起播放页 · Esc" aria-label="收起播放页">
+            <span class="icon-button back-button" aria-hidden="true">${icon("down")}</span>
+            <span class="brand"><svg class="brand-mark" viewBox="0 0 28 28" aria-hidden="true"><path d="M17.2 3.6a10.8 10.8 0 1 0 6.7 7.2M16 4.7v10.4a3.4 3.4 0 1 1-3.4-3.4H16m0-7 5-1.6"/></svg><span>网易云音乐</span></span>
+          </button>
+          <div class="header-drag-space" aria-hidden="true"></div>
           <div class="header-actions"><button class="icon-button" data-ncm-action="fullscreen" type="button" title="全屏 · F" aria-label="进入全屏" aria-pressed="false">${icon("expand")}</button><button class="icon-button" data-ncm-action="settings" type="button" title="听歌设置" aria-label="听歌设置" aria-expanded="false" aria-controls="ncm-immersive-settings">${icon("settings")}</button></div>
         </header>
         <main class="immersive-view">

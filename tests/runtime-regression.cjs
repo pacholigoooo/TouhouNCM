@@ -9,7 +9,7 @@ const viewSource = fs.readFileSync(path.join(project, 'src/renderer', 'view.js')
 const desktopSource = fs.readFileSync(path.join(project, 'src/renderer', 'desktop-lyrics.js'), 'utf8');
 const flush = async () => { for (let i = 0; i < 10; i++) await Promise.resolve(); };
 
-function fixture() {
+function fixture(clientApi) {
   const requests = [], timers = new Map(), actions = [];
   const listeners = new Set();
   let timer = 0, collapseCount = 0;
@@ -20,7 +20,7 @@ function fixture() {
   const document = { getElementById: id => id === 'root' ? root : null, querySelectorAll: () => [],
     querySelector: selector => selector.includes('tid_vinyl_unfold_btn') ? { click() { collapseCount++; } } : null,
     addEventListener() {}, removeEventListener() {} };
-  const window = { document, console, AbortController,
+  const window = { document, console, AbortController, NcmClientApi: clientApi,
     setInterval: () => ++timer, clearInterval() {},
     setTimeout(fn) { timers.set(++timer, fn); return timer; }, clearTimeout: id => timers.delete(id),
     fetch(url, options) { return new Promise((resolve, reject) => requests.push({ url, options, resolve: payload => resolve({ ok: true, json: () => Promise.resolve(payload) }), reject })); } };
@@ -61,6 +61,61 @@ function fixture() {
   assert.equal(f.collapseCount(), 0);
   assert.equal(f.actions.length, 0);
   console.log('PASS rejected subscriber cleanup and disposed native commands');
+
+  // Some player styles unmount the native header after five seconds of inactivity.
+  // React commits the restored button after Redux has notified its subscribers.
+  const nativeControls = {};
+  const detail = fixture(nativeControls);
+  const page = detail.state['page:vinylPage'];
+  const initialTimers = new Set(detail.timers.keys());
+  let buttonMounted = false, collapses = 0;
+  const query = detail.document.querySelector;
+  detail.document.querySelector = selector => selector.includes('tid_vinyl_unfold_btn')
+    ? buttonMounted && { click() { collapses++; page.pageState = 'closing'; detail.bridge.sample(); } }
+    : query(selector);
+  detail.store.dispatch = action => {
+    assert.equal(action.type, 'page:vinylPage/onUpdate');
+    assert.equal(action.payload.externalBarHidden, false);
+    Object.assign(page, action.payload);
+    detail.bridge.sample();
+  };
+  function finishRender() {
+    detail.bridge.sample();
+    for (const [id, fn] of Array.from(detail.timers)) {
+      if (initialTimers.has(id)) continue;
+      detail.timers.delete(id);
+      fn();
+    }
+  }
+  page.externalBarHidden = true;
+  detail.bridge.closeDetail();
+  assert.equal(page.externalBarHidden, false, 'restore the auto-hidden native header');
+  buttonMounted = true;
+  finishRender();
+  assert.equal(page.pageState, 'closing');
+  assert.equal(collapses, 1);
+  page.pageState = 'closed'; detail.bridge.sample();
+  // The visual effect/fullscreen layout can keep its header unmounted even after waking.
+  buttonMounted = false;
+  nativeControls.closeVinylPage = () => {
+    collapses++;
+    page.pageState = 'closing';
+    detail.bridge.sample();
+  };
+  page.pageState = 'opening'; detail.bridge.sample();
+  detail.bridge.closeDetail(); detail.bridge.closeDetail();
+  assert.equal(collapses, 1, 'wait until the opening animation finishes');
+  page.pageState = 'opened'; finishRender();
+  assert.equal(collapses, 2, 'two early clicks collapse the new page once');
+  page.pageState = 'closed'; detail.bridge.sample();
+  page.pageState = 'opening'; detail.bridge.sample();
+  detail.bridge.closeDetail();
+  page.pageState = 'opened'; detail.bridge.sample();
+  page.pageState = 'closed'; detail.bridge.sample();
+  page.pageState = 'opened'; finishRender();
+  assert.equal(collapses, 2, 'a later open starts with no queued close');
+  detail.bridge.dispose();
+  console.log('PASS collapse after the native header unmounts, during opening and on reopen');
 
   const timeout = fixture();
   [...timeout.timers.values()][0]();

@@ -17,6 +17,8 @@ internal sealed class ReleaseUpdater : IDisposable
     const string Repository = "pacholigoooo/TouhouNCM";
     internal const string Latest = "https://api.github.com/repos/" + Repository + "/releases/latest";
     const string Releases = "https://github.com/" + Repository + "/releases/";
+    internal const string Mirror = "https://www.touhou-life.top/updates/touhouncm/";
+    static readonly TimeSpan NetworkIdle = TimeSpan.FromSeconds(20);
     const long MaxInstallerBytes = 256 * 1024 * 1024;
     static readonly Regex Tag = new Regex(@"^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)\z");
 
@@ -24,7 +26,7 @@ internal sealed class ReleaseUpdater : IDisposable
     readonly Version installed;
     CancellationTokenSource active;
     Prepared ready;
-    bool retry, disposed;
+    bool retry, disposed, preferMirror;
     string phase, latest = "";
     internal event Action Changed;
 
@@ -67,8 +69,9 @@ internal sealed class ReleaseUpdater : IDisposable
             if (active != null) active.Cancel();
             SetState("idle", "");
         }
-        else if (command == "download")
+        else if (command == "download" || command == "download-mirror")
         {
+            preferMirror = command == "download-mirror";
             if (active == null) Prepare();
             else if (active.IsCancellationRequested) retry = true;
         }
@@ -77,18 +80,15 @@ internal sealed class ReleaseUpdater : IDisposable
     async void Prepare()
     {
         var operation = new CancellationTokenSource();
+        bool mirrorFirst = preferMirror;
         active = operation;
         Discard();
         SetState("downloading", "");
         try
         {
             var result = await Task.Run(async delegate {
-                using (var http = OpenGitHub(installed))
-                using (var limit = CancellationTokenSource.CreateLinkedTokenSource(operation.Token))
-                {
-                    limit.CancelAfter(TimeSpan.FromMinutes(6));
-                    return await Stage(http, installed, cache, limit.Token).ConfigureAwait(false);
-                }
+                using (var http = OpenClient(installed))
+                    return await Stage(http, installed, cache, operation.Token, mirrorFirst).ConfigureAwait(false);
             });
             if (!disposed && !operation.IsCancellationRequested)
             {
@@ -120,7 +120,7 @@ internal sealed class ReleaseUpdater : IDisposable
         if (Changed != null) Changed();
     }
 
-    internal static HttpClient OpenGitHub(Version version)
+    internal static HttpClient OpenClient(Version version)
     {
         var handler = new HttpClientHandler { AllowAutoRedirect = false, UseCookies = false,
             SslProtocols = System.Security.Authentication.SslProtocols.Tls12 };
@@ -144,57 +144,106 @@ internal sealed class ReleaseUpdater : IDisposable
         public bool draft { get; set; }
         public bool prerelease { get; set; }
         public Asset[] assets { get; set; }
+        internal Version Version;
+        internal Asset Installer;
     }
 
-    internal static async Task<Prepared> Stage(HttpClient http, Version current, string directory, CancellationToken token)
+    static async Task<Release> ReadRelease(HttpClient http, bool mirror, Version current, CancellationToken token)
     {
         Release release;
         using (var timeout = CancellationTokenSource.CreateLinkedTokenSource(token))
         {
-            timeout.CancelAfter(TimeSpan.FromSeconds(20));
-            using (var response = await http.GetAsync(Latest, timeout.Token).ConfigureAwait(false))
+            timeout.CancelAfter(TimeSpan.FromSeconds(10));
+            using (var response = await http.GetAsync(mirror ? Mirror + "latest.json" : Latest, timeout.Token).ConfigureAwait(false))
             {
                 response.EnsureSuccessStatusCode();
-                release = new JavaScriptSerializer().Deserialize<Release>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
+                string json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                try { release = new JavaScriptSerializer().Deserialize<Release>(json); }
+                catch (ArgumentException error) { throw new InvalidDataException("版本信息格式无效。", error); }
+                catch (InvalidOperationException error) { throw new InvalidDataException("版本信息格式无效。", error); }
             }
         }
-        Version next;
         if (release == null || release.draft || release.prerelease || !Tag.IsMatch(release.tag_name ?? "") ||
-            !Version.TryParse(release.tag_name.Substring(1), out next) || release.html_url != Releases + "tag/" + release.tag_name)
+            !Version.TryParse(release.tag_name.Substring(1), out release.Version) || release.html_url != Releases + "tag/" + release.tag_name)
             throw new InvalidDataException("无效的正式版本信息。");
-        if (next <= current) return null;
-        string name = "TouhouNCM-" + next + "-Setup-x64.exe";
-        var asset = Array.Find(release.assets ?? new Asset[0], item => item != null && item.name == name);
-        if (asset == null || asset.state != "uploaded" || asset.size <= 0 || asset.size > MaxInstallerBytes ||
-            asset.browser_download_url != Releases + "download/" + release.tag_name + "/" + name)
-            throw new InvalidDataException("发布版本缺少 Windows 安装包。");
+        if (release.Version > current)
+        {
+            string name = "TouhouNCM-" + release.Version + "-Setup-x64.exe";
+            var asset = Array.Find(release.assets ?? new Asset[0], item => item != null && item.name == name);
+            if (asset == null || asset.state != "uploaded" || asset.size <= 0 || asset.size > MaxInstallerBytes ||
+                asset.browser_download_url != Releases + "download/" + release.tag_name + "/" + name)
+                throw new InvalidDataException("发布版本缺少 Windows 安装包。");
+            release.Installer = asset;
+        }
+        return release;
+    }
+
+    static bool SourceFailed(Exception error)
+    {
+        return error is HttpRequestException || error is IOException || error is InvalidDataException ||
+            error is OperationCanceledException || error is ObjectDisposedException || error is WebException;
+    }
+
+    internal static async Task<Prepared> Stage(HttpClient http, Version current, string directory, CancellationToken token, bool mirrorFirst = false)
+    {
+        Release release = null;
+        try { release = await ReadRelease(http, mirrorFirst, current, token).ConfigureAwait(false); }
+        catch (Exception error)
+        {
+            token.ThrowIfCancellationRequested();
+            if (!SourceFailed(error)) throw;
+            mirrorFirst = !mirrorFirst;
+        }
+        if (release == null) release = await ReadRelease(http, mirrorFirst, current, token).ConfigureAwait(false);
+        if (release.Version <= current) return null;
         Directory.CreateDirectory(directory);
+        try { return await Download(http, directory, release, mirrorFirst, token).ConfigureAwait(false); }
+        catch (Exception error)
+        {
+            token.ThrowIfCancellationRequested();
+            if (!SourceFailed(error)) throw;
+        }
+        // Retry the same release and size when only the asset server is unreachable.
+        return await Download(http, directory, release, !mirrorFirst, token).ConfigureAwait(false);
+    }
+
+    static async Task<Prepared> Download(HttpClient http, string directory, Release release, bool mirror, CancellationToken token)
+    {
+        var asset = release.Installer;
+        var uri = new Uri(mirror ? Mirror + release.tag_name + "/" + asset.name : asset.browser_download_url);
         string path = Path.Combine(directory, "setup-" + Guid.NewGuid().ToString("N") + ".exe");
         try
         {
-            using (var response = await OpenAsset(http, new Uri(asset.browser_download_url), token).ConfigureAwait(false))
-            using (token.Register(response.Dispose))
-            using (var input = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
-            using (var output = new FileStream(path, FileMode.CreateNew, FileAccess.Write, FileShare.None))
+            using (var timeout = CancellationTokenSource.CreateLinkedTokenSource(token))
             {
-                long? length = response.Content.Headers.ContentLength;
-                if (length.HasValue && length != asset.size) throw new InvalidDataException("安装包长度不符。");
-                var buffer = new byte[65536];
-                int count;
-                while ((count = await input.ReadAsync(buffer, 0, buffer.Length, token).ConfigureAwait(false)) > 0)
+                timeout.CancelAfter(NetworkIdle);
+                using (var response = await OpenAsset(http, uri, mirror, timeout.Token).ConfigureAwait(false))
+                using (timeout.Token.Register(response.Dispose))
+                using (var input = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
+                using (var output = new FileStream(path, FileMode.CreateNew, FileAccess.Write, FileShare.None))
                 {
-                    if (output.Position + count > asset.size) throw new InvalidDataException("安装包超出发布大小。");
-                    output.Write(buffer, 0, count);
+                    long? length = response.Content.Headers.ContentLength;
+                    if (length.HasValue && length != asset.size) throw new InvalidDataException("安装包长度不符。");
+                    var buffer = new byte[65536];
+                    int count;
+                    timeout.CancelAfter(NetworkIdle);
+                    while ((count = await input.ReadAsync(buffer, 0, buffer.Length, timeout.Token).ConfigureAwait(false)) > 0)
+                    {
+                        if (output.Position + count > asset.size) throw new InvalidDataException("安装包超出发布大小。");
+                        output.Write(buffer, 0, count);
+                        timeout.CancelAfter(NetworkIdle);
+                    }
+                    timeout.Token.ThrowIfCancellationRequested();
+                    if (output.Position != asset.size) throw new InvalidDataException("安装包下载不完整。");
                 }
-                if (output.Position != asset.size) throw new InvalidDataException("安装包下载不完整。");
             }
             token.ThrowIfCancellationRequested();
-            return new Prepared(path, release.tag_name, next, asset.size);
+            return new Prepared(path, release.tag_name, release.Version, asset.size);
         }
         catch { DeleteFile(path); throw; }
     }
 
-    static async Task<HttpResponseMessage> OpenAsset(HttpClient http, Uri uri, CancellationToken token)
+    static async Task<HttpResponseMessage> OpenAsset(HttpClient http, Uri uri, bool mirror, CancellationToken token)
     {
         for (int hop = 0; hop < 5; hop++)
         {
@@ -204,7 +253,8 @@ internal sealed class ReleaseUpdater : IDisposable
             {
                 int code = (int)response.StatusCode;
                 Uri location = response.Headers.Location;
-                if (code < 300 || code > 399 || location == null) throw new HttpRequestException("GitHub 安装包下载失败。");
+                if (code < 300 || code > 399 || location == null) throw new HttpRequestException("安装包下载失败。");
+                if (mirror) throw new InvalidDataException("备用更新源需要提供安装包直链。");
                 uri = new Uri(uri, location);
                 if (uri.Scheme != "https" || !uri.IsDefaultPort || uri.UserInfo.Length != 0 ||
                     (uri.Host != "release-assets.githubusercontent.com" && uri.Host != "objects.githubusercontent.com" &&

@@ -32,6 +32,14 @@ const response = (tag, url = "https://github.com/pacholigoooo/TouhouNCM/releases
   const abort=fixture((url,options)=>new Promise((done,reject)=>{signal=options.signal;signal.addEventListener("abort",()=>reject(Error("aborted")))}));
   const waiting=abort.updates.check(); abort.updates.destroy(); await waiting;
   assert.equal(signal.aborted,true); assert.equal(abort.timers.size,0);
+  const mirror = "https://www.touhou-life.top/updates/touhouncm/latest.json";
+  const addresses = [];
+  const offline = fixture(async url => { addresses.push(url); if (url === mirror) return response("v1.2.1"); throw Error("offline"); });
+  await offline.updates.check();
+  assert.equal(offline.updates.getState().latest, "v1.2.1");
+  assert.equal(offline.updates.getState().source, "mirror");
+  assert.deepEqual(addresses, ["https://api.github.com/repos/pacholigoooo/TouhouNCM/releases/latest", mirror]);
+  offline.updates.destroy();
   console.log("PASS update comparison, request sharing, release URLs, disable and teardown");
 
   // Exercise the actual click handler: CEF must receive a native browser call,
@@ -80,7 +88,18 @@ const response = (tag, url = "https://github.com/pacholigoooo/TouhouNCM/releases
   let prevented = 0;
   await link.listeners.get("click")({ preventDefault() { prevented++; } });
   assert.equal(prevented, 1); assert.deepEqual(actions, [url]); assert.equal(fallback.hidden, true);
+  const netdisk = elements.get("[data-update-netdisk]");
+  state = { status: "error", automatic: false, url: "" }; render(state);
+  await netdisk.listeners.get("click")({ preventDefault() {} });
+  assert.equal(actions.at(-1), "https://pan.baidu.com/s/59iNZvDIhNRovi_kg5-X7-g");
+  state = { status: "available", automatic: false, latest: "v1.2.1", url, source: "mirror" }; render(state);
+  install.listeners.get("click")();
+  assert.equal(mounted.nativeSync({ phase: "idle" }), "download-mirror");
   window.NcmClientApi.openExternal = async () => { throw new Error("no native bridge"); };
+  await netdisk.listeners.get("click")({ preventDefault() { prevented++; } });
+  mounted.nativeSync({ phase: "idle" });
+  assert.equal(fallback.hidden, false);
+  assert.equal(fallback.textContent, "https://pan.baidu.com/s/59iNZvDIhNRovi_kg5-X7-g");
   await link.listeners.get("click")({ preventDefault() { prevented++; } });
   assert.match(status.textContent, /未能打开系统浏览器/);
   assert.equal(fallback.hidden, false); assert.equal(fallback.textContent, url);

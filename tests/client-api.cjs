@@ -24,6 +24,25 @@ for (const [id, exported] of [[15, "dg"], [204, "renamedSearch"], [83, "q"]]) {
 console.log("PASS client module and export renumbering; temporary entries released on success and failure");
 
 {
+  const calls = [];
+  const close = () => calls.push("closed");
+  close.toString = () => 'e=>{dispatch({type:"page:vinylPage/toggleFullscreen"});state.next(vinyl.closing)}';
+  const loader = key => loader.c[key].exports;
+  loader.m = { 147: String(close), 93: "effect stop, releaseResource=" };
+  loader.c = { 147: { exports: { renamed: close } }, 93: { exports: { fx: { stopEffect: release => calls.push(release) } } } };
+  const jsonp = [];
+  jsonp.push = entry => Object.values(entry[1])[0]({}, {}, loader);
+  const window = { webpackJsonp: jsonp };
+  vm.runInNewContext(source, { window });
+  window.NcmClientApi.closeVinylPage();
+  assert.deepEqual(calls, ["closed", false]);
+  delete loader.c[93];
+  window.NcmClientApi.closeVinylPage();
+  assert.deepEqual(calls, ["closed", false, "closed"]);
+  console.log("PASS native close with a relocated controller and an optional loaded visual effect");
+}
+
+{
   const slots = {}, session = new Map();
   const sdk = { exports: { Bridge: { _Adapter: { registerCallMap: slots } } } };
   const loader = Object.assign(() => {}, { m: { 4: "winhelper.popupMenu registerCallOnce" }, c: { 4: sdk } });

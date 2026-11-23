@@ -49,6 +49,24 @@
       return definition;
     });
   }
+  function closeVinylPage() {
+    return withLoader(loader => {
+      // The native minibar uses this controller even when the vinyl header is unmounted.
+      const markers = ["page:vinylPage/toggleFullscreen", ".closing)"];
+      const controls = loader(findModule(loader, markers, 62));
+      const close = Object.values(controls).find(fn => typeof fn === "function" &&
+        markers.every(marker => String(fn).includes(marker)));
+      if (!close) throw new Error("当前网易云版本的播放页收起操作需要适配");
+      close();
+      // The native header also stops any running artwork effect. Only touch an
+      // initialized effect manager; clients without one have nothing to release.
+      try {
+        const id = findModule(loader, ["effect stop, releaseResource="], 51);
+        const effects = Object.values(loader.c?.[id]?.exports || {}).find(value => typeof value?.stopEffect === "function");
+        effects?.stopEffect(false);
+      } catch (_) {}
+    });
+  }
   function needsMenuReload() {
     // Detaching 1.1.0 could leave an empty callback list. NetEase treats it as
     // occupied even after an upgrade. Reload that renderer once to restore its owner.
@@ -74,5 +92,5 @@
       return sdk.Os.openExternal(url.href);
     });
   }
-  host.NcmClientApi = { method, desktopMenu, needsMenuReload, openExternal };
+  host.NcmClientApi = { method, desktopMenu, closeVinylPage, needsMenuReload, openExternal };
 })(window);

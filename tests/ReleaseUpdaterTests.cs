@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -18,17 +19,33 @@ static class ReleaseUpdaterTests
         internal byte[] installer = File.ReadAllBytes(Assembly.GetExecutingAssembly().Location);
         internal string tag = "v2.0.1", location = "https://release-assets.githubusercontent.com/test";
         internal int lengthAdjustment, downloads;
+        internal bool githubOffline, failAsset, rejectMirror, redirectMirror;
+        internal readonly List<string> requests = new List<string>();
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
             string name = "TouhouNCM-" + tag.Substring(1) + "-Setup-x64.exe";
             string root = "https://github.com/pacholigoooo/TouhouNCM/releases/";
             string download = root + "download/" + tag + "/" + name;
+            string url = request.RequestUri.AbsoluteUri;
+            requests.Add(url);
             var response = new HttpResponseMessage(HttpStatusCode.OK);
-            if (request.RequestUri.AbsoluteUri == ReleaseUpdater.Latest)
+            if (githubOffline && url == ReleaseUpdater.Latest || failAsset && url == download)
+                response.StatusCode = HttpStatusCode.ServiceUnavailable;
+            else if (url == ReleaseUpdater.Latest || url == ReleaseUpdater.Mirror + "latest.json")
                 response.Content = new StringContent(new JavaScriptSerializer().Serialize(new { tag_name = tag, html_url = root + "tag/" + tag,
                     assets = new[] { new { name, state = "uploaded", size = installer.Length + lengthAdjustment, browser_download_url = download } } }));
-            else if (request.RequestUri.AbsoluteUri == download)
+            else if (url == ReleaseUpdater.Mirror + tag + "/" + name)
+            {
+                if (rejectMirror) response.StatusCode = HttpStatusCode.NotFound;
+                else if (redirectMirror)
+                {
+                    response.StatusCode = HttpStatusCode.Redirect;
+                    response.Headers.Location = new Uri("https://example.test/other.exe");
+                }
+                else response.Content = new ByteArrayContent(installer);
+            }
+            else if (url == download)
             {
                 downloads++;
                 response.StatusCode = HttpStatusCode.Redirect;
@@ -62,16 +79,38 @@ static class ReleaseUpdaterTests
                 catch (IOException) { }
             }
             Require(Directory.GetFiles(cache).Length == 0, "A cancelled install should release the file.");
+            string mirrorAsset = ReleaseUpdater.Mirror + "v2.0.1/TouhouNCM-2.0.1-Setup-x64.exe";
+            github.requests.Clear();
+            github.failAsset = true;
+            using (await ReleaseUpdater.Stage(http, old, cache, CancellationToken.None)) { }
+            Require(github.requests.Last() == mirrorAsset && !github.requests.Contains(ReleaseUpdater.Mirror + "latest.json"),
+                "An asset failure must use the same version from the other source.");
+            github.requests.Clear();
+            github.githubOffline = true;
+            using (await ReleaseUpdater.Stage(http, old, cache, CancellationToken.None)) { }
+            Require(github.requests.SequenceEqual(new[] { ReleaseUpdater.Latest, ReleaseUpdater.Mirror + "latest.json", mirrorAsset }),
+                "The mirror must work with GitHub offline.");
+            github.requests.Clear();
+            using (await ReleaseUpdater.Stage(http, old, cache, CancellationToken.None, true)) { }
+            Require(github.requests.SequenceEqual(new[] { ReleaseUpdater.Mirror + "latest.json", mirrorAsset }),
+                "Use the source already reached by the player.");
+            github.redirectMirror = true;
+            try { using (await ReleaseUpdater.Stage(http, old, cache, CancellationToken.None)) { } throw new Exception("Followed a mirror redirect."); }
+            catch (HttpRequestException) { }
+            Require(!github.requests.Any(url => url.StartsWith("https://example.test/")), "Requested an external installer.");
+            github.githubOffline = github.failAsset = github.redirectMirror = false;
             foreach (string failure in new[] { "wrong host", "wrong size", "wrong product version" })
             {
+                github.rejectMirror = true;
                 github.location = failure == "wrong host" ? "https://example.test/installer" : "https://release-assets.githubusercontent.com/test";
                 github.lengthAdjustment = failure == "wrong size" ? 1 : 0;
                 github.tag = failure == "wrong product version" ? "v2.0.2" : "v2.0.1";
                 try { using (await ReleaseUpdater.Stage(http, old, cache, CancellationToken.None)) { } throw new Exception("Accepted " + failure); }
-                catch (InvalidDataException) { }
+                catch (HttpRequestException) { }
                 Require(Directory.GetFiles(cache).Length == 0, "Incomplete installer was left in the cache.");
             }
             github.tag = "v2.0.1";
+            github.rejectMirror = false;
             using (var ready = await ReleaseUpdater.Stage(http, old, cache, CancellationToken.None))
                 ready.Install(dir);
             string marker = Path.Combine(dir, "installed.txt");

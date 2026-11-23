@@ -54,7 +54,9 @@
     var nativeProgressElement = null;
     var progressObserver = null;
     var observedProgressElements = [];
-    var closeWhenOpened = false;
+    var collapseSelector = '[data-testid="tid_vinyl_unfold_btn"]';
+    var pendingDetailClose = null;
+    var detailCloseTimer = null;
     var nativeSongSearch = null;
     var nativeHistory = null;
     var nativeListeningRank = null, nativeMusicTags = null, nativeSongLyrics = null;
@@ -966,6 +968,7 @@
         }
         var current = readCurrent();
         snapshot.detailState = current.detail && current.detail.pageState || 'closed';
+        if (pendingDetailClose) scheduleDetailClose(current.detail);
         snapshot.detailFullscreen = !!(current.detail && current.detail.isVinylFullscreen && current.windowFullscreen !== false);
         playing = current.playing;
         var track = normalizeTrack(playing);
@@ -1021,24 +1024,53 @@
         updatePlayback(clock);
         updateTools();
         emit();
-        if (closeWhenOpened && snapshot.detailState === 'opened') {
-          closeWhenOpened = false;
-          host.setTimeout(function () { if (!disposed && snapshot.detailState === 'opened') closeDetail(); }, 0);
-        }
-        if (snapshot.detailState === 'closed') closeWhenOpened = false;
       } catch (error) { report(error); emit(); }
       return snapshot;
     }
 
-    function closeDetail() {
-      if (disposed) return;
-      if (snapshot.detailState === 'opening') {
-        closeWhenOpened = true;
+    function clearDetailClose() {
+      pendingDetailClose = null;
+      if (detailCloseTimer !== null) host.clearTimeout(detailCloseTimer);
+      detailCloseTimer = null;
+    }
+
+    function scheduleDetailClose(detail) {
+      if (!detail || detail.pageState === 'closing' || detail.pageState === 'closed') {
+        clearDetailClose();
         return;
       }
-      // This control drives the native vinyl animation and clears fullscreen mode.
-      var collapse = doc.querySelector('[data-testid="tid_vinyl_unfold_btn"]');
-      if (collapse && snapshot.detailState === 'opened') collapse.click();
+      if (detail.pageState !== 'opened' || detailCloseTimer !== null) return;
+      if (pendingDetailClose === 'header' && !doc.querySelector(collapseSelector)) return;
+      // Let the current Redux notification and React commit finish before clicking.
+      detailCloseTimer = host.setTimeout(function () {
+        detailCloseTimer = null;
+        if (pendingDetailClose) closeDetail();
+      }, 0);
+    }
+
+    function closeDetail() {
+      if (disposed) return;
+      var detail = readCurrent().detail;
+      if (!detail || (detail.pageState !== 'opening' && detail.pageState !== 'opened')) return;
+      if (detail.pageState === 'opening') {
+        pendingDetailClose = 'opening';
+        return;
+      }
+      clearDetailClose();
+      var collapse = doc.querySelector(collapseSelector);
+      if (collapse && typeof collapse.click === 'function') {
+        collapse.click();
+        return;
+      }
+      if (host.NcmClientApi && typeof host.NcmClientApi.closeVinylPage === 'function') {
+        try { host.NcmClientApi.closeVinylPage(); return; }
+        catch (error) { report(error); }
+      }
+      // On a client with a different controller, let React restore its native button.
+      pendingDetailClose = 'header';
+      if (detail.externalBarHidden) {
+        store.dispatch({ type: 'page:vinylPage/onUpdate', payload: { externalBarHidden: false } });
+      }
     }
 
     function command(action, argument) {
@@ -1180,6 +1212,7 @@
       dispose: function () {
         if (disposed) return;
         disposed = true;
+        clearDetailClose();
         host.clearInterval(timer);
         if (progressObserver) progressObserver.disconnect();
         observedProgressElements = [];
