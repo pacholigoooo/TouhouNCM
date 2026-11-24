@@ -107,7 +107,7 @@ function mountImmersiveRuntime(version, viewCss, nativeCss, config) {
       if (detailState === previous) return;
       if (detailState === "opening") ui.open(true);
       else if (detailState === "opened" && previous !== "opening") ui.open(previous === "closed" || previous === "closing");
-      else if (detailState === "closed") ui.close();
+      else if (detailState === "closing" || detailState === "closed") ui.close();
     });
     dispose.push(stopWatching);
     runtime = {

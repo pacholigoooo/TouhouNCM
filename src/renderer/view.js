@@ -325,7 +325,7 @@
     let coverRetireTimer = 0;
     let coverFadeTimer = 0;
     let opened = false;
-    let openingSlide = null;
+    let pageSlide = null;
     let settingsOnly = false;
     let activeLine = -1;
     let frameId = 0;
@@ -600,7 +600,7 @@
       if (snapshot && force !== false) renderPosition(layoutChanged);
     }
     function syncBackdrop() {
-      if (document.hidden || motionQuery.matches) finishOpening();
+      if (pageSlide && (document.hidden || motionQuery.matches)) finishPageSlide();
       const running = artworkMotion();
       backdrop.setRunning(running);
       if (!running) finishCoverTransition();
@@ -1112,6 +1112,7 @@
     function openSettings() {
       if (destroyed) return;
       if (!opened && !settingsOnly) {
+        if (pageSlide) finishPageSlide();
         lastFocus = document.activeElement;
         settingsOnly = true;
         view.dataset.settingsOnly = "true";
@@ -1127,17 +1128,52 @@
       if (path.some(node => node.id === "ncm-immersive-settings-entry")) return;
       if (!path.includes(settingsPanel)) setSettings(false, false);
     }
-    function finishOpening() {
-      if (!openingSlide) return;
-      openingSlide.onfinish = null;
-      openingSlide.cancel();
-      openingSlide = null;
-      if (opened) document.documentElement.setAttribute("data-ncm-player-open", "opened");
+    function finishPageSlide() {
+      if (pageSlide) {
+        pageSlide.onfinish = null;
+        pageSlide.cancel();
+        pageSlide = null;
+      }
+      if (opened) {
+        document.documentElement.setAttribute("data-ncm-player-open", "opened");
+        return;
+      }
+      view.hidden = true;
+      if (pendingCover) clearCoverDisplay("loading");
+      clearLyrics();
+      finishCoverTransition();
+      $("[data-cover]").removeAttribute("src");
+      backdrop.setCover(null);
+      // The native vinyl may take longer to collapse. Keep it behind the library until closed.
+      if (snapshot?.detailState !== "closing") document.documentElement.removeAttribute("data-ncm-player-open");
+    }
+    function slidePage(animate) {
+      document.documentElement.setAttribute("data-ncm-player-open", opened ? "opening" : "closing");
+      if (!animate || nativeDialogOpen || document.hidden || motionQuery.matches || typeof view.animate !== "function") {
+        finishPageSlide();
+        return;
+      }
+      if (pageSlide) {
+        pageSlide.reverse();
+        return;
+      }
+      const page = { transform: "translateY(0)" };
+      const minibar = { transform: "translateY(100%)" };
+      const slide = view.animate(opened ? [minibar, page] : [page, minibar], {
+        duration: opened ? 320 : 300,
+        easing: opened ? "cubic-bezier(.2,.75,.25,1)" : "cubic-bezier(.4,0,.66,1)",
+        fill: "both"
+      });
+      pageSlide = slide;
+      slide.onfinish = () => {
+        if (pageSlide === slide && slide.playState === "finished") finishPageSlide();
+      };
     }
     function open(animate) {
       if (opened || destroyed) return;
-      const slide = animate && !settingsOnly && !nativeDialogOpen && !document.hidden && !motionQuery.matches && typeof view.animate === "function";
-      if (!settingsOnly) lastFocus = document.activeElement;
+      const reopening = Boolean(pageSlide);
+      const fromSettings = settingsOnly;
+      if (!fromSettings && !reopening) lastFocus = document.activeElement;
       settingsOnly = false;
       view.dataset.settingsOnly = "false";
       view.setAttribute("aria-label", "沉浸听歌");
@@ -1149,14 +1185,10 @@
       $("[data-ncm-action=recenter]").hidden = true;
       view.hidden = false;
       view.dataset.open = "true";
-      document.documentElement.setAttribute("data-ncm-player-open", slide ? "opening" : "opened");
-      if (slide) {
-        openingSlide = view.animate([{ transform: "translateY(100%)" }, { transform: "none" }], {
-          duration: 320, easing: "cubic-bezier(.2,.75,.25,1)"
-        });
-        openingSlide.onfinish = finishOpening;
+      slidePage(animate && !fromSettings);
+      if (!reopening || $("[data-cover]").getAttribute("src") !== coverUrl) {
+        updateCover(coverUrl, snapshot && snapshot.track && snapshot.track.title, true);
       }
-      updateCover(coverUrl, snapshot && snapshot.track && snapshot.track.title, true);
       buildLyrics();
       onFullscreenChange();
       syncBackdrop();
@@ -1167,33 +1199,29 @@
       renderPosition(true);
       frameId = requestAnimationFrame(tick);
     }
-    function close() {
+    function close(animate = true) {
+      if (!opened) {
+        if (!pageSlide && snapshot?.detailState === "closed") document.documentElement.removeAttribute("data-ncm-player-open");
+        return;
+      }
       closeTitleMenu();
-      if (!opened) return;
       opened = false;
-      finishOpening();
       dragging = false;
       seekPreview = null;
       cancelAnimationFrame(frameId);
       cancelAnimationFrame(resizeId);
       clearTimeout(resumeTimer);
       clearTimeout(coverRetireTimer);
-      if (pendingCover) clearCoverDisplay("loading");
       settingsPanel.hidden = true;
       setVolumeOpen(false, false);
       $("[data-ncm-action=settings]").setAttribute("aria-expanded", "false");
-      view.hidden = true;
       view.dataset.open = "false";
-      clearLyrics();
-      finishCoverTransition();
-      $("[data-cover]").removeAttribute("src");
-      backdrop.setCover(null);
-      document.documentElement.removeAttribute("data-ncm-player-open");
+      slidePage(animate);
       syncBackdrop();
       if (requestedFullscreen) setFullscreen(false).catch(() => {});
       requestedFullscreen = false;
       document.documentElement.removeAttribute("data-ncm-player-fullscreen");
-      if (lastFocus && lastFocus.isConnected && typeof lastFocus.focus === "function") lastFocus.focus();
+      if (!nativeDialogOpen && lastFocus && lastFocus.isConnected && typeof lastFocus.focus === "function") lastFocus.focus();
     }
     function requestClose() {
       if (typeof options.onClose === "function") options.onClose();
@@ -1398,7 +1426,9 @@
       destroy() {
         if (destroyed) return;
         if (settingsOnly) setSettings(false, false);
-        close();
+        close(false);
+        if (pageSlide) finishPageSlide();
+        document.documentElement.removeAttribute("data-ncm-player-open");
         destroyed = true;
         if (typeof unsubscribe === "function") unsubscribe();
         cancelAnimationFrame(frameId); cancelAnimationFrame(resizeId);

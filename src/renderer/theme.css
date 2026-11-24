@@ -44,7 +44,7 @@ html[data-ncm-player-fullscreen] #ncm-immersive-host {
 html[data-ncm-player-fullscreen] :is(#topArea, #page_pc_main_nav, #page_pc_mini_bar) {
   visibility: hidden;
 }
-/* Keep the library behind the player until its entrance covers the window. */
+/* The library is visible behind the player while it slides in either direction. */
 html[data-ncm-player-open="opened"] #ncm-glass-backdrop {
   display: none;
 }

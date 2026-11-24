@@ -121,10 +121,13 @@ console.log("PASS native style cache reclaim preserves rules and runs only while
 const player = fixture(undefined, "opened");
 player.start();
 assert.deepEqual(player.navigation, [["open", false]], "attaching to the current song page keeps it in place");
-for (const state of ["closed", "opening", "opening", "opened", "opened", "closing", "closed", "opened"]) player.changeDetail(state);
-assert.deepEqual(player.navigation.slice(1), [["close"], ["open", true], ["close"], ["open", true]]);
+player.changeDetail("closed");
+player.changeDetail("opened");
+assert.deepEqual(player.navigation.slice(1), [["close"], ["open", true]], "clients can skip both transition states");
+for (const state of ["closing", "closing", "opening", "opened", "closing", "closed"]) player.changeDetail(state);
+assert.deepEqual(player.navigation.slice(3), [["close"], ["open", true], ["close"], ["close"]], "begin collapsing on closing and allow it to reverse");
 player.window.__pachiImmersive.destroy();
-console.log("PASS the minibar entrance also works on clients that go straight to opened");
+console.log("PASS player navigation follows native opening and closing, including reversals and skipped states");
 
 const disconnected = fixture();
 disconnected.window.__pachiNcmImmersiveNativeWake = () => { throw Error("disconnected binding"); };
