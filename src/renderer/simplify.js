@@ -21,12 +21,11 @@ function createSimplifyControls() {
   const petIcons = '.cmd-icon-mini-pet, [class*="EggFlashWrap_"], [class*="PetEntryIconWrap_"], [title="宠物模式"], [aria-label="宠物模式"]';
   const petPopovers = ["mod_pc_desktop_pet_guide", "mod_pc_desktop_pet_entry_float", "mod_pc_desktop_pet_progress"]
     .map(oid => '[data-log*=\'"' + oid + '"\']').join(", ");
-  // Native marketing components confirmed in the client's bundled source.
-  // Keep ordinary toasts, playback notices and user-opened dialogs available.
-  const marketingSelector = [
+  const guideSelector = [
     "cell_pc_nav_bar_vip_guide", "cell_pc_nav_bar_ad_guide",
-    "mod_pc_desktop_pet_guide", "btn_pc_mini_bar_guide_up", "mod_pc_home_ad_renew"
-  ].map(oid => '[data-log*=\'"' + oid + '"\']').concat('.modal-general-send-vip').join(", ");
+    "mod_pc_desktop_pet_guide", "btn_pc_mini_bar_guide_up"
+  ].map(oid => '[data-log*=\'"' + oid + '"\']').join(", ");
+  const promotionModalSelector = '.modal-general-send-vip, [data-log*=\'"mod_pc_home_ad_renew"\']';
   const key = "ncm-immersive.simplify";
   let saved = {};
   try { saved = JSON.parse(localStorage.getItem(key) || "{}"); } catch (_) {}
@@ -39,11 +38,19 @@ function createSimplifyControls() {
   document.head.appendChild(sheet);
   const marked = new Set();
   let petNodes = new Set();
+  let hiddenGuides = new Set();
+  let dismissedButtons = new Set();
 
   function mark(node, attribute, value = "") {
     if (!node) return;
     if (node.getAttribute(attribute) !== value) node.setAttribute(attribute, value);
     marked.add(node);
+  }
+
+  function updateMarkers(previous, next, attribute) {
+    for (const node of previous) if (!next.has(node)) node.removeAttribute(attribute);
+    for (const node of next) if (!node.hasAttribute(attribute)) node.setAttribute(attribute, "");
+    return next;
   }
 
   function syncPetEntry(nav) {
@@ -59,9 +66,27 @@ function createSimplifyControls() {
         }
       }
     }
-    for (const node of petNodes) if (!next.has(node)) node.removeAttribute("data-ncm-pet-entry");
-    for (const node of next) if (!node.hasAttribute("data-ncm-pet-entry")) node.setAttribute("data-ncm-pet-entry", "");
-    petNodes = next;
+    petNodes = updateMarkers(petNodes, next, "data-ncm-pet-entry");
+  }
+
+  function syncPromotions() {
+    if (!state.marketingNotifications && !hiddenGuides.size && !dismissedButtons.size) return;
+    const guides = new Set(), buttons = new Set();
+    if (state.marketingNotifications) {
+      for (const content of document.querySelectorAll(guideSelector)) {
+        guides.add(content.closest('.cmd-popover-wrapper, [class*="BubbleWrapper_"]') || content);
+      }
+      for (const content of document.querySelectorAll(promotionModalSelector)) {
+        const modal = content.closest('.cmd-modal-wrap, [class*="ModalWrapper_"]') || content.closest(".cmd-modal");
+        const button = (modal || content).querySelector(".cmd-modal-close");
+        if (button && !button.disabled && button.getAttribute("aria-disabled") !== "true" && button.getClientRects().length) buttons.add(button);
+      }
+    }
+    hiddenGuides = updateMarkers(hiddenGuides, guides, "data-ncm-marketing-notification");
+    // The native close action also releases the modal mask and keyboard focus.
+    const previous = dismissedButtons;
+    dismissedButtons = buttons;
+    for (const button of buttons) if (!previous.has(button) && button.isConnected) button.click();
   }
 
   function sync() {
@@ -79,19 +104,8 @@ function createSimplifyControls() {
       const item = icon?.closest(toolbarSlot);
       mark(item || icon?.closest(".cmd-badge") || icon, "data-ncm-simplify-entry", id);
     }
-    document.querySelectorAll(marketingSelector).forEach(content => {
-      const modal = content.closest('[class*="ModalWrapper_"]');
-      const container = modal || content.closest('.cmd-popover-wrapper, [class*="BubbleWrapper_"]') || content;
-      mark(container, "data-ncm-marketing-notification");
-      // Dismiss known marketing modals through their own close action so their
-      // focus trap and scroll lock are released along with the backdrop.
-      if (state.marketingNotifications && modal && !dismissed.has(modal)) {
-        const close = modal.querySelector(".cmd-modal-close");
-        if (close) { dismissed.add(modal); close.click(); }
-      }
-    });
+    syncPromotions();
   }
-  const dismissed = new WeakSet();
   const observer = new MutationObserver(sync);
   observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["data-log"] });
 
@@ -127,10 +141,10 @@ function createSimplifyControls() {
       sheet.remove();
       for (const node of petNodes) node.removeAttribute("data-ncm-pet-entry");
       petNodes.clear();
-      for (const node of marked) {
-        node.removeAttribute("data-ncm-simplify-entry");
-        node.removeAttribute("data-ncm-marketing-notification");
-      }
+      for (const node of hiddenGuides) node.removeAttribute("data-ncm-marketing-notification");
+      hiddenGuides.clear();
+      dismissedButtons.clear();
+      for (const node of marked) node.removeAttribute("data-ncm-simplify-entry");
       marked.clear();
       document.documentElement.removeAttribute("data-ncm-simplify");
     }

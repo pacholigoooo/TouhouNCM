@@ -325,6 +325,7 @@
     let coverRetireTimer = 0;
     let coverFadeTimer = 0;
     let opened = false;
+    let openingSlide = null;
     let settingsOnly = false;
     let activeLine = -1;
     let frameId = 0;
@@ -599,6 +600,7 @@
       if (snapshot && force !== false) renderPosition(layoutChanged);
     }
     function syncBackdrop() {
+      if (document.hidden || motionQuery.matches) finishOpening();
       const running = artworkMotion();
       backdrop.setRunning(running);
       if (!running) finishCoverTransition();
@@ -1125,8 +1127,16 @@
       if (path.some(node => node.id === "ncm-immersive-settings-entry")) return;
       if (!path.includes(settingsPanel)) setSettings(false, false);
     }
-    function open() {
+    function finishOpening() {
+      if (!openingSlide) return;
+      openingSlide.onfinish = null;
+      openingSlide.cancel();
+      openingSlide = null;
+      if (opened) document.documentElement.setAttribute("data-ncm-player-open", "opened");
+    }
+    function open(animate) {
       if (opened || destroyed) return;
+      const slide = animate && !settingsOnly && !nativeDialogOpen && !document.hidden && !motionQuery.matches && typeof view.animate === "function";
       if (!settingsOnly) lastFocus = document.activeElement;
       settingsOnly = false;
       view.dataset.settingsOnly = "false";
@@ -1139,7 +1149,13 @@
       $("[data-ncm-action=recenter]").hidden = true;
       view.hidden = false;
       view.dataset.open = "true";
-      document.documentElement.setAttribute("data-ncm-player-open", "");
+      document.documentElement.setAttribute("data-ncm-player-open", slide ? "opening" : "opened");
+      if (slide) {
+        openingSlide = view.animate([{ transform: "translateY(100%)" }, { transform: "none" }], {
+          duration: 320, easing: "cubic-bezier(.2,.75,.25,1)"
+        });
+        openingSlide.onfinish = finishOpening;
+      }
       updateCover(coverUrl, snapshot && snapshot.track && snapshot.track.title, true);
       buildLyrics();
       onFullscreenChange();
@@ -1155,6 +1171,7 @@
       closeTitleMenu();
       if (!opened) return;
       opened = false;
+      finishOpening();
       dragging = false;
       seekPreview = null;
       cancelAnimationFrame(frameId);

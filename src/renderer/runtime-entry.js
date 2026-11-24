@@ -94,6 +94,7 @@ function mountImmersiveRuntime(version, viewCss, nativeCss, config) {
     catch (error) { console.warn("TouhouNCM 桌面歌词菜单", error.message); }
     dispose.push(() => setMinibarPalette(null, glass.palette));
     let lastColor;
+    let detailState;
     const stopWatching = bridge.subscribe(snapshot => {
       settingsEntry.sync();
       simplify.sync();
@@ -101,8 +102,12 @@ function mountImmersiveRuntime(version, viewCss, nativeCss, config) {
         lastColor = snapshot.coverColor;
         setMinibarPalette(lastColor, glass.palette);
       }
-      if (snapshot.detailState === "opening" || snapshot.detailState === "opened") ui.open();
-      else if (snapshot.detailState === "closed") ui.close();
+      const previous = detailState;
+      detailState = snapshot.detailState;
+      if (detailState === previous) return;
+      if (detailState === "opening") ui.open(true);
+      else if (detailState === "opened" && previous !== "opening") ui.open(previous === "closed" || previous === "closing");
+      else if (detailState === "closed") ui.close();
     });
     dispose.push(stopWatching);
     runtime = {

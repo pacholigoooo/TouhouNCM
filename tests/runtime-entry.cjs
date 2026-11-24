@@ -5,9 +5,11 @@ const vm = require("node:vm");
 
 const source = fs.readFileSync(path.join(__dirname, '..', 'src/renderer', 'runtime-entry.js'), "utf8");
 
-function fixture(failure) {
+function fixture(failure, initialDetail = "closed") {
   const active = new Set(["bridge"]);
   const errors = [];
+  const navigation = [];
+  let changeDetail;
   const listeners = new Map();
   const rules = ["html { color: red; }", "body { margin: 0; }"];
   let ruleEdits = 0;
@@ -26,13 +28,16 @@ function fixture(failure) {
   };
   const ui = {
     destroy: mount("view"),
-    open() {}, close() {}, getState() { return {}; }
+    open(animate) { navigation.push(["open", animate]); },
+    close() { navigation.push(["close"]); },
+    getState() { return {}; }
   };
   const bridge = {
     dispose() { active.delete("bridge"); },
     closeDetail() {},
     subscribe(listener) {
-      listener({ coverColor: null, detailState: "closed" });
+      changeDetail = state => listener({ coverColor: null, detailState: state });
+      changeDetail(initialDetail);
       if (failure === "subscribe") throw Error("subscription failed");
       return mount("subscription");
     }
@@ -81,6 +86,7 @@ function fixture(failure) {
   vm.runInContext(source, context);
   return {
     start: () => context.mountImmersiveRuntime("test", "", "", {version:"1.0.0"}),
+    navigation, changeDetail: state => changeDetail(state),
     window, active, listeners, errors,
     document: context.document, rules, get ruleEdits() { return ruleEdits; }
   };
@@ -111,6 +117,14 @@ assert.equal(loaded.listeners.size, 0);
 assert.equal(loaded.window.__pachiImmersive, undefined);
 console.log("PASS runtime teardown is complete and repeatable");
 console.log("PASS native style cache reclaim preserves rules and runs only while hidden");
+
+const player = fixture(undefined, "opened");
+player.start();
+assert.deepEqual(player.navigation, [["open", false]], "attaching to the current song page keeps it in place");
+for (const state of ["closed", "opening", "opening", "opened", "opened", "closing", "closed", "opened"]) player.changeDetail(state);
+assert.deepEqual(player.navigation.slice(1), [["close"], ["open", true], ["close"], ["open", true]]);
+player.window.__pachiImmersive.destroy();
+console.log("PASS the minibar entrance also works on clients that go straight to opened");
 
 const disconnected = fixture();
 disconnected.window.__pachiNcmImmersiveNativeWake = () => { throw Error("disconnected binding"); };
